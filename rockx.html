@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RockX · Ananya Prabhakar</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=chillax@200,300,400,500,600,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --bg: #F9F5F0; --surface: #F0E4DF; --accent: #D4908A; --accent-hover: #C17B75;
+      --body: #6B5B55; --heading: #2C1810; --card-bg: #F9F5F0;
+      --card-shadow: rgba(44,24,16,0.15); --tag-bg: rgba(212,144,138,0.10);
+      --tag-border: rgba(212,144,138,0.22); --border: rgba(212,144,138,0.12);
+      --border-md: rgba(212,144,138,0.15); --border-lg: rgba(212,144,138,0.30);
+      --accent-faint: rgba(212,144,138,0.05); --accent-ghost: rgba(212,144,138,0.08);
+      --accent-muted: rgba(212,144,138,0.28); --accent-soft: rgba(212,144,138,0.35);
+      --accent-mid: rgba(212,144,138,0.40); --accent-strong: rgba(212,144,138,0.45);
+      --shadow-sm: rgba(44,24,16,0.08); --shadow-md: rgba(44,24,16,0.13);
+      --shadow-lg: rgba(44,24,16,0.22); --nav-cta-bg: #2C1810; --nav-cta-text: #F9F5F0;
+      --btn-primary-txt: #FFF5F0; --footer-bg: #2C1810;
+    }
+    html.dark {
+      --bg: #140A08; --surface: #2A1612; --accent: #E49B93; --accent-hover: #D4908A;
+      --body: #D4B5A8; --heading: #FFF5F0; --card-bg: #1E0E0A;
+      --card-shadow: rgba(0,0,0,0.45); --tag-bg: rgba(228,155,147,0.10);
+      --tag-border: rgba(228,155,147,0.22); --border: rgba(228,155,147,0.12);
+      --border-md: rgba(228,155,147,0.15); --border-lg: rgba(228,155,147,0.25);
+      --accent-faint: rgba(228,155,147,0.05); --accent-ghost: rgba(228,155,147,0.08);
+      --accent-muted: rgba(228,155,147,0.28); --accent-soft: rgba(228,155,147,0.35);
+      --accent-mid: rgba(228,155,147,0.40); --accent-strong: rgba(228,155,147,0.45);
+      --shadow-sm: rgba(0,0,0,0.15); --shadow-md: rgba(0,0,0,0.25);
+      --shadow-lg: rgba(0,0,0,0.45); --nav-cta-bg: #FFF5F0; --nav-cta-text: #140A08;
+      --btn-primary-txt: #140A08; --footer-bg: #0A0604;
+    }
+    html { transition: background 0.4s ease, color 0.4s ease; overflow-x: clip; }
+    html, body { width: 100%; font-family: 'Chillax', sans-serif; background: var(--bg); cursor: none; color: var(--body); overflow-x: clip; }
+
+    /* ── CURSOR ── */
+    #cursor {
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif; font-size: 20px; color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.08s ease, color 0.15s;
+    }
+    #cursor.hovering { transform: translate(-50%, -50%) scale(1.6); color: var(--accent-hover); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 22px 52px;
+      background: rgba(249,245,240,0.88); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.4s ease, border-color 0.3s;
+    }
+    html.dark nav { background: rgba(20,10,8,0.88); }
+    /* ── HAMBURGER MENU ── */
+    .nav-hamburger {
+      display: none; flex-direction: column; justify-content: center; align-items: center;
+      gap: 5px; width: 40px; height: 40px;
+      background: none; border: none; cursor: none; padding: 4px; flex-shrink: 0;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--heading); border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; }
+      .nav-hamburger { display: flex; }
+      nav ul.nav-links {
+        display: none; position: fixed; top: 72px; left: 0; right: 0;
+        background: rgba(249,245,240,0.97); backdrop-filter: blur(12px);
+        flex-direction: column; align-items: stretch;
+        padding: 8px 0 16px; gap: 0;
+        border-bottom: 1px solid var(--border);
+        z-index: 99;
+      }
+      html.dark nav ul.nav-links { background: rgba(20,10,8,0.97); }
+      nav ul.nav-links.open { display: flex; }
+      nav ul.nav-links li {
+        font-size: 16px; padding: 14px 24px;
+        border-bottom: 1px solid var(--border); width: 100%;
+      }
+      nav ul.nav-links li:last-child { border-bottom: none; }
+      nav ul.nav-links li::after { display: none !important; }
+      nav ul.nav-links li:has(.theme-toggle) {
+        order: 10; border-top: 1px solid var(--border);
+        border-bottom: none; margin-top: 4px; padding-top: 16px;
+      }
+      .nav-cta { display: inline-block; }
+    }
+    .nav-logo { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--heading); cursor: none; text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+    .nav-links li { font-size: 14px; font-weight: 500; color: var(--body); cursor: none; position: relative; }
+    .nav-links li::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease; }
+    .nav-links li:hover { color: var(--accent); }
+    .nav-links li:hover::after { transform: scaleX(1); }
+    .nav-links li:has(.theme-toggle)::after { display: none; }
+    .nav-links li:has(.theme-toggle):hover { color: inherit; }
+    .nav-links li.nav-active { color: var(--accent); }
+    .nav-links li.nav-active::after { transform: scaleX(1); }
+    .nav-cta { background: var(--nav-cta-bg); color: var(--nav-cta-text) !important; padding: 8px 18px; border-radius: 8px; font-weight: 600 !important; transition: background 0.2s; }
+    .theme-toggle { background: none; border: none; padding: 0; cursor: none; display: flex; align-items: center; gap: 7px; }
+    .toggle-icon { font-size: 13px; line-height: 1; transition: opacity 0.3s, color 0.3s; }
+    .icon-sun  { color: var(--accent); opacity: 1; }
+    .icon-moon { color: var(--body); opacity: 0.35; }
+    html.dark .icon-sun  { color: var(--body); opacity: 0.35; }
+    html.dark .icon-moon { color: var(--accent); opacity: 1; }
+    .toggle-track { width: 36px; height: 20px; background: var(--surface); border: 1.5px solid var(--border-md); border-radius: 100px; position: relative; flex-shrink: 0; transition: border-color 0.35s, background 0.35s; }
+    html.dark .toggle-track { border-color: var(--accent-muted); }
+    .toggle-thumb { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); top: 50%; left: 2px; --tx: 0px; transform: translateY(-50%) translateX(var(--tx)); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.35s; box-shadow: 0 1px 4px var(--shadow-sm); }
+    html.dark .toggle-thumb { --tx: 15px; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── HERO ── */
+    .cs-hero {
+      height: 100vh; background: #2C1810;
+      background-image: radial-gradient(circle, rgba(255,245,240,0.08) 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
+      display: flex; flex-direction: column;
+      padding: 0; position: relative; overflow: hidden;
+    }
+    html.dark .cs-hero { background: #1A0C08; }
+    .cs-hero-ghost {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif; font-size: clamp(120px, 24vw, 360px);
+      font-weight: 900; color: rgba(255,245,240,0.018);
+      pointer-events: none; white-space: nowrap; letter-spacing: -0.04em;
+      user-select: none;
+    }
+    .cs-hero-split {
+      flex: 1; display: grid; grid-template-columns: 0.85fr 1.9fr;
+      gap: 40px; padding: 96px 64px 40px;
+      align-items: center; position: relative; z-index: 1;
+      max-width: 1440px; width: 100%; margin: 0 auto;
+    }
+    .cs-hero-left { display: flex; flex-direction: column; align-items: flex-start; }
+    .cs-hero-right { display: flex; align-items: center; justify-content: center; }
+    .cs-hero-eyebrow {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.18em; color: var(--accent);
+      display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+    }
+    .cs-hero-eyebrow-rule { width: 36px; height: 1px; background: var(--accent); flex-shrink: 0; }
+    .cs-hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(36px, 4vw, 64px);
+      font-weight: 800; color: #FFF5F0;
+      letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 16px;
+    }
+    .cs-hero-subtitle {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(16px, 1.8vw, 24px);
+      font-weight: 300; color: rgba(255,245,240,0.55);
+      letter-spacing: -0.01em; margin-bottom: 24px;
+    }
+    .cs-hero-hook {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(14px, 1.4vw, 18px);
+      font-style: italic; color: var(--accent);
+      line-height: 1.6; margin-bottom: 40px; max-width: 560px;
+    }
+    .cs-hero-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600; color: var(--accent);
+      text-decoration: none; cursor: none; width: fit-content;
+      border: 1.5px solid var(--accent-strong); border-radius: 100px;
+      padding: 12px 26px;
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
+    }
+    .cs-hero-cta:hover { background: var(--accent); border-color: var(--accent); color: #2C1810; }
+
+    /* ── HERO DESKTOP CLUSTER (laptop + 3 cascading browser windows) ──
+       Ported from uploads/design_handoff_rockx_hero/rockx-hero.html.
+       Fixed 1340×900 scene scaled to fill its column via #rxhScene transform. */
+    .rxh-stage { position: relative; width: 100%; }
+    .rxh-scene { position: absolute; top: 0; left: 0; width: 1340px; height: 900px; transform-origin: top left; will-change: transform; }
+
+    .rxh-floorshadow {
+      position: absolute; z-index: 0; pointer-events: none; border-radius: 50%;
+      background: radial-gradient(ellipse at 50% 50%, rgba(26,14,10,.34) 0%, rgba(26,14,10,.13) 46%, transparent 72%);
+      filter: blur(10px);
+    }
+
+    /* tiny rose equalizer accent (subtle music nod) */
+    .rxh-eq { position: absolute; z-index: 1; display: flex; align-items: flex-end; gap: 3px; height: 18px; opacity: .5; pointer-events: none; }
+    .rxh-eq i { width: 4px; border-radius: 2px; background: var(--accent); display: block; }
+    .rxh-eq i:nth-child(1){ height: 45%; }
+    .rxh-eq i:nth-child(2){ height: 100%; }
+    .rxh-eq i:nth-child(3){ height: 62%; }
+    .rxh-eq i:nth-child(4){ height: 82%; }
+
+    /* MacBook-style laptop (hero, front-left) */
+    .rxh-laptop { position: absolute; }
+    .rxh-laptop .rxh-lid {
+      position: relative; padding: 15px 15px 16px; border-radius: 21px 21px 7px 7px;
+      background: linear-gradient(150deg,#3A271F 0%, #1A0E0A 48%, #0E0705 100%);
+      box-shadow: 0 2px 2px rgba(255,245,240,.10) inset, 0 0 0 1.5px rgba(255,245,240,.05) inset,
+        0 54px 90px -34px rgba(26,14,10,.55), 0 18px 40px -20px rgba(26,14,10,.40);
+    }
+    .rxh-laptop .rxh-notch {
+      position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
+      width: 118px; height: 7px; background: #0b0604; border-radius: 0 0 8px 8px; z-index: 6;
+    }
+    .rxh-laptop .rxh-glass {
+      position: relative; overflow: hidden; display: block; border-radius: 8px; background: #FBF7F2;
+      box-shadow: 0 0 0 2px #0c0604, inset 0 0 12px rgba(0,0,0,.32);
+    }
+    .rxh-laptop .rxh-hinge {
+      position: relative; height: 9px; width: calc(100% - 10px); margin: 0 auto;
+      background: linear-gradient(180deg,#241712,#130B07); border-radius: 0 0 4px 4px;
+      box-shadow: 0 1px 0 rgba(255,245,240,.06) inset;
+    }
+    .rxh-laptop .rxh-base {
+      position: relative; width: calc(100% + 84px); margin-left: -42px; height: 15px;
+      background: linear-gradient(180deg,#3A271F,#1A0E0A 58%,#0F0705); border-radius: 3px 3px 12px 12px;
+      box-shadow: 0 36px 54px -24px rgba(26,14,10,.6), 0 2px 2px rgba(255,245,240,.08) inset;
+    }
+    .rxh-laptop .rxh-base::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 108px; height: 7px; background: #110907; border-radius: 0 0 9px 9px;
+    }
+    .rxh-glasssheen {
+      position: absolute; inset: 0; z-index: 4; pointer-events: none;
+      background: linear-gradient(120deg, rgba(255,255,255,.13) 0%, rgba(255,255,255,.03) 22%, transparent 46%);
+      mix-blend-mode: screen;
+    }
+    .rxh-glassfade {
+      position: absolute; inset: 0; z-index: 3; pointer-events: none;
+      background: linear-gradient(to top, rgba(14,7,5,.82) 0%, rgba(14,7,5,.3) 28%, transparent 55%);
+    }
+
+    /* browser window (cascade) */
+    .rxh-device {
+      position: absolute; border-radius: 18px; padding: 11px;
+      background: linear-gradient(150deg,#34211A 0%, #1A0E0A 46%, #100806 100%);
+      box-shadow: 0 2px 2px rgba(255,245,240,.10) inset, 0 0 0 1.5px rgba(255,245,240,.05) inset,
+        0 44px 74px -28px rgba(26,14,10,.55), 0 14px 32px -16px rgba(26,14,10,.38);
+    }
+    .rxh-screen {
+      position: relative; overflow: hidden; border-radius: 13px; background: #FBF7F2;
+      box-shadow: 0 0 0 2px #0c0604, inset 0 0 10px rgba(0,0,0,.28);
+      display: flex; flex-direction: column;
+    }
+    .rxh-chrome {
+      flex: none; height: 34px; background: linear-gradient(180deg,#FFFDFB,#F0E4DF);
+      border-bottom: 1px solid rgba(44,24,16,.09);
+      display: flex; align-items: center; gap: 8px; padding: 0 13px;
+    }
+    .rxh-lights { display: flex; align-items: center; gap: 6px; flex: none; }
+    .rxh-lights i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+    .rxh-lights i:nth-child(1){ background: #C17B75; }
+    .rxh-lights i:nth-child(2){ background: #E0B7B2; }
+    .rxh-lights i:nth-child(3){ background: #EAD7D1; }
+    .rxh-omni {
+      flex: 1; height: 18px; border-radius: 100px; background: rgba(44,24,16,.06);
+      box-shadow: inset 0 0 0 1px rgba(44,24,16,.07);
+      margin-left: 7px; display: flex; align-items: center; padding: 0 10px; gap: 6px;
+    }
+    .rxh-omni::before { content: ''; width: 7px; height: 7px; border-radius: 2px; background: var(--accent); flex: none; }
+    .rxh-omni span { height: 3px; width: 34%; border-radius: 2px; background: rgba(44,24,16,.16); }
+    .rxh-viewport { position: relative; flex: 1; overflow: hidden; background: #FBF7F2; }
+    .rxh-coverimg, .rxh-fill {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: top center; display: block;
+    }
+    .rxh-sheen {
+      position: absolute; inset: 0; z-index: 4; pointer-events: none;
+      background: linear-gradient(122deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.03) 20%, transparent 44%);
+      mix-blend-mode: screen;
+    }
+
+    /* ── TL;DR STRIP ── */
+    .tldr-strip { border-top: 1px solid rgba(255,245,240,0.1); display: flex; align-items: stretch; }
+    .tldr-item { flex: 1; padding: 28px 32px; border-right: 1px solid rgba(255,245,240,0.08); }
+    .tldr-item:last-child { border-right: none; }
+    .tldr-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent); margin-bottom: 8px; }
+    .tldr-value { font-family: 'Chillax', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,245,240,0.82); line-height: 1.5; }
+    .tldr-value strong { color: #FFF5F0; font-weight: 700; }
+
+    /* ── MAIN LAYOUT ── */
+    .cs-layout { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 220px 1fr; gap: 0; align-items: start; padding: 0 64px; }
+
+    /* ── TOC ── */
+    .cs-toc { position: sticky; top: 88px; align-self: start; padding: 80px 0 80px; border-right: 1px solid var(--border); padding-right: 40px; }
+    .toc-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent-muted); margin-bottom: 20px; padding-left: 2px; }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .toc-list li a { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; color: var(--body); text-decoration: none; cursor: none; padding: 8px 10px; border-radius: 8px; transition: color 0.2s, background 0.2s; line-height: 1.3; }
+    .toc-list li a:hover { color: var(--accent); background: var(--accent-faint); }
+    .toc-list li.toc-active a { color: var(--accent); background: var(--accent-ghost); font-weight: 600; }
+    .toc-icon { flex-shrink: 0; display: flex; align-items: center; color: var(--accent); }
+    .toc-divider { height: 1px; background: var(--border); margin: 12px 0; }
+    .toc-list .toc-top a { color: var(--accent-soft); font-size: 12px; }
+    .toc-list .toc-top a:hover { color: var(--accent); }
+
+    /* ── CASE STUDY MAIN ── */
+    .cs-main { padding: 0 0 0 64px; min-width: 0; }
+    .cs-main img, .cs-main video { max-width: 100%; }
+
+    /* ── SECTION BASE ── */
+    .cs-section { padding: 80px 0; border-bottom: 1px solid var(--border); }
+    .cs-section:last-child { border-bottom: none; }
+    .section-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+    .section-eyebrow .eyebrow-rule { width: 40px; height: 1px; background: var(--accent); flex-shrink: 0; }
+    .cs-section-title { font-family: 'Fraunces', serif; font-size: clamp(26px, 2.8vw, 38px); font-weight: 700; color: var(--heading); letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 32px; }
+    .cs-body { font-size: 16px; line-height: 1.85; color: var(--body); max-width: 680px; margin-bottom: 32px; }
+    .cs-body:last-child { margin-bottom: 0; }
+    .cs-body strong { color: var(--heading); font-weight: 600; }
+    .cs-body em { color: var(--accent); font-style: italic; }
+
+    /* ── SUBSECTION HEADING ── */
+    .cs-sub-heading { font-family: 'Fraunces', serif; font-size: clamp(18px, 2vw, 24px); font-weight: 700; color: var(--heading); letter-spacing: -0.02em; margin: 48px 0 16px; }
+    .cs-sub-heading:first-child { margin-top: 0; }
+
+    /* ── DASH LIST ── */
+    .persona-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 20px 0; max-width: 680px; }
+    .persona-list li { font-size: 15px; color: var(--body); line-height: 1.7; padding-left: 20px; position: relative; }
+    .persona-list li::before { content: '—'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+    .persona-list li strong { color: var(--heading); font-weight: 600; }
+
+    /* ── CONCEPT LIST ── */
+    .concept-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 24px 0; max-width: 680px; }
+    .concept-list li { font-size: 15px; color: var(--body); line-height: 1.75; padding-left: 20px; position: relative; }
+    .concept-list li::before { content: '–'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+    .concept-list li strong { color: var(--heading); font-weight: 600; }
+
+    /* ── REFLECTION QUOTE ── */
+    .reflection-quote { font-family: 'Fraunces', serif; font-size: clamp(18px, 2vw, 24px); font-style: italic; font-weight: 400; color: var(--heading); line-height: 1.72; border-left: 3px solid var(--accent); padding-left: 24px; margin: 32px 0; }
+
+    /* ── PLACEHOLDER BLOCK ── */
+    .placeholder-block { width: 100%; border-radius: 16px; background: var(--surface); border: 1.5px dashed var(--border-lg); margin: 28px 0; min-height: 240px; display: flex; align-items: center; justify-content: center; padding: 40px; }
+    .placeholder-label { font-family: 'Fraunces', serif; font-size: 14px; font-style: italic; color: var(--body); opacity: 0.5; text-align: center; line-height: 1.6; }
+
+    /* ── IMAGE FIGURE (placeholder/image + caption) ── */
+    .img-figure { margin: 28px 0; }
+    .img-figure .placeholder-block { margin: 0; }
+    .img-caption { font-family: 'Fraunces', serif; font-style: italic; font-size: 13.5px; color: var(--body); opacity: 0.78; margin-top: 12px; line-height: 1.6; }
+    .img-caption .cap-star { color: var(--accent); font-style: normal; margin-right: 7px; font-size: 10px; }
+
+    /* ── STAT CHIPS ── */
+    .stat-chips { display: flex; gap: 16px; flex-wrap: wrap; margin: 32px 0; }
+    .stat-chip { display: flex; align-items: baseline; gap: 14px; padding: 20px 28px; border: 1px solid var(--border-md); border-radius: 14px; background: var(--card-bg); box-shadow: 0 2px 12px var(--shadow-sm); }
+    .stat-chip-num { font-family: 'Fraunces', serif; font-size: clamp(28px, 3.2vw, 40px); font-weight: 900; color: var(--accent); letter-spacing: -0.04em; line-height: 1; }
+    .stat-chip-label { font-size: 13.5px; color: var(--body); line-height: 1.4; }
+
+    /* ── CALLOUT CARDS ── */
+    .callouts { display: flex; flex-direction: column; gap: 16px; margin-top: 28px; }
+    .callout { background: var(--surface); border-radius: 12px; border-left: 3px solid var(--accent); padding: 18px 22px; max-width: 680px; }
+    .callout-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 8px; }
+    .callout-body { font-size: 14px; color: var(--body); line-height: 1.72; }
+    .callout-body strong { color: var(--heading); font-weight: 600; }
+
+    /* ── SCENE LEAD (opening line — bigger than body, smaller than a heading) ── */
+    .scene-lead { font-family: 'Fraunces', serif; font-size: clamp(17px, 1.9vw, 22px); font-weight: 500; color: var(--heading); letter-spacing: -0.01em; line-height: 1.65; max-width: 680px; margin-bottom: 28px; }
+
+    /* ── SCREENSHOT IMAGES & RECORDINGS ── */
+    .cs-shot { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--border-md); box-shadow: 0 4px 24px var(--shadow-sm); background: var(--surface); }
+    .cs-vid { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--border-md); box-shadow: 0 4px 24px var(--shadow-sm); background: var(--surface); }
+    .vid-2up { display: grid; grid-template-columns: 1fr; gap: 28px; }
+    .vid-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--body); opacity: 0.65; margin-bottom: 10px; }
+    .sketch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .strip-3 { display: grid; grid-template-columns: 1fr; gap: 28px; }
+
+    /* ── OA MATRIX ── */
+    .oa-scroll { overflow-x: auto; border-radius: 14px; border: 1.5px solid var(--border-md); }
+    .oa-table { width: 100%; border-collapse: collapse; min-width: 500px; }
+    .oa-table th { background: var(--heading); color: rgba(255,245,240,0.85); font-family: 'Chillax', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.13em; padding: 14px 18px; text-align: center; border-right: 1px solid rgba(255,245,240,0.1); }
+    html.dark .oa-table th { background: #1A0C08; border-right-color: rgba(255,245,240,0.07); }
+    .oa-table th:first-child { text-align: left; min-width: 150px; }
+    .oa-table td { padding: 14px 18px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); text-align: center; background: var(--card-bg); font-size: 13px; }
+    .oa-table td:first-child { text-align: left; background: var(--surface); font-family: 'Chillax', sans-serif; font-weight: 600; font-size: 12.5px; color: var(--heading); position: sticky; left: 0; border-right: 1.5px solid var(--border-md); }
+    .oa-table tr:last-child td { border-bottom: none; }
+    .oa-table th:last-child, .oa-table td:last-child { border-right: none; }
+    .oa-check { color: var(--accent); font-size: 13px; }
+    .oa-dash { color: var(--body); opacity: 0.18; }
+    /* Attribute cards */
+    .attr-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 28px 0 8px; }
+    @media (max-width: 900px) { .attr-grid { grid-template-columns: repeat(2, 1fr); } }
+    .attr-card { border-radius: 12px; border: 1px solid var(--border-md); overflow: hidden; }
+    .attr-card-head { background: var(--heading); padding: 12px 16px; font-family: 'Fraunces', serif; font-size: 13.5px; font-weight: 700; color: #FFF5F0; line-height: 1.2; }
+    html.dark .attr-card-head { background: #1A0C08; }
+    .attr-list { padding: 12px 16px; background: var(--card-bg); display: flex; flex-direction: column; gap: 5px; }
+    .attr-item { font-size: 11.5px; color: var(--body); padding-left: 13px; position: relative; line-height: 1.55; }
+    .attr-item::before { content: '—'; position: absolute; left: 0; color: var(--accent); opacity: 0.5; font-size: 10px; top: 2px; }
+
+    /* ── PRIORITIZATION TIERS ── */
+    .pm-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    @media (max-width: 900px) { .pm-tiers { grid-template-columns: 1fr; } }
+    .pm-col { border-radius: 12px; border: 1.5px solid var(--border-md); overflow: hidden; }
+    .pm-col--hi { border-color: var(--accent-muted); }
+    .pm-col-head { padding: 12px 16px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); background: var(--surface); border-bottom: 1px solid var(--border); }
+    .pm-col--hi .pm-col-head { background: rgba(212,144,138,0.13); }
+    .pm-col-body { padding: 14px 16px; background: var(--card-bg); display: flex; flex-direction: column; gap: 7px; }
+    .pm-chip { font-size: 12.5px; color: var(--body); padding: 7px 12px; background: var(--surface); border-radius: 8px; border: 1px solid var(--border); line-height: 1.5; }
+
+    /* ── CHALLENGE CARDS ── */
+    .challenge-cards { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .challenge-card {
+      background: var(--surface); border-radius: 16px;
+      border: 1px solid var(--border-md); padding: 28px 32px;
+    }
+    .challenge-card-tag {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--accent);
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+    .challenge-card-heading {
+      font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700;
+      color: var(--heading); margin-bottom: 12px;
+    }
+    .challenge-card-body { font-size: 14px; color: var(--body); line-height: 1.78; }
+
+    /* ── CONCEPT CARDS (three articulations) ── */
+    .concept-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+    .concept-card { background: var(--surface); border: 1px solid var(--border-md); border-radius: 16px; padding: 24px 26px; }
+    .concept-card-num { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 12px; }
+    .concept-card-name { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 700; color: var(--heading); letter-spacing: -0.015em; margin-bottom: 10px; }
+    .concept-card-line { font-size: 13.5px; color: var(--body); line-height: 1.7; }
+    .concept-card-line em { color: var(--accent); font-style: italic; }
+
+    /* ── WIZARD STEPS ── */
+    .wizard-steps { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 24px 0; }
+    .wizard-step { font-size: 12.5px; font-weight: 600; color: var(--heading); background: var(--surface); border: 1px solid var(--border-md); border-radius: 100px; padding: 9px 18px; white-space: nowrap; }
+    .wizard-arrow { color: var(--accent); font-size: 13px; flex-shrink: 0; }
+
+    /* ── DV DECISIONS TABLE ── */
+    .dv-scroll { overflow-x: auto; border-radius: 14px; border: 1.5px solid var(--border-md); margin: 28px 0; }
+    .dv-table { width: 100%; border-collapse: collapse; min-width: 640px; }
+    .dv-table th { background: var(--heading); color: rgba(255,245,240,0.85); font-family: 'Chillax', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.13em; padding: 14px 18px; text-align: left; border-right: 1px solid rgba(255,245,240,0.1); }
+    html.dark .dv-table th { background: #1A0C08; border-right-color: rgba(255,245,240,0.07); }
+    .dv-table th:last-child { border-right: none; }
+    .dv-table td { padding: 16px 18px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--card-bg); font-size: 13.5px; line-height: 1.65; color: var(--body); vertical-align: top; }
+    .dv-table td:first-child { font-family: 'Chillax', sans-serif; font-weight: 600; font-size: 13px; color: var(--heading); background: var(--surface); }
+    .dv-table td:nth-child(2) { color: var(--accent); font-weight: 600; }
+    .dv-table td:last-child { border-right: none; }
+    .dv-table tr:last-child td { border-bottom: none; }
+
+    /* ── LEARNINGS CARDS ── */
+    .learnings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; align-items: start; margin-top: 48px; }
+    .lc-label { font-family: 'Chillax', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(255,245,240,0.38); margin-bottom: 14px; }
+    .lc-rule { width: 22px; height: 2px; background: var(--accent); opacity: 0.65; margin-bottom: 16px; }
+    .lc-hook { font-family: 'Chillax', sans-serif; font-size: 15px; font-weight: 700; color: #FFF5F0; line-height: 1.4; margin: 0 0 10px; }
+    .lc-body { font-family: 'Chillax', sans-serif; font-size: 13.5px; color: rgba(255,245,240,0.55); line-height: 1.7; margin: 0; }
+
+    /* ── OUTCOMES DARK SECTION ── */
+    .cs-outcomes-dark {
+      background: #2C1810; margin: 0 -64px; padding: 80px 64px;
+      border-radius: 0; position: relative;
+    }
+    .outcomes-intro-band {
+      display: flex; align-items: center; gap: 32px;
+      margin: -80px -64px 64px;
+      padding: 52px 64px;
+      border-bottom: 1px solid rgba(255,245,240,0.07);
+    }
+    .cs-outcomes-dark::before {
+      content: ''; position: absolute; right: 100%; top: 0; bottom: 0;
+      width: 100vw; background: #2C1810;
+    }
+    .cs-outcomes-dark::after {
+      content: ''; position: absolute; left: 100%; top: 0; bottom: 0;
+      width: 100vw; background: #2C1810;
+    }
+    html.dark .cs-outcomes-dark { background: #1A0C08; }
+    html.dark .cs-outcomes-dark::before,
+    html.dark .cs-outcomes-dark::after { background: #1A0C08; }
+    .cs-outcomes-dark .cs-section-title { color: #FFF5F0; }
+    .cs-outcomes-dark .cs-sub-heading { color: #FFF5F0; }
+    .cs-outcomes-dark .cs-body { color: rgba(255,245,240,0.72); }
+    .cs-outcomes-dark .section-eyebrow { color: var(--accent); }
+    .cs-outcomes-dark .eyebrow-rule { background: var(--accent); }
+    .phase-break-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.2em; color: var(--accent);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .phase-break-line { height: 1px; flex: 1; background: rgba(255,245,240,0.1); }
+    .phase-break-statement {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(15px, 1.8vw, 22px); font-weight: 700; font-style: italic;
+      color: rgba(255,245,240,0.88); letter-spacing: -0.015em; line-height: 1.35;
+      flex-shrink: 0; max-width: 340px; text-align: right;
+    }
+
+    /* ── NEXT PROJECT ── */
+    .next-project { background: var(--bg); padding: 80px 64px; border-top: 1px solid var(--border); }
+    .next-project-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: flex-end; }
+    .next-project-link { text-decoration: none; cursor: none; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; padding: 32px 40px; border: 1px solid var(--border-md); border-radius: 20px; background: var(--card-bg); min-width: 280px; transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s; }
+    .next-project-link:hover { transform: translateY(-4px); box-shadow: 0 16px 48px var(--shadow-md); border-color: var(--accent-muted); }
+    .next-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); display: flex; align-items: center; gap: 6px; }
+    .next-title { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700; color: var(--heading); letter-spacing: -0.025em; line-height: 1.1; }
+    .next-sub { font-size: 13px; color: var(--body); line-height: 1.5; text-align: right; }
+
+    /* ── FOOTER ── */
+    .site-footer { background: var(--footer-bg); display: grid; grid-template-columns: 1fr 1fr 1fr; min-height: 360px; }
+    .footer-bean { overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .footer-bean img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
+    .footer-middle { display: flex; flex-direction: column; justify-content: flex-end; padding: 56px 52px; gap: 24px; }
+    .footer-closing { font-family: 'Fraunces', serif; font-size: clamp(22px, 2.8vw, 38px); font-style: italic; font-weight: 600; color: #FFF5F0; line-height: 1.25; }
+    .footer-links { display: grid; grid-template-columns: auto auto; gap: 8px 28px; width: fit-content; }
+    .footer-links a { font-size: 14px; font-weight: 500; color: var(--accent); text-decoration: none; cursor: none; position: relative; transition: color 0.2s; width: fit-content; }
+    .footer-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.25s; }
+    .footer-links a:hover { color: #FFF5F0; }
+    .footer-links a:hover::after { transform: scaleX(1); }
+    .footer-copy { font-size: 11px; color: var(--accent-muted); letter-spacing: 0.04em; line-height: 1.6; }
+    .footer-copy-light { color: var(--accent-strong); }
+    .footer-right { display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; text-align: right; padding: 48px 52px 80px; }
+    .footer-availability { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); background: var(--tag-bg); border: 1px solid var(--border-lg); padding: 5px 14px; border-radius: 100px; width: fit-content; }
+    .footer-right-bottom { display: flex; flex-direction: column; gap: 14px; align-items: flex-end; }
+    .footer-nav-link { font-family: 'Chillax', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,245,240,0.38); text-decoration: none; cursor: none; transition: color 0.2s; }
+    .footer-nav-link:hover { color: #FFF5F0; }
+    .footer-back-top { font-family: 'Chillax', sans-serif; font-size: 13px; font-weight: 500; color: var(--accent-mid); background: none; border: none; cursor: none; transition: color 0.2s; letter-spacing: 0.03em; padding: 0; }
+    .footer-back-top:hover { color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .cs-layout { grid-template-columns: 1fr; padding: 0 40px; }
+      .cs-toc { display: none; }
+      /* iPad / tablet: hero stacks + becomes content-height (kills the 100vh gap) */
+      .cs-hero { height: auto; min-height: auto; }
+      .cs-hero-split { grid-template-columns: 1fr; gap: 36px; padding: 104px 48px 48px; }
+      .cs-hero-left { align-items: flex-start; }
+      .cs-hero-right { justify-content: center; }
+      .tldr-strip { flex-direction: column; }
+      .tldr-item { border-right: none; border-bottom: 1px solid rgba(255,245,240,0.08); }
+      .tldr-item:last-child { border-bottom: none; }
+      .cs-main { padding: 0; }
+    }
+    @media (max-width: 900px) {
+      .concept-cards { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .cs-hero { height: auto; min-height: auto; }
+      .cs-hero-split { grid-template-columns: 1fr; gap: 32px; padding: 100px 32px 40px; }
+      .cs-hero-right { justify-content: center; }
+      .rxh-stage { max-width: 460px; margin: 0 auto; }
+      .tldr-strip { flex-direction: column; }
+      .tldr-item { border-right: none; border-bottom: 1px solid rgba(255,245,240,0.08); padding: 20px 24px; }
+      .tldr-item:last-child { border-bottom: none; }
+      .cs-layout { padding: 0 24px; }
+      .cs-section { padding: 56px 0; }
+      .next-project { padding: 56px 24px; }
+      .next-project-link { min-width: auto; width: 100%; }
+      .cs-outcomes-dark { margin: 0 -24px; padding: 56px 24px; }
+      .outcomes-intro-band { margin: -56px -24px 48px; padding: 40px 24px; flex-wrap: wrap; gap: 16px; }
+      .phase-break-line { display: none; }
+      .phase-break-statement { text-align: left; max-width: 100%; }
+      .learnings-grid { grid-template-columns: 1fr; gap: 32px; }
+      .stat-chips { flex-direction: column; }
+      .sketch-grid { grid-template-columns: 1fr; }
+      .site-footer { grid-template-columns: 1fr; }
+      .footer-bean { display: none; }
+      .footer-middle { padding: 44px 24px 12px; gap: 18px; }
+      .footer-right { align-items: flex-start; text-align: left; padding: 12px 24px 56px; }
+      .footer-right-bottom { align-items: flex-start; }
+      nav { padding: 18px 24px; }
+      .nav-links { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+<div id="cursor">✦</div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="index.html" class="nav-logo">Ananya Prabhakar</a>
+  <ul class="nav-links">
+    <li><button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <span class="toggle-icon icon-sun">☀︎</span>
+      <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      <span class="toggle-icon icon-moon">☾</span>
+    </button></li>
+    <li class="nav-active"><a href="index.html#work" style="color:inherit;text-decoration:none;cursor:none;">Work</a></li>
+    <li><a href="about.html" style="color:inherit;text-decoration:none;cursor:none;">About</a></li>
+    <li><a href="#" style="color:inherit;text-decoration:none;cursor:none;">Resume ↗</a></li>
+    <li><a href="mailto:ananyaprabhakar1@gmail.com" class="nav-cta" style="text-decoration:none;cursor:none;">Say Hi ✦</a></li>
+  </ul>
+<button class="nav-hamburger" aria-label="Open menu" id="navHamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ══════════════════════════════════
+     HERO
+════════════════════════════════════ -->
+<section class="cs-hero">
+  <div class="cs-hero-ghost">RockX</div>
+  <div class="cs-hero-split">
+    <div class="cs-hero-left">
+      <div class="cs-hero-eyebrow">
+        <div class="cs-hero-eyebrow-rule"></div>
+        Academic · Interaction Design
+      </div>
+      <h1 class="cs-hero-title reveal">RockX</h1>
+      <p class="cs-hero-subtitle reveal" style="transition-delay:0.08s;">The Museum's Control Room</p>
+      <p class="cs-hero-hook reveal" style="transition-delay:0.16s;">Everyone wants to design the museum. I designed the part that keeps it running.</p>
+      <a href="https://pkn6aq.axshare.com/?g=14" class="cs-hero-cta reveal" style="transition-delay:0.22s;" target="_blank" rel="noopener">View the Axure Prototype →</a>
+    </div>
+    <div class="cs-hero-right reveal" style="transition-delay:0.2s;">
+      <div class="rxh-stage" id="rxhStage">
+        <div class="rxh-scene" id="rxhScene">
+
+          <div class="rxh-floorshadow" style="left:30px; top:678px; width:760px; height:92px;"></div>
+
+          <!-- cascade · supporting browser windows (fanning up-right) -->
+          <!-- Exhibits (backmost) -->
+          <div class="rxh-device" style="left:867px; top:96px; z-index:2;">
+            <div class="rxh-screen" style="width:428px; height:316px;">
+              <div class="rxh-chrome"><div class="rxh-lights"><i></i><i></i><i></i></div><div class="rxh-omni"><span></span></div></div>
+              <div class="rxh-viewport"><img class="rxh-coverimg" src="../uploads/RockX/hero/exhibits.png" alt="RockX artist exhibit details" /></div>
+              <div class="rxh-sheen"></div>
+            </div>
+          </div>
+
+          <!-- Events (middle) -->
+          <div class="rxh-device" style="left:775px; top:288px; z-index:3;">
+            <div class="rxh-screen" style="width:428px; height:307px;">
+              <div class="rxh-chrome"><div class="rxh-lights"><i></i><i></i><i></i></div><div class="rxh-omni"><span></span></div></div>
+              <div class="rxh-viewport"><img class="rxh-coverimg" src="../uploads/RockX/hero/events.png" alt="RockX events calendar" /></div>
+              <div class="rxh-sheen"></div>
+            </div>
+          </div>
+
+          <!-- Analytics (front of fan) -->
+          <div class="rxh-device" style="left:640px; top:480px; z-index:4;">
+            <div class="rxh-screen" style="width:428px; height:316px;">
+              <div class="rxh-chrome"><div class="rxh-lights"><i></i><i></i><i></i></div><div class="rxh-omni"><span></span></div></div>
+              <div class="rxh-viewport"><img class="rxh-coverimg" src="../uploads/RockX/hero/analytics.png" alt="RockX analytics" /></div>
+              <div class="rxh-sheen"></div>
+            </div>
+          </div>
+
+          <!-- HERO · laptop front-left playing the dashboard recording -->
+          <div class="rxh-laptop" style="left:36px; top:216px; z-index:6;">
+            <div class="rxh-lid">
+              <div class="rxh-notch"></div>
+              <div class="rxh-glass" style="width:716px; height:426px;">
+                <img class="rxh-fill" src="../uploads/RockX/hero/dashboard.png" alt="RockX admin dashboard" />
+                <div class="rxh-glasssheen"></div>
+              </div>
+            </div>
+            <div class="rxh-hinge"></div>
+            <div class="rxh-base"></div>
+          </div>
+
+          <!-- tiny rose equalizer accent -->
+          <span class="rxh-eq" style="left:1205px; top:470px;"><i></i><i></i><i></i><i></i></span>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tldr-strip reveal" style="transition-delay:0.26s;">
+    <div class="tldr-item">
+      <div class="tldr-label">Role</div>
+      <div class="tldr-value"><strong>Interaction Designer</strong> · Team of 3, one platform each: B2C Website · Visitor Mobile App · <strong>B2E Admin Dashboard (mine)</strong></div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Project</div>
+      <div class="tldr-value"><strong>Admin dashboard</strong> for RockX, a hybrid rock music museum and event center</div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Course</div>
+      <div class="tldr-value">ISE 218, Interaction Design, Spring 2025</div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Tools</div>
+      <div class="tldr-value">Axure RP (medium fidelity)</div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Focus</div>
+      <div class="tldr-value">Information architecture, enterprise workflows, data visualization</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     MAIN LAYOUT: TOC + CONTENT
+════════════════════════════════════ -->
+<div class="cs-layout">
+
+  <!-- ── TOC ── -->
+  <aside class="cs-toc">
+    <div class="toc-label">Sections</div>
+    <ul class="toc-list">
+      <li id="toc-scene"><a href="#scene"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="5.5"/><circle cx="7" cy="7" r="2.8"/><circle cx="7" cy="7" r="0.8" fill="currentColor" stroke="none"/></svg></span> Setting the Scene</a></li>
+      <li id="toc-challenge"><a href="#challenge"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="10" height="8" rx="1.2"/><path d="M5 3V2"/><path d="M9 3V2"/><path d="M2 6h10"/></svg></span> The Design Challenge</a></li>
+      <li id="toc-process"><a href="#process"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="4" cy="4" r="2"/><circle cx="10" cy="4" r="2"/><circle cx="7" cy="10.5" r="2"/><path d="M4 6v1.5l3 2 3-2V6"/></svg></span> How I Designed It</a></li>
+      <li id="toc-experience"><a href="#experience"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="2" width="11" height="10" rx="1.5"/><path d="M1.5 5.5h11"/><path d="M6 5.5V12"/></svg></span> The Dashboard Experience</a></li>
+      <li id="toc-data"><a href="#data"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12V8.5"/><path d="M5.3 12V4.5"/><path d="M8.7 12V6.8"/><path d="M12 12V2.5"/></svg></span> Designing for Data</a></li>
+      <li id="toc-learnings"><a href="#learnings"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2A3.5 3.5 0 0 1 10.5 5.5c0 1.6-1 2.9-2.5 3.5V11h-2V9C4.5 8.4 3.5 7.1 3.5 5.5A3.5 3.5 0 0 1 7 2z"/><path d="M5.5 11.5h3"/><path d="M6 13h2"/></svg></span> What I Learned</a></li>
+      <li class="toc-divider" style="list-style:none;height:0;"></li>
+      <li class="toc-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">↑ Top</a></li>
+    </ul>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="cs-main">
+
+    <!-- ══════════════════════════════════
+         SECTION 2 · SETTING THE SCENE
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="scene">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>Setting the Scene</div>
+      <p class="scene-lead reveal" style="transition-delay:0.08s;">RockX is what happens when Silicon Valley money meets a midlife rock obsession: a museum, digital archive, and event center in downtown San Jose, built to keep rock and roll alive.</p>
+
+      <p class="cs-body reveal" style="transition-delay:0.12s;">Visitors plan custom tours on the website, then follow them through the galleries with an AR mobile guide.</p>
+
+      <div class="stat-chips reveal" style="transition-delay:0.16s;">
+        <div class="stat-chip"><span class="stat-chip-num">$1B</span><span class="stat-chip-label">donated to build it</span></div>
+        <div class="stat-chip"><span class="stat-chip-num">2 days</span><span class="stat-chip-label">to see everything it offers</span></div>
+      </div>
+
+      <p class="cs-body reveal" style="transition-delay:0.20s;">That's the part everyone sees.</p>
+
+      <p class="cs-body reveal" style="transition-delay:0.24s; margin-bottom:4px;"><strong>Backstage, every single day:</strong></p>
+      <ul class="persona-list reveal" style="transition-delay:0.28s;">
+        <li>Events get scheduled, approved, and sold</li>
+        <li>Guitars get loaned to performers and tracked back in</li>
+        <li>AR sensors die mid-tour and need fixing</li>
+        <li>Exhibits get curated, content ships on deadline</li>
+      </ul>
+
+      <div class="callout reveal" style="transition-delay:0.30s; margin-top:28px;">
+        <p class="callout-body"><strong>And one rule baked into the museum's founding:</strong> every dollar RockX takes from its endowment must be matched by ticket revenue before it's released. Someone is watching that math daily.</p>
+      </div>
+
+      <p class="cs-body reveal" style="transition-delay:0.32s; margin-top:28px;"><strong>Meet Aisha, Digital Experience Manager.</strong> Museum studies background, systems thinker, zero patience for tools that slow her down. My job was to design the tool she opens every morning: the dashboard where she runs events, exhibits, the guitar collection, members, analytics, and content.</p>
+
+      <blockquote class="reflection-quote reveal" style="transition-delay:0.34s;">Every show needs a control room. This is RockX's.</blockquote>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 3 · THE DESIGN CHALLENGE
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="challenge">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>The Design Challenge</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">Design the B2E web dashboard for RockX: the tool the museum's staff uses to run everything the visitors never see.</h2>
+
+      <p class="cs-body reveal" style="transition-delay:0.12s;">Sounds like a standard admin panel. It wasn't, for three reasons:</p>
+
+      <div class="challenge-cards reveal" style="transition-delay:0.16s;">
+        <div class="challenge-card">
+          <div class="challenge-card-tag">01</div>
+          <div class="challenge-card-heading">It manages a building, not just data.</div>
+          <p class="challenge-card-body">Most dashboards track numbers. This one tracks physical things that move and break: guitars out on loan, sensor batteries dying mid-exhibit, instruments due for maintenance. The interface had to treat the museum itself as live data.</p>
+        </div>
+        <div class="challenge-card">
+          <div class="challenge-card-tag">02</div>
+          <div class="challenge-card-heading">The visitors generate the signal.</div>
+          <p class="challenge-card-body">On the B2C side, visitors build custom tour plans before they arrive. Every plan is a vote. Which exhibits make it into plans, which plans actually get completed: that behavior is the museum's best evidence for what's earning its floor space. The dashboard had to turn visitor planning data into curation decisions.</p>
+        </div>
+        <div class="challenge-card">
+          <div class="challenge-card-tag">03</div>
+          <div class="challenge-card-heading">Designed for the thousandth visit, not the first.</div>
+          <p class="challenge-card-body">Aisha opens this dashboard every morning. No onboarding, no hand-holding, no decoration. Enterprise tools are judged by how fast an expert moves through them, which flips most consumer design instincts on their head.</p>
+        </div>
+      </div>
+
+      <p class="cs-body reveal" style="transition-delay:0.20s;"><strong>Brief constraints:</strong> medium fidelity, max 3-column grid, 3 colors, strict type hierarchy. No polish to hide behind. Structure had to carry the design.</p>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 4 · HOW I DESIGNED IT
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="process">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>How I Designed It</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s; font-style:italic;">Structure first. Screens last.</h2>
+
+      <p class="cs-body reveal" style="transition-delay:0.12s;">Before drawing a single screen, I defined the grammar of the system: the objects Aisha manages, the actions she takes on them, and which combinations actually matter. For a six-section admin dashboard, this wasn't academic. It was the only thing standing between me and an interface that collapses into menus.</p>
+
+      <h3 class="cs-sub-heading reveal">The grammar, fast</h3>
+
+      <p class="cs-body reveal" style="transition-delay:0.08s;">I started broad: every noun in RockX's world crossed with every verb. Then I cut it down to what the B2E dashboard actually owns: six objects, six actions, one matrix.</p>
+
+      <div class="img-figure reveal" style="transition-delay:0.12s;">
+        <div class="oa-scroll">
+          <table class="oa-table">
+            <thead>
+              <tr><th>Object ↓ · Action →</th><th>View</th><th>Add</th><th>Edit</th><th>Delete</th><th>Filter</th><th>Publish</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Dashboard</td><td><span class="oa-check">✦</span></td><td><span class="oa-dash">—</span></td><td><span class="oa-dash">—</span></td><td><span class="oa-dash">—</span></td><td><span class="oa-dash">—</span></td><td><span class="oa-dash">—</span></td></tr>
+              <tr><td>Events</td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-dash">—</span></td></tr>
+              <tr><td>Exhibits</td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-dash">—</span></td></tr>
+              <tr><td>Members</td><td><span class="oa-check">✦</span></td><td><span class="oa-dash">—</span></td><td><span class="oa-dash">—</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-dash">—</span></td></tr>
+              <tr><td>Analytics</td><td><span class="oa-check">✦</span></td><td><span class="oa-dash">—</span></td><td><span class="oa-dash">—</span></td><td><span class="oa-dash">—</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-dash">—</span></td></tr>
+              <tr><td>Content</td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td><td><span class="oa-check">✦</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="img-caption"><span class="cap-star">✦</span>The grammar of the control room: six objects, six actions.</p>
+      </div>
+
+      <p class="cs-body reveal" style="transition-delay:0.14s;">Each object then got its attributes mapped: what fields define an event, a guitar, a member, a post. This is the unglamorous spreadsheet work that makes every later screen almost design itself.</p>
+
+      <div class="attr-grid reveal" style="transition-delay:0.16s;">
+        <div class="attr-card">
+          <div class="attr-card-head">Dashboard</div>
+          <div class="attr-list">
+            <span class="attr-item">Current Date &amp; Day</span>
+            <span class="attr-item">Task Overview</span>
+            <span class="attr-item">Key KPIs</span>
+            <span class="attr-item">Upcoming Events Preview</span>
+          </div>
+        </div>
+        <div class="attr-card">
+          <div class="attr-card-head">Events</div>
+          <div class="attr-list">
+            <span class="attr-item">Event name</span>
+            <span class="attr-item">Date &amp; Time</span>
+            <span class="attr-item">Location</span>
+            <span class="attr-item">Artist/Instructor</span>
+            <span class="attr-item">Type (Concert, Class)</span>
+            <span class="attr-item">Status (Upcoming, Special, Completed)</span>
+            <span class="attr-item">Promoter</span>
+            <span class="attr-item">Tickets Available</span>
+            <span class="attr-item">AR Enabled</span>
+            <span class="attr-item">Description</span>
+            <span class="attr-item">Image Upload</span>
+          </div>
+        </div>
+        <div class="attr-card">
+          <div class="attr-card-head">Exhibits — Artist/Band</div>
+          <div class="attr-list">
+            <span class="attr-item">Exhibit Name</span>
+            <span class="attr-item">Category</span>
+            <span class="attr-item">Featured Artist</span>
+            <span class="attr-item">Era</span>
+            <span class="attr-item">Status</span>
+            <span class="attr-item">Duration Type (Permanent, Special)</span>
+            <span class="attr-item">End Date (If Special)</span>
+            <span class="attr-item">Location</span>
+            <span class="attr-item">Description</span>
+            <span class="attr-item">Featured Guitars</span>
+            <span class="attr-item">Image Upload</span>
+          </div>
+        </div>
+        <div class="attr-card">
+          <div class="attr-card-head">Exhibits — Guitars</div>
+          <div class="attr-list">
+            <span class="attr-item">Instrument Name</span>
+            <span class="attr-item">Type (Electric/Acoustic)</span>
+            <span class="attr-item">Era</span>
+            <span class="attr-item">Condition</span>
+            <span class="attr-item">Year</span>
+            <span class="attr-item">Manufacturer</span>
+            <span class="attr-item">Model Number</span>
+            <span class="attr-item">Unique ID</span>
+            <span class="attr-item">Location</span>
+            <span class="attr-item">Exhibit Status</span>
+            <span class="attr-item">Linked Exhibit</span>
+            <span class="attr-item">Description</span>
+            <span class="attr-item">Image Upload</span>
+          </div>
+        </div>
+        <div class="attr-card">
+          <div class="attr-card-head">Members</div>
+          <div class="attr-list">
+            <span class="attr-item">Member ID</span>
+            <span class="attr-item">Name</span>
+            <span class="attr-item">Email</span>
+            <span class="attr-item">Tour Plans Created</span>
+            <span class="attr-item">Last Visit</span>
+            <span class="attr-item">Most Viewed Exhibit</span>
+            <span class="attr-item">AR Usage %</span>
+          </div>
+        </div>
+        <div class="attr-card">
+          <div class="attr-card-head">Analytics</div>
+          <div class="attr-list">
+            <span class="attr-item">Ticket Sales</span>
+            <span class="attr-item">Endowment Match Unlocked</span>
+            <span class="attr-item">Top Exhibit Views</span>
+            <span class="attr-item">Time Spent per Exhibit</span>
+            <span class="attr-item">AR Usage Metrics</span>
+            <span class="attr-item">Visitor Flow (heatmap)</span>
+            <span class="attr-item">Web &amp; Mobile Interactions</span>
+          </div>
+        </div>
+        <div class="attr-card">
+          <div class="attr-card-head">Content</div>
+          <div class="attr-list">
+            <span class="attr-item">Title</span>
+            <span class="attr-item">Category</span>
+            <span class="attr-item">Body Text</span>
+            <span class="attr-item">Tags</span>
+            <span class="attr-item">Cover Image</span>
+            <span class="attr-item">Publish Date</span>
+            <span class="attr-item">Status</span>
+            <span class="attr-item">Author</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="cs-sub-heading reveal">Prioritization: not all actions are equal</h3>
+
+      <p class="cs-body reveal" style="transition-delay:0.08s;">The matrix tells you what exists. It doesn't tell you what to optimize for. So every object-action pair got sorted by frequency: what Aisha does daily, weekly, rarely. Reviewing tasks and approvals, daily. Adding events and publishing content, weekly. Deleting an exhibit, almost never.</p>
+
+      <p class="cs-body reveal" style="transition-delay:0.12s;">That sorting made the hard layout calls for me. Frequent tasks earned dashboard real estate. Rare tasks could live two clicks deep without guilt.</p>
+
+      <div class="img-figure reveal" style="transition-delay:0.16s;">
+        <div class="pm-tiers">
+          <div class="pm-col pm-col--hi">
+            <div class="pm-col-head">Frequent Tasks</div>
+            <div class="pm-col-body">
+              <span class="pm-chip">View Dashboard Overview</span>
+              <span class="pm-chip">Add/Edit Events</span>
+              <span class="pm-chip">View &amp; Edit Band/Artist and Guitar Exhibits</span>
+              <span class="pm-chip">View Analytics Charts</span>
+              <span class="pm-chip">Add Content Posts (Website)</span>
+              <span class="pm-chip">Search/Filter Events and Members</span>
+            </div>
+          </div>
+          <div class="pm-col">
+            <div class="pm-col-head">Medium Tasks</div>
+            <div class="pm-col-body">
+              <span class="pm-chip">Upload Media to Exhibits or Events</span>
+              <span class="pm-chip">Manage tour plans from members page</span>
+              <span class="pm-chip">Export Analytics or Member Data</span>
+              <span class="pm-chip">Add New Guitar Instrument</span>
+              <span class="pm-chip">Unpublish or Archive Content</span>
+            </div>
+          </div>
+          <div class="pm-col">
+            <div class="pm-col-head">Rare Tasks</div>
+            <div class="pm-col-body">
+              <span class="pm-chip">Delete Events or Exhibits</span>
+              <span class="pm-chip">Archive/Remove Members</span>
+              <span class="pm-chip">Edit Events or Exhibits</span>
+            </div>
+          </div>
+        </div>
+        <p class="img-caption"><span class="cap-star">✦</span>Frequency decides hierarchy. The dashboard front page belongs to daily work.</p>
+      </div>
+
+      <h3 class="cs-sub-heading reveal">Three ways to say the same sentence</h3>
+
+      <p class="cs-body reveal" style="transition-delay:0.08s;">Here's where it got interesting. The same grammar can be articulated in navigation three completely different ways, so I sketched all three:</p>
+
+      <div class="concept-cards reveal" style="transition-delay:0.12s;">
+        <div class="concept-card">
+          <div class="concept-card-num">Concept 1</div>
+          <div class="concept-card-name">Object-Based.</div>
+          <p class="concept-card-line">Go to the <em>thing</em>, then act on it.</p>
+        </div>
+        <div class="concept-card">
+          <div class="concept-card-num">Concept 2</div>
+          <div class="concept-card-name">Object-Action Hybrid.</div>
+          <p class="concept-card-line">Objects and hot actions share the nav.</p>
+        </div>
+        <div class="concept-card">
+          <div class="concept-card-num">Concept 3</div>
+          <div class="concept-card-name">Action-Based.</div>
+          <p class="concept-card-line">Pick the <em>verb</em> first, then what to apply it to.</p>
+        </div>
+      </div>
+
+      <div class="img-figure reveal" style="transition-delay:0.16s;">
+        <div class="sketch-grid">
+          <img class="cs-shot" src="../uploads/RockX/rockx%20sketches1.png" alt="Navigation concept sketch 1" loading="lazy">
+          <img class="cs-shot" src="../uploads/RockX/rockx%20sketches2.png" alt="Navigation concept sketch 2" loading="lazy">
+          <img class="cs-shot" src="../uploads/RockX/rockx%20sketches3.png" alt="Navigation concept sketch 3" loading="lazy">
+        </div>
+        <p class="img-caption"><span class="cap-star">✦</span>Same grammar, three articulations. Only one survives contact with a daily user.</p>
+      </div>
+
+      <p class="cs-body reveal" style="transition-delay:0.18s;"><strong>Object-Based won, and the reason is Aisha.</strong> She doesn't start her morning thinking "I want to create something." She thinks "what's happening with this weekend's <em>events</em>," "where are my <em>guitars</em>," "did that <em>content</em> go out." Experts navigate by the thing they're responsible for. Action-first nav forces a second decision on every single trip, and the hybrid makes her learn two systems at once. Object-based meant the navbar IS the matrix's top row. The grammar became the interface.</p>
+
+      <h3 class="cs-sub-heading reveal">From grammar to motion</h3>
+
+      <p class="cs-body reveal" style="transition-delay:0.08s;">With the structure locked, I mapped the experience flows for the core workflows, like managing exhibits: dashboard in, bands or guitars, create-edit-archive branches, confirm, out.</p>
+
+      <div class="img-figure reveal" style="transition-delay:0.12s;">
+        <img class="cs-shot" src="../uploads/RockX/rx%20experience%20flow.png" alt="Experience flow diagram — managing exhibits workflow" loading="lazy">
+        <p class="img-caption"><span class="cap-star">✦</span>Managing exhibits, mapped before any screen existed.</p>
+      </div>
+
+      <p class="cs-body reveal" style="transition-delay:0.14s;">Only then did screens happen.</p>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 5 · THE DASHBOARD EXPERIENCE
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="experience">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>The Dashboard Experience</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s; font-style:italic;">A walk through the control room, the way Aisha actually uses it.</h2>
+
+      <h3 class="cs-sub-heading reveal">The morning glance</h3>
+
+      <p class="cs-body reveal" style="transition-delay:0.08s;">One question: <strong>what needs me today?</strong></p>
+
+      <ul class="concept-list reveal" style="transition-delay:0.12s;">
+        <li><strong>5 KPI cards</strong> · visitors, events, guitars out, check-ins, revenue + trend</li>
+        <li><strong>Work surface below</strong> · tasks with owners, sensor alerts, approvals, notifications</li>
+        <li><strong>Approve/deny in the row</strong> · frequent action, zero navigation</li>
+      </ul>
+
+      <div class="img-figure reveal" style="transition-delay:0.16s;">
+        <video class="cs-vid" src="../uploads/RockX/axure%20recordings/dashboard%20main.mp4" muted playsinline preload="metadata" aria-label="RockX dashboard main view recording — KPI cards on top, task and approval work surface below"></video>
+        <p class="img-caption"><span class="cap-star">✦</span>Pulse on top, work below.</p>
+      </div>
+
+      <div class="callouts reveal" style="transition-delay:0.18s;">
+        <div class="callout">
+          <div class="callout-label">Values over labels</div>
+          <p class="callout-body">Aisha isn't reading "Ticket Revenue." She's reading <strong>$36,000, down 12%.</strong> After a thousand mornings, labels are furniture. The data gets the weight.</p>
+        </div>
+        <div class="callout">
+          <div class="callout-label">The prioritization matrix put approvals here</div>
+          <p class="callout-body">Daily task → front page. No detours.</p>
+        </div>
+      </div>
+
+      <h3 class="cs-sub-heading reveal">Creating an event</h3>
+
+      <p class="cs-body reveal" style="transition-delay:0.08s;">Long forms are where admin tools go to die. So: <strong>5-step wizard.</strong></p>
+
+      <div class="wizard-steps reveal" style="transition-delay:0.12s;">
+        <span class="wizard-step">Basic Info</span><span class="wizard-arrow">→</span>
+        <span class="wizard-step">Scheduling</span><span class="wizard-arrow">→</span>
+        <span class="wizard-step">Venue &amp; Capacity</span><span class="wizard-arrow">→</span>
+        <span class="wizard-step">Ticketing &amp; Pricing</span><span class="wizard-arrow">→</span>
+        <span class="wizard-step">Media &amp; AR</span>
+      </div>
+
+      <ul class="concept-list reveal" style="transition-delay:0.16s;">
+        <li>One decision context per step</li>
+        <li>Save Draft at every point</li>
+        <li>Steps mirror how staff think an event into existence</li>
+      </ul>
+
+      <div class="img-figure reveal" style="transition-delay:0.16s;">
+        <video class="cs-vid" src="../uploads/RockX/axure%20recordings/events%20flow.mp4" muted playsinline preload="metadata" aria-label="Events flow recording — creating an event through the 5-step wizard"></video>
+      </div>
+
+      <h3 class="cs-sub-heading reveal">Managing the collection</h3>
+
+      <p class="cs-body reveal" style="transition-delay:0.08s;">Two tabs: <strong>Artist/Band exhibits</strong> and <strong>Guitars.</strong></p>
+
+      <p class="cs-body reveal" style="transition-delay:0.12s;">The guitars table is part museum, part lending library:</p>
+
+      <ul class="concept-list reveal" style="transition-delay:0.14s;">
+        <li>Condition · location · assigned curator</li>
+        <li>AR sensor health · next maintenance date</li>
+        <li>Loan status · who has it · when it's due back</li>
+      </ul>
+
+      <div class="img-figure reveal" style="transition-delay:0.16s;">
+        <div class="vid-2up">
+          <div>
+            <div class="vid-label">Artist/Band exhibits</div>
+            <video class="cs-vid" src="../uploads/RockX/axure%20recordings/exhibits%20artist%20table%20-%20artist%20details.mp4" muted playsinline preload="metadata" aria-label="Artist/Band exhibits table to exhibit details — prototype recording"></video>
+          </div>
+          <div>
+            <div class="vid-label">Guitars</div>
+            <video class="cs-vid" src="../uploads/RockX/axure%20recordings/exhibits%20guitar%20table%20-%20guitar%20details.mp4" muted playsinline preload="metadata" aria-label="Guitars table to guitar details — prototype recording"></video>
+          </div>
+        </div>
+      </div>
+
+      <div class="callouts reveal" style="transition-delay:0.20s;">
+        <div class="callout">
+          <div class="callout-label">The museum as live data</div>
+          <p class="callout-body">A dying sensor battery isn't an IT ticket. It's a broken visitor experience. So sensor health lives in the same row as curatorial info, because for Aisha it's the same job.</p>
+        </div>
+      </div>
+
+      <div class="img-figure reveal" style="transition-delay:0.22s;">
+        <div class="vid-2up">
+          <div>
+            <div class="vid-label">Add artist flow</div>
+            <video class="cs-vid" src="../uploads/RockX/axure%20recordings/add%20artist%20flow.mp4" muted playsinline preload="metadata" aria-label="Adding an artist exhibit — prototype recording"></video>
+          </div>
+          <div>
+            <div class="vid-label">Add guitar flow</div>
+            <video class="cs-vid" src="../uploads/RockX/axure%20recordings/add%20guitar%20flow.mp4" muted playsinline preload="metadata" aria-label="Adding a guitar — prototype recording"></video>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="cs-sub-heading reveal">Reading the signals</h3>
+
+      <p class="cs-body reveal" style="transition-delay:0.08s;">The Analytics page is where the B2C side reports back.</p>
+
+      <ul class="concept-list reveal" style="transition-delay:0.12s;">
+        <li><strong>Visit plans created</strong> · <strong>completion rate</strong> · <strong>AR engagements</strong></li>
+        <li><strong>Top Exhibits by Plan Inclusion</strong> · what visitors actually plan to see</li>
+        <li><strong>Conversion table</strong> · do plans become visits?</li>
+      </ul>
+
+      <div class="img-figure reveal" style="transition-delay:0.16s;">
+        <img class="cs-shot" src="../uploads/RockX/axure%20ss/rx%20analytics%20page%20main.png" alt="Analytics page — visit plans, completion rate, AR engagements, and top exhibits by plan inclusion" loading="lazy">
+        <p class="img-caption"><span class="cap-star">✦</span>Every plan is a vote. This is where they get counted.</p>
+      </div>
+
+      <h3 class="cs-sub-heading reveal">The rest of the control room</h3>
+
+      <div class="img-figure reveal" style="transition-delay:0.08s;">
+        <div class="strip-3">
+          <div>
+            <img class="cs-shot" src="../uploads/RockX/axure%20ss/rx%20events%20page%20main.png" alt="Events page — weekly calendar view" loading="lazy">
+            <div class="callout" style="margin-top:16px; max-width:none;">
+              <div class="callout-label">Events</div>
+              <p class="callout-body">weekly calendar, color-coded</p>
+            </div>
+          </div>
+          <div>
+            <img class="cs-shot" src="../uploads/RockX/axure%20ss/rx%20members%20-%20visitors.png" alt="Members page — visitor tiers" loading="lazy">
+            <div class="callout" style="margin-top:16px; max-width:none;">
+              <div class="callout-label">Members</div>
+              <p class="callout-body">visitor tiers + emerging artist applications</p>
+            </div>
+          </div>
+          <div>
+            <img class="cs-shot" src="../uploads/RockX/axure%20ss/rx%20content%20page%20main.png" alt="Content page — drafts, scheduled, published, archived" loading="lazy">
+            <div class="callout" style="margin-top:16px; max-width:none;">
+              <div class="callout-label">Content</div>
+              <p class="callout-body">drafts → scheduled → published → archived</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 6 · DESIGNING FOR DATA
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="data">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>Designing for Data</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s; font-style:italic;">Every chart on this dashboard had to earn its spot. Here's the logic.</h2>
+
+      <p class="cs-body reveal" style="transition-delay:0.12s;">The rule I held myself to: <strong>the visualization matches the question, not the other way around.</strong> Aisha doesn't look at charts to admire them. She looks to compare, spot, and decide.</p>
+
+      <div class="dv-scroll reveal" style="transition-delay:0.16s;">
+        <table class="dv-table">
+          <thead>
+            <tr>
+              <th>The question</th>
+              <th>The viz</th>
+              <th>Why this form</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Which exhibits are visitors planning to see most?</td>
+              <td>Bar chart, ranked</td>
+              <td>Comparison across categories. Bars make rank instantly readable</td>
+            </tr>
+            <tr>
+              <td>Is revenue trending up or down?</td>
+              <td>Line chart over months</td>
+              <td>Change over time is a line's whole job</td>
+            </tr>
+            <tr>
+              <td>Are visit plans converting into completed visits?</td>
+              <td>Compact table with %</td>
+              <td>Three dates, three numbers. A chart would be decoration</td>
+            </tr>
+            <tr>
+              <td>When is the museum actually busy?</td>
+              <td>Calendar heatmap</td>
+              <td>Density across days needs a calendar shape, not an axis</td>
+            </tr>
+            <tr>
+              <td>What's the pulse right now?</td>
+              <td>KPI cards + trend chips</td>
+              <td>One number, one direction. Glanceable in under a second</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callouts reveal" style="transition-delay:0.20s;">
+        <div class="callout">
+          <div class="callout-label">Numbers come with direction</div>
+          <p class="callout-body">Every KPI card carries a trend chip: <strong>+8%</strong>, <strong>−12%</strong>. A number without context is trivia. Aisha needs to know if it's a good number.</p>
+        </div>
+        <div class="callout">
+          <div class="callout-label">Tables are a visualization too</div>
+          <p class="callout-body">Half this dashboard is tables, on purpose. When experts need to scan, sort, and act row by row, a table beats a chart every time. Knowing when <em>not</em> to chart is the DV decision nobody talks about.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 7 · WHAT I LEARNED
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="learnings" style="border-bottom:none; padding-bottom:0;">
+      <div class="cs-outcomes-dark">
+
+        <div class="outcomes-intro-band reveal">
+          <div class="phase-break-label">What I Learned</div>
+          <div class="phase-break-line"></div>
+          <div class="phase-break-statement">When the grammar is right, the navbar writes itself.</div>
+        </div>
+
+        <div class="learnings-grid">
+
+          <div class="reveal" style="transition-delay:0.14s;">
+            <div class="lc-label">01</div>
+            <div class="lc-rule"></div>
+            <p class="lc-hook">The grammar travels.</p>
+            <p class="lc-body">MatchDog was where the structure-first method clicked for me. RockX was the stress test: same process, opposite problem. Consumer app to enterprise dashboard, adopters to employees, emotion to operations. The objects changed, the actions changed, the method held. When the grammar is right, the navbar writes itself.</p>
+          </div>
+
+          <div class="reveal" style="transition-delay:0.18s;">
+            <div class="lc-label">02</div>
+            <div class="lc-rule"></div>
+            <p class="lc-hook">Experts read values, not labels.</p>
+            <p class="lc-body">Aisha lives in this dashboard. She knows where every heading sits, so the visual weight belongs to the data, not the labels around it. Designing for the thousandth visit instead of the first is the real difference between consumer and enterprise UX.</p>
+          </div>
+
+          <div class="reveal" style="transition-delay:0.22s;">
+            <div class="lc-label">03</div>
+            <div class="lc-rule"></div>
+            <p class="lc-hook">The business model is a design input.</p>
+            <p class="lc-body">RockX's founding rule, endowment dollars only release when ticket revenue matches them, is why revenue sits on the dashboard home with a trend chip instead of inside a monthly report. Some layout decisions come from finance documents, not user interviews. Read the business model before you place the pixels.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main><!-- /cs-main -->
+</div><!-- /cs-layout -->
+
+<!-- ══════════════════════════════════
+     NEXT PROJECT
+════════════════════════════════════ -->
+<div class="next-project">
+  <div class="next-project-inner">
+    <a href="southwest.html" class="next-project-link reveal">
+      <div class="next-label">Next Project →</div>
+      <div class="next-title">Southwest</div>
+      <div class="next-sub">UX Research · Usability Testing · Redesign</div>
+    </a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     FOOTER
+════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-bean">
+    <img src="../uploads/giphy.gif" alt="Mr. Bean waiting patiently"/>
+  </div>
+  <div class="footer-middle">
+    <div class="footer-availability">Available to work ✦</div>
+    <p class="footer-closing">I'll be waiting<br/>to hear from you.</p>
+    <div class="footer-links">
+      <a href="mailto:ananyaprabhakar1@gmail.com">Email ↗</a>
+      <a href="https://www.linkedin.com/in/ananya--prabhakar/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="https://x.com/AnanyaPrabhakr" target="_blank" rel="noopener">X ↗</a>
+      <a href="https://medium.com/@ananyaprabhakar1" target="_blank" rel="noopener">Medium ↗</a>
+      <a href="https://www.behance.net/ananyaprabhakar1" target="_blank" rel="noopener">Behance ↗</a>
+      <a href="#" target="_blank">Resume ↗</a>
+    </div>
+    <p class="footer-copy"><span class="footer-copy-light">designed and created by</span><br/>© 2026 Ananya Prabhakar</p>
+  </div>
+  <div class="footer-right">
+    <div class="footer-right-bottom">
+      <a href="index.html#work" class="footer-nav-link">Work</a>
+      <a href="about.html" class="footer-nav-link">About</a>
+      <a href="#" class="footer-nav-link">Resume ↗</a>
+      <a href="mailto:ananyaprabhakar1@gmail.com" class="footer-nav-link">Say Hi ✦</a>
+      <button class="footer-back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+  });
+
+  
+  // Hamburger nav
+  (function () {
+    var burger = document.getElementById('navHamburger');
+    var list   = document.querySelector('.nav-links');
+    if (!burger || !list) return;
+    burger.addEventListener('click', function () {
+      burger.classList.toggle('open');
+      list.classList.toggle('open');
+    });
+    list.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        burger.classList.remove('open');
+        list.classList.remove('open');
+      });
+    });
+  })();
+
+  
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('button, a, .next-project-link').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  const sections = ['scene','challenge','process','experience','data','learnings'];
+  const tocItems = {};
+  sections.forEach(id => { tocItems[id] = document.getElementById('toc-' + id); });
+
+  const tocObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      const id = e.target.id;
+      if (tocItems[id]) {
+        if (e.isIntersecting) tocItems[id].classList.add('toc-active');
+        else tocItems[id].classList.remove('toc-active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) tocObserver.observe(el);
+  });
+
+  document.querySelectorAll('.toc-list a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+
+  /* Play videos only when they enter the viewport — each recording plays through once
+     (no loop; a finished video is not restarted when it scrolls back into view) */
+  const videoEls = [...document.querySelectorAll('video')].filter(v => !v.closest('.proto-frame') && !v.classList.contains('hover-vid'));
+  if ('IntersectionObserver' in window) {
+    const videoObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { if (!entry.target.ended) { entry.target.play().catch(() => {}); } }
+        else { entry.target.pause(); }
+      });
+    }, { threshold: 0.2 });
+    videoEls.forEach(v => videoObserver.observe(v));
+  } else {
+    videoEls.forEach(v => { v.play().catch(() => {}); });
+  }
+
+  /* Hover-driven videos (gallery frames + mid-fi flow recordings) play on hover */
+  document.querySelectorAll('.proto-frame video, video.hover-vid').forEach(v => {
+    const target = v.closest('.proto-frame') || v;
+    target.addEventListener('mouseenter', () => v.play().catch(() => {}));
+    target.addEventListener('mouseleave', () => v.pause());
+  });
+
+  /* Fit the fixed 1340×900 hero cluster scene into its column (origin top-left) */
+  (function () {
+    const stage = document.getElementById('rxhStage');
+    const scene = document.getElementById('rxhScene');
+    if (!stage || !scene) return;
+    const SCENE_W = 1340, SCENE_H = 900, OVERSCALE = 1.3;
+    function fit() {
+      const w = stage.clientWidth;
+      if (!w) { requestAnimationFrame(fit); return; }
+      const s = (w / SCENE_W) * OVERSCALE;
+      scene.style.zoom = s;                             // zoom renders at true pixel density (no blurry composite)
+      scene.style.transform = '';
+      stage.style.height = (SCENE_H * s) + 'px';
+    }
+    window.addEventListener('resize', fit);
+    if (window.ResizeObserver) { new ResizeObserver(fit).observe(stage); }
+    requestAnimationFrame(fit); fit();
+  })();
+
+</script>
+</body>
+</html>

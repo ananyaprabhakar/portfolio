@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About · Ananya Prabhakar</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=chillax@200,300,400,500,600,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --bg: #F9F5F0; --surface: #F0E4DF; --accent: #D4908A; --accent-hover: #C17B75;
+      --body: #6B5B55; --heading: #2C1810; --card-bg: #F9F5F0;
+      --card-shadow: rgba(44,24,16,0.15); --tag-bg: rgba(212,144,138,0.10);
+      --tag-border: rgba(212,144,138,0.22); --border: rgba(212,144,138,0.12);
+      --border-md: rgba(212,144,138,0.15); --border-lg: rgba(212,144,138,0.30);
+      --accent-faint: rgba(212,144,138,0.05); --accent-ghost: rgba(212,144,138,0.08);
+      --accent-muted: rgba(212,144,138,0.28); --accent-soft: rgba(212,144,138,0.35);
+      --accent-mid: rgba(212,144,138,0.40); --accent-strong: rgba(212,144,138,0.45);
+      --shadow-sm: rgba(44,24,16,0.08); --shadow-md: rgba(44,24,16,0.13);
+      --shadow-lg: rgba(44,24,16,0.22); --nav-cta-bg: #2C1810; --nav-cta-text: #F9F5F0;
+      --btn-primary-txt: #FFF5F0; --footer-bg: #2C1810;
+    }
+    html.dark {
+      --bg: #140A08; --surface: #2A1612; --accent: #E49B93; --accent-hover: #D4908A;
+      --body: #D4B5A8; --heading: #FFF5F0; --card-bg: #1E0E0A;
+      --card-shadow: rgba(0,0,0,0.45); --tag-bg: rgba(228,155,147,0.10);
+      --tag-border: rgba(228,155,147,0.22); --border: rgba(228,155,147,0.12);
+      --border-md: rgba(228,155,147,0.15); --border-lg: rgba(228,155,147,0.25);
+      --accent-faint: rgba(228,155,147,0.05); --accent-ghost: rgba(228,155,147,0.08);
+      --accent-muted: rgba(228,155,147,0.28); --accent-soft: rgba(228,155,147,0.35);
+      --accent-mid: rgba(228,155,147,0.40); --accent-strong: rgba(228,155,147,0.45);
+      --shadow-sm: rgba(0,0,0,0.15); --shadow-md: rgba(0,0,0,0.25);
+      --shadow-lg: rgba(0,0,0,0.45); --nav-cta-bg: #FFF5F0; --nav-cta-text: #140A08;
+      --btn-primary-txt: #140A08; --footer-bg: #0A0604;
+    }
+    html { transition: background 0.4s ease, color 0.4s ease; }
+    html, body { width: 100%; font-family: 'Chillax', sans-serif; background: var(--bg); cursor: none; color: var(--body); }
+
+    /* ── CURSOR ── */
+    #cursor {
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif; font-size: 20px; color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.08s ease, color 0.15s;
+    }
+    #cursor.hovering { transform: translate(-50%, -50%) scale(1.6); color: var(--accent-hover); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 22px 52px;
+      background: rgba(249,245,240,0.88); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.4s ease, border-color 0.3s;
+    }
+    html.dark nav { background: rgba(20,10,8,0.88); }
+    /* ── HAMBURGER MENU ── */
+    .nav-hamburger {
+      display: none; flex-direction: column; justify-content: center; align-items: center;
+      gap: 5px; width: 40px; height: 40px;
+      background: none; border: none; cursor: none; padding: 4px; flex-shrink: 0;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--heading); border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; }
+      .nav-hamburger { display: flex; }
+      nav ul.nav-links {
+        display: none; position: fixed; top: 72px; left: 0; right: 0;
+        background: rgba(249,245,240,0.97); backdrop-filter: blur(12px);
+        flex-direction: column; align-items: stretch;
+        padding: 8px 0 16px; gap: 0;
+        border-bottom: 1px solid var(--border);
+        z-index: 99;
+      }
+      html.dark nav ul.nav-links { background: rgba(20,10,8,0.97); }
+      nav ul.nav-links.open { display: flex; }
+      nav ul.nav-links li {
+        font-size: 16px; padding: 14px 24px;
+        border-bottom: 1px solid var(--border); width: 100%;
+      }
+      nav ul.nav-links li:last-child { border-bottom: none; }
+      nav ul.nav-links li::after { display: none !important; }
+      nav ul.nav-links li:has(.theme-toggle) {
+        order: 10; border-top: 1px solid var(--border);
+        border-bottom: none; margin-top: 4px; padding-top: 16px;
+      }
+      .nav-cta { display: inline-block; }
+      .site-footer { grid-template-columns: 1fr; }
+      .footer-bean { display: none; }
+      .footer-middle { padding: 44px 24px 12px; gap: 18px; }
+      .footer-right { align-items: flex-start; text-align: left; padding: 12px 24px 56px; }
+      .footer-right-bottom { align-items: flex-start; }
+    }
+    .nav-logo {
+      font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700;
+      color: var(--heading); cursor: none; text-decoration: none; letter-spacing: -0.02em;
+    }
+    .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+    .nav-links li { font-size: 14px; font-weight: 500; color: var(--body); cursor: none; position: relative; }
+    .nav-links li::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+      height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease;
+    }
+    .nav-links li:hover { color: var(--accent); }
+    .nav-links li:hover::after { transform: scaleX(1); }
+    .nav-links li:has(.theme-toggle)::after { display: none; }
+    .nav-links li:has(.theme-toggle):hover { color: inherit; }
+    .nav-links li.nav-active { color: var(--accent); }
+    .nav-links li.nav-active::after { transform: scaleX(1); }
+    .nav-cta { background: var(--nav-cta-bg); color: var(--nav-cta-text) !important; padding: 8px 18px; border-radius: 8px; font-weight: 600 !important; transition: background 0.2s; }
+
+    /* Theme toggle */
+    .theme-toggle { background: none; border: none; padding: 0; cursor: none; display: flex; align-items: center; gap: 7px; }
+    .toggle-icon { font-size: 13px; line-height: 1; transition: opacity 0.3s, color 0.3s; }
+    .icon-sun  { color: var(--accent); opacity: 1; }
+    .icon-moon { color: var(--body);   opacity: 0.35; }
+    html.dark .icon-sun  { color: var(--body);   opacity: 0.35; }
+    html.dark .icon-moon { color: var(--accent); opacity: 1; }
+    .toggle-track {
+      width: 36px; height: 20px; background: var(--surface); border: 1.5px solid var(--border-md);
+      border-radius: 100px; position: relative; flex-shrink: 0;
+      transition: border-color 0.35s, background 0.35s;
+    }
+    html.dark .toggle-track { border-color: var(--accent-muted); }
+    .toggle-thumb {
+      position: absolute; width: 14px; height: 14px; border-radius: 50%;
+      background: var(--accent); top: 50%; left: 2px; --tx: 0px;
+      transform: translateY(-50%) translateX(var(--tx));
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.35s;
+      box-shadow: 0 1px 4px var(--shadow-sm);
+    }
+    html.dark .toggle-thumb { --tx: 15px; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── DESK HERO ── */
+    .desk-hero {
+      min-height: 100vh; background: var(--bg);
+      display: flex; flex-direction: column;
+      padding: 108px 64px 56px;
+    }
+    .desk-intro {
+      max-width: 700px; width: 100%; margin: 0 auto 36px;
+      display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0;
+    }
+    .desk-eyebrow {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--accent);
+      margin-bottom: 18px;
+    }
+    .desk-name {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 3.5vw, 50px);
+      font-weight: 700; color: var(--heading);
+      letter-spacing: -0.03em; line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .desk-name em { color: var(--accent); font-style: italic; }
+    .desk-subtitle {
+      font-size: clamp(14px, 1.1vw, 16px); color: var(--body);
+      line-height: 1.7; max-width: 520px;
+    }
+    .desk-subtitle em { color: var(--accent); font-style: italic; font-weight: 500; }
+    .desk-caption {
+      max-width: 700px; width: 100%; margin: 28px auto 0;
+      font-size: 14px; color: var(--body); line-height: 1.7; text-align: center;
+    }
+    .desk-caption em { color: var(--accent); font-style: italic; font-weight: 500; }
+    .desk-illus-wrap {
+      max-width: 1100px; width: 100%; margin: 0 auto;
+    }
+    .desk-placeholder {
+      width: 100%; height: min(58vh, 620px);
+      background: transparent; border: none;
+      border-radius: 20px;
+      display: block;
+      position: relative; overflow: visible;
+    }
+    .desk-placeholder svg,
+    .desk-placeholder canvas { display: block; width: 100%; height: 100%; border-radius: 18px; }
+
+    /* ── STORY SECTION ── */
+    .story-section {
+      background: var(--surface);
+      padding: clamp(56px, 9vw, 104px) clamp(20px, 6vw, 64px);
+    }
+    .story-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+    }
+    /* Tablet + phone: paragraph drops below the heading */
+    @media (max-width: 1024px) {
+      .story-inner { grid-template-columns: 1fr; gap: clamp(20px, 4vw, 36px); }
+      /* Hero: drop forced 100vh so the next section follows the content, not a viewport gap */
+      .desk-hero { min-height: auto; padding-top: 96px; padding-bottom: 40px; }
+    }
+    .story-left {}
+    .story-opening {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(30px, 3.4vw, 46px);
+      font-weight: 700; color: var(--heading);
+      letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 0;
+    }
+    .story-opening em { color: var(--accent); font-style: italic; }
+    .story-right {}
+    .story-headline {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(16px, 1.6vw, 20px);
+      font-weight: 400; font-style: italic;
+      color: var(--accent); line-height: 1.45; margin-bottom: 24px;
+    }
+    .story-body {
+      font-size: clamp(14px, 1.2vw, 16px); line-height: 1.9;
+      color: var(--body);
+    }
+    .story-hl { color: var(--accent); font-weight: 500; }
+    .story-link {
+      color: var(--accent); text-decoration: underline;
+      text-decoration-color: var(--accent-muted); text-underline-offset: 2px;
+      cursor: none; transition: color 0.2s;
+    }
+    .story-link:hover { color: var(--accent-hover); }
+
+    /* ── SECTION SHARED ── */
+    .section-eyebrow {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--accent);
+      display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+    }
+    .section-eyebrow .eyebrow-rule { width: 40px; height: 1px; background: var(--accent); flex-shrink: 0; }
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 3.2vw, 42px); font-weight: 700;
+      color: var(--heading); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 14px;
+    }
+    .section-sub { font-size: 15px; color: var(--body); line-height: 1.7; max-width: 520px; }
+
+    /* ── Desk Illustration component ── */
+    .desk-illustration {
+      position: relative; width: 100%; max-width: 1400px; margin: 0 auto;
+      border-radius: 20px;
+      box-shadow: 0 30px 80px -20px rgba(44,24,16,0.25), 0 8px 24px -8px rgba(44,24,16,0.15);
+      background: #F0E4DF; font-family: 'Chillax', system-ui, sans-serif;
+    }
+    .desk-illustration__img { width: 100%; height: auto; display: block; border-radius: 20px; }
+    .desk-illustration .desk-hotspot {
+      position: absolute; z-index: 2; border-radius: 12px; transition: background 0.25s ease;
+    }
+    .desk-illustration .desk-hotspot:hover {
+      background: radial-gradient(ellipse at center, rgba(255,235,225,0.35), rgba(255,235,225,0) 70%);
+    }
+    .desk-illustration .desk-hotspot::before {
+      content: ""; position: absolute; top: 50%; left: 50%;
+      width: 10px; height: 10px;
+      transform: translate(-50%,-50%) scale(0.6); border-radius: 50%;
+      background: #D4908A;
+      box-shadow: 0 0 0 4px rgba(212,144,138,0.25), 0 2px 8px rgba(44,24,16,0.2);
+      opacity: 0; transition: opacity 0.25s ease, transform 0.25s ease; pointer-events: none;
+    }
+    .desk-illustration .desk-hotspot:hover::before,
+    .desk-illustration .desk-hotspot:focus::before,
+    .desk-illustration .desk-hotspot:focus-within::before {
+      opacity: 1; transform: translate(-50%,-50%) scale(1);
+    }
+    .desk-illustration .desk-tip {
+      position: absolute; left: 50%; bottom: calc(100% + 12px);
+      transform: translateX(-50%) translateY(6px);
+      min-width: 160px; max-width: 240px; padding: 10px 14px;
+      background: #FFF8F3; color: #2C1810;
+      border: 1px solid rgba(212,144,138,0.4); border-radius: 12px;
+      box-shadow: 0 12px 28px -8px rgba(44,24,16,0.25);
+      font-size: 12.5px; line-height: 1.45; text-align: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease; z-index: 3;
+    }
+    .desk-illustration .desk-tip::after {
+      content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+      border: 6px solid transparent; border-top-color: #FFF8F3;
+      filter: drop-shadow(0 1px 0 rgba(212,144,138,0.4));
+    }
+    .desk-illustration .desk-tip__label {
+      display: block; font-family: 'Fraunces', Georgia, serif;
+      font-style: italic; font-weight: 500; color: #D4908A; font-size: 13.5px; margin-bottom: 2px;
+    }
+    .desk-illustration .desk-hotspot:hover .desk-tip,
+    .desk-illustration .desk-hotspot:focus .desk-tip,
+    .desk-illustration .desk-hotspot:focus-within .desk-tip { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .desk-illustration .desk-hotspot.tip-below .desk-tip {
+      bottom: auto; top: calc(100% + 12px); transform: translateX(-50%) translateY(-6px);
+    }
+    .desk-illustration .desk-hotspot.tip-below .desk-tip::after {
+      top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: #FFF8F3;
+    }
+    .desk-illustration .desk-hotspot.tip-below:hover .desk-tip { transform: translateX(-50%) translateY(0); }
+    .desk-illustration .desk-hotspot.tip-near .desk-tip {
+      bottom: auto; top: 70%; transform: translateX(-50%) translateY(6px);
+    }
+    .desk-illustration .desk-hotspot.tip-near:hover .desk-tip { transform: translateX(-50%) translateY(0); }
+    .desk-illustration .desk-hotspot.tip-near .desk-tip::after {
+      top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: #FFF8F3;
+    }
+    .desk-illustration .desk-hotspot.tip-left .desk-tip {
+      left: auto; right: 0; transform: translateX(0) translateY(6px);
+    }
+    .desk-illustration .desk-hotspot.tip-left:hover .desk-tip { transform: translateX(0) translateY(0); }
+    .desk-illustration .desk-hotspot.tip-left .desk-tip::after { left: auto; right: 18px; transform: none; }
+    .desk-illustration .desk-hotspot.tip-right .desk-tip {
+      left: 0; right: auto; transform: translateX(0) translateY(6px);
+    }
+    .desk-illustration .desk-hotspot.tip-right:hover .desk-tip { transform: translateX(0) translateY(0); }
+    .desk-illustration .desk-hotspot.tip-right .desk-tip::after { left: 18px; transform: none; }
+
+    /* ── PHOTO CAROUSEL ── */
+    .carousel-section { background: var(--bg); padding: 104px 0 104px 64px; overflow: hidden; }
+    .carousel-header { max-width: 1100px; padding-right: 64px; margin-bottom: 48px; }
+    .carousel-track {
+      display: flex; gap: 18px; overflow-x: auto; padding-bottom: 12px; padding-right: 64px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .carousel-track::-webkit-scrollbar { display: none; }
+    .carousel-card {
+      flex-shrink: 0; width: 270px; height: 340px;
+      border-radius: 18px; background: var(--surface);
+      border: 1px solid var(--border-md);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .carousel-card:hover { transform: scale(1.025); box-shadow: 0 8px 32px var(--shadow-md); }
+    .carousel-card img, .carousel-card video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .carousel-card-icon { font-size: 28px; opacity: 0.35; }
+    .carousel-card-label {
+      font-family: 'Fraunces', serif; font-size: 13px; font-style: italic;
+      color: var(--accent-soft); text-align: center; padding: 0 20px;
+    }
+
+    /* ── UX QUOTE SECTION ── */
+    .ux-section {
+      background: #2C1810; padding: 104px 64px;
+      position: relative; overflow: hidden;
+    }
+    html.dark .ux-section { background: #1A0C08; }
+    .ux-ghost {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif; font-size: clamp(90px, 15vw, 220px);
+      font-weight: 900; color: rgba(255,245,240,0.025);
+      pointer-events: none; white-space: nowrap; letter-spacing: -0.05em;
+    }
+    .ux-content { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; text-align: center; }
+    .ux-eyebrow {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--accent);
+      display: flex; align-items: center; gap: 14px; justify-content: center; margin-bottom: 48px;
+    }
+    .ux-eyebrow .eyebrow-rule { width: 40px; height: 1px; background: var(--accent); }
+    .ux-statement {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(19px, 2.2vw, 28px); font-weight: 400; font-style: italic;
+      color: #FFF5F0; line-height: 1.72; margin-bottom: 0;
+    }
+    .ux-statement .hl { color: var(--accent); }
+    .ux-rule { width: 1px; height: 52px; background: rgba(255,245,240,0.1); margin: 44px auto; }
+    .ux-spool-quote {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(17px, 1.8vw, 23px); font-style: italic;
+      color: rgba(255,245,240,0.82); line-height: 1.68; margin-bottom: 14px;
+    }
+    .ux-attribution {
+      font-size: 12px; color: rgba(255,245,240,0.38);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .ux-closing {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(20px, 2.2vw, 28px); font-style: italic;
+      color: rgba(255,245,240,0.9); line-height: 1.68; margin-top: 44px;
+    }
+
+    /* ── FAQ ── */
+    .faq-section { background: var(--surface); padding: 104px 64px; }
+    .faq-inner { max-width: 800px; margin: 0 auto; }
+    .faq-header { margin-bottom: 56px; }
+    .faq-item { border-bottom: 1px solid var(--border-md); }
+    .faq-item:first-of-type { border-top: 1px solid var(--border-md); }
+    .faq-q {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 24px;
+      padding: 28px 0; cursor: none; background: none; border: none; width: 100%; text-align: left;
+      font-family: 'Fraunces', serif; font-size: clamp(15px, 1.5vw, 19px);
+      font-weight: 600; color: var(--heading); line-height: 1.3;
+      transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--accent); }
+    .faq-icon {
+      width: 26px; height: 26px; flex-shrink: 0;
+      border: 1.5px solid var(--border-lg); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 300; line-height: 1; color: var(--accent);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s;
+      margin-top: 1px;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); border-color: var(--accent); }
+    .faq-a-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s ease; }
+    .faq-item.open .faq-a-wrap { grid-template-rows: 1fr; }
+    .faq-a-inner { overflow: hidden; }
+    .faq-a { font-size: 15px; color: var(--body); line-height: 1.82; padding-bottom: 28px; padding-right: 50px; }
+    .faq-a strong { color: var(--heading); font-weight: 600; }
+
+    /* ── CURRENTLY ── */
+    .currently-section { background: var(--bg); padding: 104px 64px; }
+    .currently-inner { max-width: 1100px; margin: 0 auto; }
+    .currently-header { margin-bottom: 56px; }
+    .currently-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .currently-card {
+      background: var(--card-bg); border: 1px solid var(--border-md);
+      border-radius: 20px; padding: 36px 40px;
+      box-shadow: 0 4px 20px var(--shadow-sm);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .currently-card:hover { transform: translateY(-4px); box-shadow: 0 10px 40px var(--shadow-md); }
+    .currently-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--accent);
+      display: flex; align-items: center; gap: 7px; margin-bottom: 14px;
+    }
+    .c-icon { font-size: 15px; }
+    .currently-title {
+      font-family: 'Fraunces', serif; font-size: clamp(15px, 1.3vw, 18px);
+      font-weight: 600; color: var(--heading); line-height: 1.3; margin-bottom: 10px;
+    }
+    .currently-desc { font-size: 14px; color: var(--body); line-height: 1.72; }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: var(--footer-bg);
+      display: grid; grid-template-columns: 1fr 1fr 1fr; min-height: 360px;
+    }
+    .footer-bean { overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .footer-bean img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
+    .footer-middle { display: flex; flex-direction: column; justify-content: flex-end; padding: 56px 52px; gap: 24px; }
+    .footer-closing { font-family: 'Fraunces', serif; font-size: clamp(22px, 2.8vw, 38px); font-style: italic; font-weight: 600; color: #FFF5F0; line-height: 1.25; }
+    .footer-links { display: grid; grid-template-columns: auto auto; gap: 8px 28px; width: fit-content; }
+    .footer-links a {
+      font-size: 14px; font-weight: 500; color: var(--accent);
+      text-decoration: none; cursor: none; position: relative; transition: color 0.2s; width: fit-content;
+    }
+    .footer-links a::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+      height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.25s;
+    }
+    .footer-links a:hover { color: #FFF5F0; }
+    .footer-links a:hover::after { transform: scaleX(1); }
+    .footer-copy { font-size: 11px; color: var(--accent-muted); letter-spacing: 0.04em; line-height: 1.6; }
+    .footer-copy-light { color: var(--accent-strong); }
+    .footer-right { display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; text-align: right; padding: 48px 52px 80px; }
+    .footer-availability { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); background: var(--tag-bg); border: 1px solid var(--border-lg); padding: 5px 14px; border-radius: 100px; width: fit-content; }
+    .footer-right-bottom { display: flex; flex-direction: column; gap: 14px; align-items: flex-end; }
+    .footer-nav-link { font-family: 'Chillax', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,245,240,0.38); text-decoration: none; cursor: none; transition: color 0.2s; }
+    .footer-nav-link:hover { color: #FFF5F0; }
+    .footer-back-top { font-family: 'Chillax', sans-serif; font-size: 13px; font-weight: 500; color: var(--accent-mid); background: none; border: none; cursor: none; transition: color 0.2s; letter-spacing: 0.03em; padding: 0; }
+    .footer-back-top:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+<div id="cursor">✦</div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="index.html#work" class="nav-logo">Ananya Prabhakar</a>
+  <ul class="nav-links">
+    <li><button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <span class="toggle-icon icon-sun">☀︎</span>
+      <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      <span class="toggle-icon icon-moon">☾</span>
+    </button></li>
+    <li><a href="index.html#work" style="color:inherit;text-decoration:none;cursor:none;">Work</a></li>
+    <li class="nav-active">About</li>
+    <li><a href="#" style="color:inherit;text-decoration:none;cursor:none;">Resume ↗</a></li>
+    <li><a href="mailto:ananyaprabhakar1@gmail.com" class="nav-cta" style="text-decoration:none;cursor:none;">Say Hi ✦</a></li>
+  </ul>
+<button class="nav-hamburger" aria-label="Open menu" id="navHamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ══════════════════════════════════
+     DESK HERO
+════════════════════════════════════ -->
+<section class="desk-hero">
+  <div class="desk-intro reveal">
+    <div class="desk-eyebrow">A little corner of the chaos</div>
+    <h1 class="desk-name">my <em>desk</em>, more or less</h1>
+    <p class="desk-subtitle">Records spinning, a candle that smells like rose espresso, and the snacks I refuse to design without. <em>Hover to peek inside my world →</em></p>
+  </div>
+  <div class="desk-illus-wrap reveal" style="transition-delay:0.12s;">
+    <div class="desk-illustration">
+      <img class="desk-illustration__img"
+           src="../uploads/desk-illustration.png"
+           alt="Illustration of Ananya's desk: Crosley record player, peonies in a glass vase, a Cashmere Rose Espresso candle, a laptop showing a Figma file, four pinned sketches on the wall, plushies on a shelf, an iced Starbucks, strawberry Pocky, elf lip tint, and a pickleball paddle that reads Play Hard Be Kind."/>
+
+      <!-- Plushies on shelf -->
+      <div class="desk-hotspot tip-near" style="left:12%; top:2%; width:28%; height:30%;" tabindex="0">
+        <span class="desk-tip"><span class="desk-tip__label">plushies</span>They judge my design decisions. Harshly.</span>
+      </div>
+
+      <!-- Wall sketches cluster (4 pinned pieces) -->
+      <div class="desk-hotspot tip-near" style="left:40%; top:7%; width:40%; height:36%;" tabindex="0">
+        <span class="desk-tip"><span class="desk-tip__label">sketches</span>Pinterest is my muse. My hand does the rest.</span>
+      </div>
+
+      <!-- Turntable -->
+      <div class="desk-hotspot tip-right" style="left:2%; top:37%; width:24%; height:54%;" tabindex="0">
+        <span class="desk-tip"><span class="desk-tip__label">turntable</span>Building my vinyl collection one payday at a time.</span>
+      </div>
+
+      <!-- Peonies in vase -->
+      <div class="desk-hotspot" style="left:20%; top:33%; width:14%; height:44%;" tabindex="0">
+        <span class="desk-tip"><span class="desk-tip__label">flowers</span>My bestie brings these. She's the real MVP.</span>
+      </div>
+
+      <!-- Cashmere Rose Espresso candle -->
+      <div class="desk-hotspot" style="left:34%; top:50%; width:8%; height:28%;" tabindex="0">
+        <span class="desk-tip"><span class="desk-tip__label">scented candle</span>Scented candles set the mood. Currently: productivity.</span>
+      </div>
+
+      <!-- Laptop -->
+      <div class="desk-hotspot" style="left:42%; top:38%; width:28%; height:46%;" tabindex="0">
+        <span class="desk-tip"><span class="desk-tip__label">laptop</span>Where the magic happens. Figma open at all times.</span>
+      </div>
+
+      <!-- Starbucks cup -->
+      <div class="desk-hotspot" style="left:70%; top:39%; width:8%; height:43%;" tabindex="0">
+        <span class="desk-tip"><span class="desk-tip__label">starbucks</span>Caramel ribbon crunch frap, 2 extra shots of blonde espresso. Non-negotiable.</span>
+      </div>
+
+      <!-- Pocky box -->
+      <div class="desk-hotspot" style="left:78%; top:45%; width:7%; height:38%;" tabindex="0">
+        <span class="desk-tip"><span class="desk-tip__label">pocky</span>Critical design fuel.</span>
+      </div>
+
+      <!-- elf lip tint -->
+      <div class="desk-hotspot tip-left" style="left:85%; top:64%; width:5%; height:21%;" tabindex="0">
+        <span class="desk-tip"><span class="desk-tip__label">elf lip tint</span>Love blushing up with this.</span>
+      </div>
+
+      <!-- Pickleball paddle -->
+      <div class="desk-hotspot tip-left" style="left:89%; top:14%; width:10%; height:58%;" tabindex="0">
+        <span class="desk-tip"><span class="desk-tip__label">pickleball gear</span>My friends say I'm terrible. I still show up anyway. They're not wrong.</span>
+      </div>
+    </div>
+  </div>
+  <p class="desk-caption reveal" style="transition-delay:0.2s;">A few of the things on rotation lately: <em>flowers, focus, and a perfectly iced oat latte.</em></p>
+</section>
+
+<!-- ══════════════════════════════════
+     STORY
+════════════════════════════════════ -->
+<section class="story-section">
+  <div class="story-inner">
+    <div class="story-left">
+      <h2 class="story-opening reveal">
+        Hi, I'm Ananya.<br><em>Glad you made it here.</em>
+      </h2>
+    </div>
+    <div class="story-right">
+      <p class="story-headline reveal" style="transition-delay:0.1s;">So what's a Computer Science Engineer doing here?</p>
+      <p class="story-body reveal" style="transition-delay:0.2s;">
+        Honestly? I started where most CS students do: writing code, debugging at 2am, wondering why interfaces were so confusing to use. Then I took a <span class="story-hl">Human-Computer Interaction course</span> and something clicked. The problem was never the code. It was the experience around it. Before that click, I'd published two research papers on AI systems, in <a href="https://ieeexplore.ieee.org/document/10404566" class="story-link" target="_blank" rel="noopener">IEEE</a> and <a href="https://link.springer.com/chapter/10.1007/978-981-97-4228-8_16" class="story-link" target="_blank" rel="noopener">Springer</a>. Peer review is where I learned to defend a decision with evidence, which turns out to be most of what UX research is too. I've spent every moment since learning how to design that experience, through internships, research, teaching, and now a <span class="story-hl">Master's in Human Factors & Ergonomics at SJSU</span>. Turns out, knowing how something gets built makes you a lot better at designing it.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     WHAT UX MEANS TO ME
+════════════════════════════════════ -->
+<section class="ux-section">
+  <div class="ux-ghost">Design</div>
+  <div class="ux-content">
+    <div class="ux-eyebrow reveal">
+      <div class="eyebrow-rule"></div>
+      What I Believe
+      <div class="eyebrow-rule"></div>
+    </div>
+    <p class="ux-statement reveal" style="transition-delay:0.1s;">
+      <span class="hl">"UX is the space between what someone needs to do and how effortlessly they get it done."</span>
+      A user should never have to think about the 'how', only the 'what.' The moment someone notices the steps it took to get somewhere, something went wrong.
+    </p>
+    <div class="ux-rule reveal" style="transition-delay:0.2s;"></div>
+    <p class="ux-spool-quote reveal" style="transition-delay:0.25s;">"Good design, when it's done well, becomes invisible. It's only when it's done poorly that we notice it."</p>
+    <p class="ux-attribution reveal" style="transition-delay:0.3s;">Jared Spool</p>
+    <p class="ux-closing reveal" style="transition-delay:0.35s;">That's what I'm chasing: experiences so intuitive they disappear.<br>And I plan on chasing that for the rest of my career.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     PHOTO CAROUSEL
+════════════════════════════════════ -->
+<section class="carousel-section">
+  <div class="carousel-header">
+    <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>The Human Behind the Work</div>
+    <h2 class="section-title reveal" style="transition-delay:0.1s;">A few candids ✦</h2>
+  </div>
+  <div class="carousel-track" id="photoCarousel">
+    <div class="carousel-card carousel-card--video">
+      <video src="../uploads/images for about page/IMG_6152.mp4" muted loop playsinline></video>
+    </div>
+    <div class="carousel-card"><img src="../uploads/images for about page/1.jpg" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/2.JPG" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/3.jpg" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/4.jpg" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/5.jpg" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/6.JPG" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/7.JPG" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/8.jpg" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/9.jpg" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/10.JPG" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/11.jpg" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/12.jpg" alt="candid"></div>
+    <div class="carousel-card"><img src="../uploads/images for about page/13.jpg" alt="candid"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     FAQ
+════════════════════════════════════ -->
+<section class="faq-section">
+  <div class="faq-inner">
+    <div class="faq-header">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>Get to Know Me</div>
+      <h2 class="section-title reveal" style="transition-delay:0.1s;">Things people always ask ✦</h2>
+    </div>
+
+    <div class="faq-item open reveal" style="transition-delay:0.15s;">
+      <button class="faq-q">
+        What's the first thing you do when you get a new design problem?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a-wrap"><div class="faq-a-inner">
+        <p class="faq-a">Talk to people. Not sketch, not research competitors. Talk to the actual humans who have the problem. In FreshBite, I ran surveys, focus groups, and user interviews before a single wireframe was drawn. That research improved our task success rate by about <strong>40% through usability testing</strong>, because we built the right thing, not just a thing.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item open reveal" style="transition-delay:0.2s;">
+      <button class="faq-q">
+        Design or research: if you had to pick one?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a-wrap"><div class="faq-a-inner">
+        <p class="faq-a">I refuse to pick. A beautiful design built on bad research is just a pretty mistake. I've run surveys, focus groups, usability tests, and interviewed both users AND service providers, because the full picture matters.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item open reveal" style="transition-delay:0.25s;">
+      <button class="faq-q">
+        What makes you different from other UX designers?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a-wrap"><div class="faq-a-inner">
+        <p class="faq-a">I've been on the other side of the handoff. I know what it's like to receive a design spec as an engineer, which means I document interaction states, edge cases, and component behaviors clearly enough that engineering doesn't have to guess. On <strong>ACME Phoenix</strong>, that was the whole point: a console investigators could trust because every state was accounted for.</p>
+      </div></div>
+    </div>
+
+    <div class="faq-item open reveal" style="transition-delay:0.3s;">
+      <button class="faq-q">
+        How do you use AI in your design process?
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a-wrap"><div class="faq-a-inner">
+        <p class="faq-a">As a thinking partner, not a shortcut. I use AI to brainstorm directions faster, synthesize research insights, and pressure-test my problem framing, but every decision that makes it into a final design has gone through my own judgment first. AI helps me move faster. It doesn't replace the thinking. And honestly, knowing how to prompt well is its own skill, one I've been deliberately building.</p>
+      </div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     CURRENTLY
+════════════════════════════════════ -->
+<section class="currently-section">
+  <div class="currently-inner">
+    <div class="currently-header">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>Right Now</div>
+      <h2 class="section-title reveal" style="transition-delay:0.1s;">What I'm into ✦</h2>
+    </div>
+    <div class="currently-grid">
+      <div class="currently-card reveal" style="transition-delay:0.15s;">
+        <div class="currently-label"><span class="c-icon">🎵</span> Listening to</div>
+        <div class="currently-title">Harry Styles · Kiss All The Time, Disco Occasionally.</div>
+        <div class="currently-desc">On repeat. No notes.</div>
+      </div>
+      <div class="currently-card reveal" style="transition-delay:0.2s;">
+        <div class="currently-label"><span class="c-icon">📖</span> Reading</div>
+        <div class="currently-title">Don't Make Me Think, Steve Krug.</div>
+        <div class="currently-desc">It's been staring at me from my downloads folder for two weeks. This is my public commitment to finally open it.</div>
+      </div>
+      <div class="currently-card reveal" style="transition-delay:0.25s;">
+        <div class="currently-label"><span class="c-icon">🧠</span> Learning</div>
+        <div class="currently-title">AI for UX</div>
+        <div class="currently-desc">How to use it as a thinking partner without losing the craft.</div>
+      </div>
+      <div class="currently-card reveal" style="transition-delay:0.3s;">
+        <div class="currently-label"><span class="c-icon">📺</span> Into right now</div>
+        <div class="currently-title">F.R.I.E.N.D.S.</div>
+        <div class="currently-desc">Yes, again. It's my comfort show and I will not be taking questions.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     FOOTER
+════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-bean">
+    <img src="../uploads/giphy.gif" alt="Mr. Bean waiting patiently"/>
+  </div>
+  <div class="footer-middle">
+    <div class="footer-availability">Available to work ✦</div>
+    <p class="footer-closing">I'll be waiting<br/>to hear from you.</p>
+    <div class="footer-links">
+      <a href="mailto:ananyaprabhakar1@gmail.com">Email ↗</a>
+      <a href="https://www.linkedin.com/in/ananya--prabhakar/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="https://x.com/AnanyaPrabhakr" target="_blank" rel="noopener">X ↗</a>
+      <a href="https://medium.com/@ananyaprabhakar1" target="_blank" rel="noopener">Medium ↗</a>
+      <a href="https://www.behance.net/ananyaprabhakar1" target="_blank" rel="noopener">Behance ↗</a>
+      <a href="#" target="_blank">Resume ↗</a>
+    </div>
+    <p class="footer-copy"><span class="footer-copy-light">designed and created by</span><br/>© 2026 Ananya Prabhakar</p>
+  </div>
+  <div class="footer-right">
+    <div class="footer-right-bottom">
+      <a href="index.html#work" class="footer-nav-link">Work</a>
+      <a href="about.html" class="footer-nav-link">About</a>
+      <a href="#" class="footer-nav-link">Resume ↗</a>
+      <a href="mailto:ananyaprabhakar1@gmail.com" class="footer-nav-link">Say Hi ✦</a>
+      <button class="footer-back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Dark mode toggle
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+  });
+
+  
+  // Hamburger nav
+  (function () {
+    var burger = document.getElementById('navHamburger');
+    var list   = document.querySelector('.nav-links');
+    if (!burger || !list) return;
+    burger.addEventListener('click', function () {
+      burger.classList.toggle('open');
+      list.classList.toggle('open');
+    });
+    list.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        burger.classList.remove('open');
+        list.classList.remove('open');
+      });
+    });
+  })();
+
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('button, a, .currently-card, .carousel-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+
+  // Scroll reveal
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // FAQ — toggle individual items (all open by default)
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.faq-item').classList.toggle('open');
+    });
+  });
+
+  // Carousel — smooth auto-scroll + drag
+  (function () {
+    const track = document.getElementById('photoCarousel');
+    const SPEED = 2.5; // px per frame (~150px/s at 60fps)
+    let paused = false;
+    let dragging = false, startX, scrollStart;
+    let visible = false;
+
+    // Only run when at least 30% of the carousel section is in the viewport
+    const section = track.closest('.carousel-section');
+    new IntersectionObserver(
+      ([entry]) => { visible = entry.isIntersecting; },
+      { threshold: 0.3 }
+    ).observe(section);
+
+    // rAF loop — pixel-by-pixel, loops seamlessly at the end
+    function tick() {
+      if (!paused && !dragging && visible) {
+        track.scrollLeft += SPEED;
+        if (track.scrollLeft >= track.scrollWidth - track.clientWidth) {
+          track.scrollLeft = 0;
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    // Pause on hover
+    track.addEventListener('mouseenter', () => { paused = true; });
+    track.addEventListener('mouseleave', () => { paused = false; });
+
+    // Drag to scroll
+    track.addEventListener('mousedown', e => {
+      dragging = true; paused = true;
+      startX = e.pageX - track.offsetLeft; scrollStart = track.scrollLeft;
+    });
+    document.addEventListener('mouseup', () => {
+      dragging = false; paused = false;
+    });
+    document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      e.preventDefault();
+      track.scrollLeft = scrollStart - (e.pageX - track.offsetLeft - startX) * 1.4;
+    });
+
+    // Touch
+    track.addEventListener('touchstart', () => { paused = true; }, { passive: true });
+    track.addEventListener('touchend',   () => { paused = false; }, { passive: true });
+  })();
+
+  // Footer cursor
+  document.querySelectorAll('.footer-links a, .footer-nav-link, .footer-back-top, .footer-availability').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+
+  // Play videos only when they enter the viewport
+  const videoEls = document.querySelectorAll('video');
+  if ('IntersectionObserver' in window) {
+    const videoObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.play().catch(() => {}); }
+        else { entry.target.pause(); }
+      });
+    }, { threshold: 0.2 });
+    videoEls.forEach(v => videoObserver.observe(v));
+  } else {
+    videoEls.forEach(v => { v.play().catch(() => {}); });
+  }
+</script>
+</body>
+</html>

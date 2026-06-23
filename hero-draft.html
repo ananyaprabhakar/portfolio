@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hero: The Depth Variations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=chillax@400,500,600,700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="../design-canvas.jsx"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #111; font-family: 'Chillax', sans-serif; }
+
+    /* ── shared ── */
+    .btn-p {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #D4908A; color: #FFF5F0;
+      font-family: 'Chillax', sans-serif; font-size: 15px; font-weight: 600;
+      padding: 13px 26px; border-radius: 10px; border: none; cursor: pointer;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .btn-s {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: #2C1810;
+      font-family: 'Chillax', sans-serif; font-size: 15px; font-weight: 600;
+      padding: 12px 25px; border-radius: 10px;
+      border: 1.5px solid rgba(212,144,138,0.45);
+      cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    }
+    .ph {
+      background: rgba(240,228,223,0.9);
+      border: 1px dashed rgba(212,144,138,0.35);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; overflow: hidden;
+    }
+    .ph span {
+      font-size: 11px; font-family: monospace;
+      color: #D4908A; letter-spacing: 0.05em;
+      text-align: center; line-height: 1.8;
+    }
+
+    /* shared nav */
+    .d-nav {
+      height: 72px; display: flex;
+      justify-content: space-between; align-items: center;
+      padding: 0 64px; flex-shrink: 0;
+      position: relative; z-index: 10;
+      border-bottom: 1px solid rgba(212,144,138,0.12);
+    }
+    .d-logo {
+      font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600;
+      color: #2C1810; letter-spacing: -0.01em;
+    }
+    .d-links {
+      display: flex; gap: 28px; list-style: none; align-items: center;
+    }
+    .d-links li { font-size: 14px; font-weight: 500; color: #6B5B55; cursor: pointer; }
+    .d-cta-nav {
+      background: #2C1810; color: #F9F5F0 !important;
+      padding: 8px 18px; border-radius: 8px; font-weight: 600 !important;
+    }
+
+    /* ════════════════════════════════════
+       C1 · CENTERED REFINED
+       Clean centered, one ghost word, refined
+    ════════════════════════════════════ */
+    .c1 {
+      width: 1440px; height: 900px;
+      background: #F9F5F0;
+      display: flex; flex-direction: column;
+      overflow: hidden; position: relative;
+    }
+    .c1-ghost {
+      position: absolute;
+      bottom: -60px; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Fraunces', serif;
+      font-size: 420px; font-weight: 900; line-height: 1;
+      letter-spacing: -0.05em; text-transform: uppercase;
+      color: rgba(212,144,138,0.08);
+      white-space: nowrap; pointer-events: none; user-select: none;
+    }
+    .c1-body {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      position: relative; z-index: 2; gap: 0;
+      padding: 0 120px;
+    }
+    .c1-eyebrow {
+      font-size: 12px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.12em; color: #D4908A;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 24px;
+    }
+    .c1-eyebrow-line { width: 40px; height: 1px; background: #D4908A; }
+    .c1-name {
+      font-family: 'Fraunces', serif;
+      font-size: 96px; font-weight: 700; line-height: 0.95;
+      letter-spacing: -0.03em; color: #2C1810;
+      text-align: center; margin-bottom: 28px;
+    }
+    .c1-name em { font-style: italic; color: #D4908A; }
+    .c1-divider {
+      width: 64px; height: 1px;
+      background: rgba(212,144,138,0.35); margin-bottom: 28px;
+    }
+    .c1-tagline {
+      font-family: 'Chillax', sans-serif;
+      font-size: 20px; font-weight: 500; line-height: 1.65;
+      color: #6B5B55; text-align: center; max-width: 540px;
+      margin-bottom: 36px;
+    }
+    .c1-tagline strong { color: #2C1810; font-weight: 600; }
+    .c1-ctas { display: flex; gap: 14px; align-items: center; margin-bottom: 36px; }
+    .c1-meta {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .c1-dot { width: 5px; height: 5px; border-radius: 50%; background: #D4908A; }
+    .c1-meta-text {
+      font-size: 12px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.07em; color: #6B5B55;
+    }
+
+    /* ════════════════════════════════════
+       C2 · FULL NAME GHOST
+       Both lines stacked huge behind
+    ════════════════════════════════════ */
+    .c2 {
+      width: 1440px; height: 900px;
+      background: #F9F5F0;
+      display: flex; flex-direction: column;
+      overflow: hidden; position: relative;
+    }
+    .c2-ghost-wrap {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      pointer-events: none; user-select: none;
+      gap: 0;
+    }
+    .c2-ghost-line {
+      font-family: 'Fraunces', serif;
+      font-weight: 900; line-height: 0.88;
+      letter-spacing: -0.04em; text-transform: uppercase;
+      color: rgba(212,144,138,0.07);
+      white-space: nowrap;
+      font-size: 230px;
+    }
+    .c2-body {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      position: relative; z-index: 2;
+      padding: 0 120px; gap: 0;
+    }
+    .c2-eyebrow {
+      font-size: 12px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.12em; color: #D4908A;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px;
+    }
+    .c2-eyebrow-line { width: 40px; height: 1px; background: #D4908A; }
+    .c2-role {
+      font-size: 14px; font-weight: 500; color: #6B5B55;
+      text-align: center; margin-bottom: 20px;
+    }
+    .c2-tagline-big {
+      font-family: 'Fraunces', serif;
+      font-size: 42px; font-weight: 700; font-style: italic;
+      line-height: 1.25; letter-spacing: -0.02em;
+      color: #2C1810; text-align: center;
+      max-width: 760px; margin-bottom: 12px;
+    }
+    .c2-tagline-big em { color: #D4908A; font-style: normal; }
+    .c2-sub {
+      font-size: 16px; font-weight: 400; color: #6B5B55;
+      text-align: center; margin-bottom: 36px; line-height: 1.6;
+    }
+    .c2-ctas { display: flex; gap: 14px; align-items: center; margin-bottom: 32px; }
+    .c2-meta {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .c2-dot { width: 5px; height: 5px; border-radius: 50%; background: #D4908A; }
+    .c2-meta-text {
+      font-size: 12px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.07em; color: #6B5B55;
+    }
+    /* accent marks */
+    .c2-mark {
+      position: absolute; font-family: 'Fraunces', serif;
+      font-style: italic; color: rgba(212,144,138,0.25);
+      user-select: none; pointer-events: none; z-index: 1;
+    }
+
+    /* ════════════════════════════════════
+       C3 · DEPTH + SPLIT
+       Ghost name bg, two-column foreground
+    ════════════════════════════════════ */
+    .c3 {
+      width: 1440px; height: 900px;
+      background: #F9F5F0;
+      display: flex; flex-direction: column;
+      overflow: hidden; position: relative;
+    }
+    .c3-ghost {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -48%);
+      font-family: 'Fraunces', serif;
+      font-size: 320px; font-weight: 900; line-height: 1;
+      letter-spacing: -0.05em; text-transform: uppercase;
+      color: rgba(212,144,138,0.07);
+      white-space: nowrap; pointer-events: none; user-select: none;
+    }
+    .c3-body {
+      flex: 1;
+      display: grid; grid-template-columns: 1fr 1fr;
+      position: relative; z-index: 2;
+      min-height: 0;
+    }
+    /* left panel */
+    .c3-left {
+      display: flex; flex-direction: column;
+      justify-content: center; padding: 0 64px 0 64px;
+      gap: 28px;
+      border-right: 1px solid rgba(212,144,138,0.15);
+    }
+    .c3-eyebrow {
+      font-size: 12px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.12em; color: #D4908A;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .c3-eyebrow-line { width: 32px; height: 1px; background: #D4908A; }
+    .c3-name {
+      font-family: 'Fraunces', serif;
+      font-size: 72px; font-weight: 700; line-height: 1.0;
+      letter-spacing: -0.03em; color: #2C1810;
+    }
+    .c3-name em { font-style: italic; color: #D4908A; }
+    .c3-role {
+      font-size: 15px; font-weight: 500; color: #6B5B55; line-height: 1.6;
+    }
+    .c3-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+    .c3-meta {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .c3-dot { width: 5px; height: 5px; border-radius: 50%; background: #D4908A; }
+    .c3-meta-text {
+      font-size: 12px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.07em; color: #6B5B55;
+    }
+    /* right panel */
+    .c3-right {
+      display: flex; flex-direction: column;
+      justify-content: center; padding: 0 64px;
+      gap: 32px;
+    }
+    .c3-tagline {
+      font-family: 'Fraunces', serif;
+      font-size: 38px; font-weight: 700; font-style: italic;
+      line-height: 1.3; letter-spacing: -0.02em; color: #2C1810;
+    }
+    .c3-tagline em { color: #D4908A; font-style: normal; }
+    .c3-photo-row {
+      display: flex; gap: 14px; align-items: flex-end;
+    }
+    .c3-photo-a {
+      width: 200px; height: 260px;
+      border-radius: 100px 100px 14px 14px;
+    }
+    .c3-photo-b {
+      width: 130px; height: 180px;
+      border-radius: 65px 65px 10px 10px;
+    }
+    .c3-photo-cap {
+      font-size: 10px; font-family: monospace;
+      color: #D4908A; letter-spacing: 0.05em;
+      margin-top: 6px; text-align: center;
+    }
+    .c3-photo-wrap {
+      display: flex; flex-direction: column; align-items: center;
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+function Nav() {
+  return (
+    <nav className="d-nav">
+      <div className="d-logo">Ananya Prabhakar</div>
+      <ul className="d-links">
+        <li>Work</li><li>About</li><li>Now</li><li>Resume ↗</li>
+        <li className="d-cta-nav">Say Hi ✦</li>
+      </ul>
+    </nav>
+  );
+}
+
+function Photo({ className, style = {}, label = "your photo\ngoes here" }) {
+  return (
+    <div className={`ph ${className}`} style={style}>
+      <span>{label}</span>
+    </div>
+  );
+}
+
+/* ── C1: Centered Refined ── */
+function HeroC1() {
+  return (
+    <div className="c1">
+      <div className="c1-ghost">Ananya</div>
+      <Nav />
+      <div className="c1-body">
+        <div className="c1-eyebrow">
+          <div className="c1-eyebrow-line" />
+          Product Designer & Researcher · SJSU '26
+          <div className="c1-eyebrow-line" />
+        </div>
+        <div className="c1-name">
+          Ananya <em>Prabhakar</em>
+        </div>
+        <div className="c1-divider" />
+        <p className="c1-tagline">
+          <strong>Trained as an engineer.</strong> Fell in love with UX.<br/>
+          Now I build experiences that satisfy both.
+        </p>
+        <div className="c1-ctas">
+          <button className="btn-p">Explore My Work</button>
+          <button className="btn-s">Get to Know Me</button>
+        </div>
+        <div className="c1-meta">
+          <div className="c1-dot" />
+          <span className="c1-meta-text">San Jose, CA</span>
+          <div className="c1-dot" />
+          <span className="c1-meta-text">Available May 2026</span>
+          <div className="c1-dot" />
+          <span className="c1-meta-text">Human Factors & Ergonomics</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── C2: Full Name Ghost ── */
+function HeroC2() {
+  return (
+    <div className="c2">
+      <div className="c2-ghost-wrap">
+        <div className="c2-ghost-line">Ananya</div>
+        <div className="c2-ghost-line">Prabhakar</div>
+      </div>
+      <div className="c2-mark" style={{ top: 110, left: 72, fontSize: 36 }}>✦</div>
+      <div className="c2-mark" style={{ bottom: 80, right: 80, fontSize: 24 }}>✦</div>
+      <Nav />
+      <div className="c2-body">
+        <div className="c2-eyebrow">
+          <div className="c2-eyebrow-line" />
+          Product Designer & Researcher
+          <div className="c2-eyebrow-line" />
+        </div>
+        <div className="c2-role">SJSU Human Factors & Ergonomics · Class of 2026 · San Jose, CA</div>
+        <div className="c2-tagline-big">
+          Trained as an engineer.<br/>
+          Fell in love with <em>UX.</em><br/>
+          Now I build experiences that satisfy both.
+        </div>
+        <div className="c2-ctas">
+          <button className="btn-p">Explore My Work</button>
+          <button className="btn-s">Get to Know Me</button>
+        </div>
+        <div className="c2-meta">
+          <div className="c2-dot" />
+          <span className="c2-meta-text">Available May 2026</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── C3: Depth + Split ── */
+function HeroC3() {
+  return (
+    <div className="c3">
+      <div className="c3-ghost">Ananya</div>
+      <Nav />
+      <div className="c3-body">
+        <div className="c3-left">
+          <div className="c3-eyebrow">
+            <div className="c3-eyebrow-line" />
+            Product Designer & Researcher
+          </div>
+          <div className="c3-name">
+            Ananya<br/><em>Prabhakar</em>
+          </div>
+          <div className="c3-role">
+            SJSU Human Factors & Ergonomics · Class of 2026<br/>
+            San Jose, CA · Available May 2026
+          </div>
+          <div className="c3-ctas">
+            <button className="btn-p">Explore My Work</button>
+            <button className="btn-s">Get to Know Me</button>
+          </div>
+          <div className="c3-meta">
+            <div className="c3-dot" />
+            <span className="c3-meta-text">CS Background + UX Authority</span>
+          </div>
+        </div>
+        <div className="c3-right">
+          <p className="c3-tagline">
+            Trained as an engineer.<br/>
+            Fell in love with <em>UX.</em><br/>
+            Now I build experiences<br/>that satisfy both.
+          </p>
+          <div className="c3-photo-row">
+            <div className="c3-photo-wrap">
+              <Photo className="c3-photo-a" label="your photo" />
+              <div className="c3-photo-cap">your photo</div>
+            </div>
+            <div className="c3-photo-wrap" style={{ paddingBottom: 20 }}>
+              <Photo className="c3-photo-b" label="candid" />
+              <div className="c3-photo-cap">candid</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Original C · The Depth ── */
+function HeroOriginal() {
+  return (
+    <div className="c1" style={{ background: '#F9F5F0' }}>
+      {/* ghost */}
+      <div className="c1-ghost" style={{ fontSize: 340, bottom: -40, color: 'rgba(212,144,138,0.09)' }}>Ananya</div>
+      {/* accent marks */}
+      <div style={{ position:'absolute', top:110, left:80, fontFamily:'Fraunces,serif', fontSize:48, fontStyle:'italic', color:'rgba(212,144,138,0.3)', pointerEvents:'none', zIndex:1 }}>✦</div>
+      <div style={{ position:'absolute', bottom:100, right:100, fontFamily:'Fraunces,serif', fontSize:32, fontStyle:'italic', color:'rgba(212,144,138,0.3)', pointerEvents:'none', zIndex:1 }}>✦</div>
+      <div style={{ position:'absolute', top:300, right:60, fontFamily:'Fraunces,serif', fontSize:20, fontStyle:'italic', color:'rgba(212,144,138,0.3)', pointerEvents:'none', zIndex:1 }}>✦</div>
+      <Nav />
+      <div className="c1-body">
+        <div className="c1-eyebrow">
+          <div className="c1-eyebrow-line" />
+          Product Designer & Researcher · SJSU '26
+          <div className="c1-eyebrow-line" />
+        </div>
+        <div className="c1-name">Ananya <em>Prabhakar</em></div>
+        <div className="c1-divider" />
+        <p className="c1-tagline">
+          <strong>Trained as an engineer.</strong> Fell in love with UX.<br/>
+          Now I build experiences that satisfy both.
+        </p>
+        <div className="c1-ctas">
+          <button className="btn-p">Explore My Work</button>
+          <button className="btn-s">Get to Know Me</button>
+        </div>
+        <div className="c1-meta">
+          <div className="c1-dot" />
+          <span className="c1-meta-text">San Jose, CA</span>
+          <div className="c1-dot" />
+          <span className="c1-meta-text">Available May 2026</span>
+          <div className="c1-dot" />
+          <span className="c1-meta-text">Human Factors & Ergonomics</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <DesignCanvas title="The Depth: Shortlist">
+      <DCSection id="depth" title="Your Shortlist">
+        <DCArtboard id="original" label="C · Original" width={1440} height={900}>
+          <HeroOriginal />
+        </DCArtboard>
+        <DCArtboard id="c1" label="C1 · Centered Refined" width={1440} height={900}>
+          <HeroC1 />
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

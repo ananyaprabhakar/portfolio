@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreshBite · Ananya Prabhakar</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=chillax@200,300,400,500,600,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --bg: #F9F5F0; --surface: #F0E4DF; --accent: #D4908A; --accent-hover: #C17B75;
+      --body: #6B5B55; --heading: #2C1810; --card-bg: #F9F5F0;
+      --card-shadow: rgba(44,24,16,0.15); --tag-bg: rgba(212,144,138,0.10);
+      --tag-border: rgba(212,144,138,0.22); --border: rgba(212,144,138,0.12);
+      --border-md: rgba(212,144,138,0.15); --border-lg: rgba(212,144,138,0.30);
+      --accent-faint: rgba(212,144,138,0.05); --accent-ghost: rgba(212,144,138,0.08);
+      --accent-muted: rgba(212,144,138,0.28); --accent-soft: rgba(212,144,138,0.35);
+      --accent-mid: rgba(212,144,138,0.40); --accent-strong: rgba(212,144,138,0.45);
+      --shadow-sm: rgba(44,24,16,0.08); --shadow-md: rgba(44,24,16,0.13);
+      --shadow-lg: rgba(44,24,16,0.22); --nav-cta-bg: #2C1810; --nav-cta-text: #F9F5F0;
+      --btn-primary-txt: #FFF5F0; --footer-bg: #2C1810;
+    }
+    html.dark {
+      --bg: #140A08; --surface: #2A1612; --accent: #E49B93; --accent-hover: #D4908A;
+      --body: #D4B5A8; --heading: #FFF5F0; --card-bg: #1E0E0A;
+      --card-shadow: rgba(0,0,0,0.45); --tag-bg: rgba(228,155,147,0.10);
+      --tag-border: rgba(228,155,147,0.22); --border: rgba(228,155,147,0.12);
+      --border-md: rgba(228,155,147,0.15); --border-lg: rgba(228,155,147,0.25);
+      --accent-faint: rgba(228,155,147,0.05); --accent-ghost: rgba(228,155,147,0.08);
+      --accent-muted: rgba(228,155,147,0.28); --accent-soft: rgba(228,155,147,0.35);
+      --accent-mid: rgba(228,155,147,0.40); --accent-strong: rgba(228,155,147,0.45);
+      --shadow-sm: rgba(0,0,0,0.15); --shadow-md: rgba(0,0,0,0.25);
+      --shadow-lg: rgba(0,0,0,0.45); --nav-cta-bg: #FFF5F0; --nav-cta-text: #140A08;
+      --btn-primary-txt: #140A08; --footer-bg: #0A0604;
+    }
+    html { transition: background 0.4s ease, color 0.4s ease; overflow-x: clip; }
+    html, body { width: 100%; font-family: 'Chillax', sans-serif; background: var(--bg); cursor: none; color: var(--body); overflow-x: clip; }
+
+    /* ── CURSOR ── */
+    #cursor {
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif; font-size: 20px; color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.08s ease, color 0.15s;
+    }
+    #cursor.hovering { transform: translate(-50%, -50%) scale(1.6); color: var(--accent-hover); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 22px 52px;
+      background: rgba(249,245,240,0.88); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.4s ease, border-color 0.3s;
+    }
+    html.dark nav { background: rgba(20,10,8,0.88); }
+    /* ── HAMBURGER MENU ── */
+    .nav-hamburger {
+      display: none; flex-direction: column; justify-content: center; align-items: center;
+      gap: 5px; width: 40px; height: 40px;
+      background: none; border: none; cursor: none; padding: 4px; flex-shrink: 0;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--heading); border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; }
+      .nav-hamburger { display: flex; }
+      nav ul.nav-links {
+        display: none; position: fixed; top: 72px; left: 0; right: 0;
+        background: rgba(249,245,240,0.97); backdrop-filter: blur(12px);
+        flex-direction: column; align-items: stretch;
+        padding: 8px 0 16px; gap: 0;
+        border-bottom: 1px solid var(--border);
+        z-index: 99;
+      }
+      html.dark nav ul.nav-links { background: rgba(20,10,8,0.97); }
+      nav ul.nav-links.open { display: flex; }
+      nav ul.nav-links li {
+        font-size: 16px; padding: 14px 24px;
+        border-bottom: 1px solid var(--border); width: 100%;
+      }
+      nav ul.nav-links li:last-child { border-bottom: none; }
+      nav ul.nav-links li::after { display: none !important; }
+      nav ul.nav-links li:has(.theme-toggle) {
+        order: 10; border-top: 1px solid var(--border);
+        border-bottom: none; margin-top: 4px; padding-top: 16px;
+      }
+      .nav-cta { display: inline-block; }
+    }
+    .nav-logo { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--heading); cursor: none; text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+    .nav-links li { font-size: 14px; font-weight: 500; color: var(--body); cursor: none; position: relative; }
+    .nav-links li::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease; }
+    .nav-links li:hover { color: var(--accent); }
+    .nav-links li:hover::after { transform: scaleX(1); }
+    .nav-links li:has(.theme-toggle)::after { display: none; }
+    .nav-links li:has(.theme-toggle):hover { color: inherit; }
+    .nav-links li.nav-active { color: var(--accent); }
+    .nav-links li.nav-active::after { transform: scaleX(1); }
+    .nav-cta { background: var(--nav-cta-bg); color: var(--nav-cta-text) !important; padding: 8px 18px; border-radius: 8px; font-weight: 600 !important; transition: background 0.2s; }
+    .theme-toggle { background: none; border: none; padding: 0; cursor: none; display: flex; align-items: center; gap: 7px; }
+    .toggle-icon { font-size: 13px; line-height: 1; transition: opacity 0.3s, color 0.3s; }
+    .icon-sun  { color: var(--accent); opacity: 1; }
+    .icon-moon { color: var(--body); opacity: 0.35; }
+    html.dark .icon-sun  { color: var(--body); opacity: 0.35; }
+    html.dark .icon-moon { color: var(--accent); opacity: 1; }
+    .toggle-track { width: 36px; height: 20px; background: var(--surface); border: 1.5px solid var(--border-md); border-radius: 100px; position: relative; flex-shrink: 0; transition: border-color 0.35s, background 0.35s; }
+    html.dark .toggle-track { border-color: var(--accent-muted); }
+    .toggle-thumb { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); top: 50%; left: 2px; --tx: 0px; transform: translateY(-50%) translateX(var(--tx)); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.35s; box-shadow: 0 1px 4px var(--shadow-sm); }
+    html.dark .toggle-thumb { --tx: 15px; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── HERO ── */
+    .cs-hero {
+      height: 100vh; background: #2C1810;
+      background-image: radial-gradient(circle, rgba(255,245,240,0.08) 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
+      display: flex; flex-direction: column;
+      padding: 0; position: relative; overflow: hidden;
+    }
+    html.dark .cs-hero { background: #1A0C08; }
+    .cs-hero-ghost {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif; font-size: clamp(120px, 22vw, 320px);
+      font-weight: 900; color: rgba(255,245,240,0.018);
+      pointer-events: none; white-space: nowrap; letter-spacing: -0.04em;
+      user-select: none;
+    }
+    .cs-hero-split {
+      flex: 1; display: grid; grid-template-columns: 1fr 1.45fr;
+      gap: 48px; padding: 96px 80px 40px;
+      align-items: center; position: relative; z-index: 1;
+      max-width: 1440px; width: 100%; margin: 0 auto;
+    }
+    .cs-hero-left { display: flex; flex-direction: column; }
+    .cs-hero-right { display: flex; align-items: center; justify-content: center; }
+    .cs-hero-eyebrow {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.18em; color: var(--accent);
+      display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+    }
+    .cs-hero-eyebrow-rule { width: 36px; height: 1px; background: var(--accent); flex-shrink: 0; }
+    .cs-hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(36px, 4vw, 64px);
+      font-weight: 800; color: #FFF5F0;
+      letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 16px;
+    }
+    .cs-hero-subtitle {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(16px, 1.8vw, 24px);
+      font-weight: 300; color: rgba(255,245,240,0.55);
+      letter-spacing: -0.01em; margin-bottom: 24px;
+    }
+    .cs-hero-hook {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(14px, 1.4vw, 18px);
+      font-style: italic; color: var(--accent);
+      line-height: 1.6; margin-bottom: 48px;
+    }
+    .cs-hero-proto {
+      font-size: 13px; font-weight: 500; color: rgba(255,245,240,0.45);
+      text-decoration: underline; text-underline-offset: 3px;
+      display: inline-flex; align-items: center; gap: 6px;
+      letter-spacing: 0.01em; transition: color 0.2s, gap 0.2s;
+      margin-top: 14px;
+    }
+    .cs-hero-proto:hover { color: rgba(255,245,240,0.75); gap: 9px; }
+    .cs-hero-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600; color: var(--accent);
+      text-decoration: none; cursor: none; width: fit-content;
+      border: 1.5px solid var(--accent-strong); border-radius: 100px;
+      padding: 12px 26px; margin-top: 24px;
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
+    }
+    .cs-hero-cta:hover { background: var(--accent); border-color: var(--accent); color: #2C1810; }
+
+    /* ── HERO IMPACT STAT ── */
+    .cs-hero-stat { margin-top: 24px; margin-bottom: 24px; }
+    .cs-hero-stat-value {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(36px, 4.5vw, 56px);
+      font-weight: 900; line-height: 1; letter-spacing: -0.02em;
+      color: var(--accent);
+    }
+    .cs-hero-stat-label {
+      font-family: 'Chillax', sans-serif;
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.14em;
+      color: rgba(255,245,240,0.6); margin-top: 6px;
+    }
+
+    /* ── TL;DR STRIP ── */
+    .tldr-strip {
+      border-top: 1px solid rgba(255,245,240,0.1);
+      display: flex; align-items: stretch;
+    }
+    .tldr-item {
+      flex: 1; padding: 28px 32px;
+      border-right: 1px solid rgba(255,245,240,0.08);
+    }
+    .tldr-item:last-child { border-right: none; }
+    .tldr-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.16em; color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .tldr-value {
+      font-family: 'Chillax', sans-serif;
+      font-size: 13px; font-weight: 500; color: rgba(255,245,240,0.82);
+      line-height: 1.5;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .cs-layout {
+      max-width: 1240px; margin: 0 auto;
+      display: grid; grid-template-columns: 220px 1fr;
+      gap: 0; align-items: start;
+      padding: 0 64px;
+    }
+
+    /* ── TOC ── */
+    .cs-toc {
+      position: sticky; top: 88px; align-self: start;
+      padding: 80px 0 80px;
+      border-right: 1px solid var(--border);
+      padding-right: 40px;
+    }
+    .toc-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.16em; color: var(--accent-muted);
+      margin-bottom: 20px; padding-left: 2px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .toc-list li a {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 500; color: var(--body);
+      text-decoration: none; cursor: none; padding: 8px 10px;
+      border-radius: 8px; transition: color 0.2s, background 0.2s;
+      line-height: 1.3;
+    }
+    .toc-list li a:hover { color: var(--accent); background: var(--accent-faint); }
+    .toc-list li.toc-active a { color: var(--accent); background: var(--accent-ghost); font-weight: 600; }
+    .toc-icon { flex-shrink: 0; display: flex; align-items: center; color: var(--accent); }
+    .toc-divider { height: 1px; background: var(--border); margin: 12px 0; }
+    .toc-list .toc-top a { color: var(--accent-soft); font-size: 12px; }
+    .toc-list .toc-top a:hover { color: var(--accent); }
+
+    /* ── CASE STUDY MAIN ── */
+    .cs-main { padding: 0 0 0 64px; min-width: 0; }
+    .cs-main img, .cs-main video { max-width: 100%; }
+
+    /* ── SECTION BASE ── */
+    .cs-section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cs-section:last-child { border-bottom: none; }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--accent);
+      display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+    }
+    .section-eyebrow .eyebrow-rule { width: 40px; height: 1px; background: var(--accent); flex-shrink: 0; }
+    .cs-section-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(26px, 2.8vw, 38px); font-weight: 700;
+      color: var(--heading); letter-spacing: -0.025em; line-height: 1.15;
+      margin-bottom: 32px;
+    }
+    .cs-body {
+      font-size: 16px; line-height: 1.85; color: var(--body);
+      max-width: 680px; margin-bottom: 32px;
+    }
+    .cs-body:last-child { margin-bottom: 0; }
+    .cs-body strong { color: var(--heading); font-weight: 600; }
+    .cs-body em { color: var(--accent); font-style: italic; }
+
+    /* ── SUBSECTION HEADING ── */
+    .cs-sub-heading {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(18px, 2vw, 24px); font-weight: 700;
+      color: var(--heading); letter-spacing: -0.02em;
+      margin: 48px 0 16px;
+    }
+    .cs-sub-heading:first-child { margin-top: 0; }
+
+    /* ── MEDIA PLACEHOLDER ── */
+    .media-block {
+      width: 100%; border-radius: 16px;
+      background: var(--surface); border: 1.5px dashed var(--border-lg);
+      margin: 32px 0; overflow: hidden;
+      min-height: 320px; display: flex; align-items: center; justify-content: center;
+    }
+    .media-block.media-tall { min-height: 460px; }
+    .media-block.media-short { min-height: 200px; }
+    .media-inner {
+      text-align: center; padding: 40px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .media-icon { font-size: 32px; opacity: 0.5; }
+    .media-label {
+      font-family: 'Fraunces', serif; font-size: 14px; font-style: italic;
+      color: var(--body); opacity: 0.55; max-width: 380px; line-height: 1.6;
+    }
+    .media-caption {
+      font-size: 12px; color: var(--accent-soft); letter-spacing: 0.04em;
+      text-transform: uppercase; font-weight: 600;
+    }
+
+    /* ── CALLOUT CARDS ── */
+    .callouts { display: flex; flex-direction: column; gap: 16px; margin-top: 28px; }
+    .callout {
+      background: var(--surface); border-radius: 12px;
+      border-left: 3px solid var(--accent);
+      padding: 18px 22px;
+    }
+    .callout-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--accent); margin-bottom: 8px;
+    }
+    .callout-body { font-size: 14px; color: var(--body); line-height: 1.72; }
+    .callout-body strong { color: var(--heading); font-weight: 600; }
+
+
+    /* ── INFO CARDS ── */
+    .info-cards { display: flex; gap: 16px; margin: 28px 0; flex-wrap: wrap; }
+    .info-card {
+      flex: 1; min-width: 160px; background: var(--surface);
+      border: 1px solid var(--border-md); border-radius: 16px;
+      padding: 24px 24px; text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .info-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px var(--shadow-sm); }
+    .info-card-icon { margin-bottom: 10px; display: block; color: var(--accent); }
+    .info-card-stat {
+      font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700;
+      color: var(--heading); letter-spacing: -0.02em; margin-bottom: 4px;
+    }
+    .info-card-desc { font-size: 12px; color: var(--body); line-height: 1.5; }
+
+    /* ── FLOW GRAPHIC ── */
+    .flow-graphic {
+      display: flex; align-items: center;
+      background: var(--surface); border: 1px solid var(--border-md);
+      border-radius: 16px; padding: 28px 32px; margin: 28px 0;
+      flex-wrap: wrap; gap: 0;
+    }
+    .flow-node {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      flex: 1; min-width: 80px; text-align: center;
+      padding: 16px 12px;
+    }
+    .flow-node-icon { display: flex; align-items: center; color: var(--accent); }
+    .flow-node-label {
+      font-size: 12px; font-weight: 600; color: var(--heading);
+      letter-spacing: 0.01em; line-height: 1.3;
+    }
+    .flow-arrow {
+      color: var(--accent-soft); font-size: 20px; flex-shrink: 0;
+      padding: 0 4px; align-self: center;
+    }
+
+    /* ── PROCESS STEPS ── */
+    .cs-steps { display: flex; flex-direction: column; gap: 48px; margin-top: 40px; }
+    .cs-step { display: grid; grid-template-columns: 52px 1fr; gap: 24px; }
+    .step-num {
+      font-family: 'Fraunces', serif; font-size: 32px; font-weight: 800;
+      color: var(--accent-muted); letter-spacing: -0.04em; line-height: 1;
+      padding-top: 4px;
+    }
+    .step-content {}
+    .step-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.16em; color: var(--accent); margin-bottom: 8px;
+    }
+    .step-heading {
+      font-family: 'Fraunces', serif; font-size: clamp(16px, 1.8vw, 20px);
+      font-weight: 700; color: var(--heading); margin-bottom: 12px; letter-spacing: -0.02em;
+    }
+    .step-body { font-size: 15px; color: var(--body); line-height: 1.8; max-width: 600px; }
+    .step-body strong { color: var(--heading); font-weight: 600; }
+
+    /* ── SURFACES GRID (pain point icon cards) ── */
+    .surfaces-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+      margin: 28px 0;
+    }
+    .surface-card {
+      background: var(--card-bg); border: 1px solid var(--border-md);
+      border-radius: 14px; padding: 20px 16px; text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .surface-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px var(--shadow-sm); }
+    .surface-icon { margin-bottom: 10px; display: block; color: var(--accent); }
+    .surface-name {
+      font-family: 'Fraunces', serif; font-size: 13px; font-weight: 700;
+      color: var(--heading); margin-bottom: 8px; letter-spacing: -0.01em;
+    }
+    .surface-desc { font-size: 11px; color: var(--body); line-height: 1.6; }
+
+    /* ── PERSONA GRID ── */
+    .persona-strips { margin: 16px 0; }
+    .persona-strip {
+      display: flex; gap: 28px; align-items: flex-start;
+      padding: 20px 0; border-bottom: 1px solid var(--border);
+    }
+    .persona-strip:last-child { border-bottom: none; padding-bottom: 0; }
+    .persona-strip-img {
+      flex: 0 0 56%;
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--border-md);
+    }
+    .persona-strip-img img { width: 100%; height: auto; display: block; }
+    .persona-strip-info {
+      flex: 1; position: sticky; top: 88px;
+    }
+    .persona-name {
+      font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700;
+      color: var(--heading); margin-bottom: 4px; letter-spacing: -0.02em;
+    }
+    .persona-archetype {
+      font-size: 13px; color: var(--accent); font-style: italic;
+      margin-bottom: 20px; line-height: 1.4;
+    }
+    .persona-detail {
+      font-size: 14px; color: var(--body); line-height: 1.65; margin-bottom: 10px;
+    }
+    .persona-detail:last-child { margin-bottom: 0; }
+    .persona-detail strong { color: var(--heading); font-weight: 600; }
+
+    /* ── BEATS (prototype flows) ── */
+    .cs-beats { margin-top: 16px; }
+    .beat {
+      padding: 48px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .beat:last-child { border-bottom: none; }
+    .beat-number {
+      font-family: 'Fraunces', serif; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--accent); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .beat-number::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); }
+    .beat-heading {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(20px, 2.2vw, 28px); font-weight: 700;
+      color: var(--heading); letter-spacing: -0.025em; line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .beat-intro {
+      font-size: 15px; color: var(--body); line-height: 1.85;
+      max-width: 640px; margin-bottom: 0;
+    }
+
+    /* ── INFORMATION CARDS (findings, testing, learnings) ── */
+    .info-cards-stack { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .info-card-block {
+      background: var(--surface); border-radius: 16px;
+      border: 1px solid var(--border-md); padding: 28px 32px;
+    }
+    .info-card-heading {
+      font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700;
+      color: var(--heading); margin-bottom: 12px;
+    }
+    .info-card-body { font-size: 14px; color: var(--body); line-height: 1.78; }
+    .cs-outcomes-dark .info-card-block {
+      background: rgba(255,245,240,0.05); border-color: rgba(255,245,240,0.1);
+    }
+    .cs-outcomes-dark .info-card-heading { color: #FFF5F0; }
+    .cs-outcomes-dark .info-card-body { color: rgba(255,245,240,0.72); }
+
+    /* ── BEAT MEDIA ROW ── */
+    .beat-row {
+      display: flex; gap: 48px; align-items: flex-start; margin: 28px 0 0;
+    }
+    .beat-row--flip { flex-direction: row-reverse; }
+    .beat-media { flex: 0 0 auto; border-radius: 14px; overflow: hidden; }
+    .beat-callouts { flex: 1; position: sticky; top: 88px; }
+
+    /* ── BEFORE / AFTER ── */
+    .before-after { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: start; margin: 32px 0; }
+    .ba-col {}
+    .ba-header {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.14em; margin-bottom: 16px;
+    }
+    .ba-header.before { color: var(--body); opacity: 0.6; }
+    .ba-header.after  { color: var(--accent); }
+    .ba-arrow-icon { font-size: 24px; color: var(--accent-soft); align-self: center; padding-top: 40px; }
+    .ba-caption { font-family: 'Fraunces', serif; font-size: 13px; font-style: italic; color: var(--body); opacity: 0.7; margin-top: 10px; }
+
+    /* ── REFLECTION QUOTE (pullquote) ── */
+    .reflection-quote {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(18px, 2vw, 24px); font-style: italic; font-weight: 400;
+      color: var(--heading); line-height: 1.72;
+      border-left: 3px solid var(--accent); padding-left: 24px;
+      margin: 32px 0;
+    }
+
+    /* ── OUTCOMES DARK SECTION ── */
+    .cs-outcomes-dark {
+      background: #2C1810; margin: 0 -64px; padding: 80px 64px;
+      border-radius: 0; position: relative;
+    }
+    .outcomes-intro-band {
+      display: flex; align-items: center; gap: 32px;
+      margin: -80px -64px 64px;
+      padding: 52px 64px;
+      border-bottom: 1px solid rgba(255,245,240,0.07);
+    }
+    .cs-outcomes-dark::before {
+      content: ''; position: absolute; right: 100%; top: 0; bottom: 0;
+      width: 100vw; background: #2C1810;
+    }
+    .cs-outcomes-dark::after {
+      content: ''; position: absolute; left: 100%; top: 0; bottom: 0;
+      width: 100vw; background: #2C1810;
+    }
+    html.dark .cs-outcomes-dark { background: #1A0C08; }
+    html.dark .cs-outcomes-dark::before,
+    html.dark .cs-outcomes-dark::after { background: #1A0C08; }
+    .cs-outcomes-dark .cs-section-title { color: #FFF5F0; }
+    .cs-outcomes-dark .cs-sub-heading { color: #FFF5F0; }
+    .cs-outcomes-dark .cs-body { color: rgba(255,245,240,0.72); }
+    .cs-outcomes-dark .section-eyebrow { color: var(--accent); }
+    .cs-outcomes-dark .eyebrow-rule { background: var(--accent); }
+
+    /* ── CHANGED LIST ── */
+    .changed-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 24px 0; }
+    .changed-list li {
+      font-size: 15px; color: var(--body); line-height: 1.7;
+      padding-left: 22px; position: relative;
+    }
+    .changed-list li::before {
+      content: '✦'; position: absolute; left: 0; top: 1px;
+      font-size: 10px; color: var(--accent); line-height: 1.7;
+    }
+
+    /* ── NEXT PROJECT ── */
+    .next-project {
+      background: var(--bg); padding: 80px 64px;
+      border-top: 1px solid var(--border);
+    }
+    .next-project-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: flex-end; }
+    .next-project-link {
+      text-decoration: none; cursor: none;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+      padding: 32px 40px; border: 1px solid var(--border-md); border-radius: 20px;
+      background: var(--card-bg); min-width: 280px;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    }
+    .next-project-link:hover { transform: translateY(-4px); box-shadow: 0 16px 48px var(--shadow-md); border-color: var(--accent-muted); }
+    .next-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--accent); display: flex; align-items: center; gap: 6px;
+    }
+    .next-title {
+      font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700;
+      color: var(--heading); letter-spacing: -0.025em; line-height: 1.1;
+    }
+    .next-sub { font-size: 13px; color: var(--body); line-height: 1.5; text-align: right; }
+
+    /* ── FOOTER ── */
+    .site-footer { background: var(--footer-bg); display: grid; grid-template-columns: 1fr 1fr 1fr; min-height: 360px; }
+    .footer-bean { overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .footer-bean img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
+    .footer-middle { display: flex; flex-direction: column; justify-content: flex-end; padding: 56px 52px; gap: 24px; }
+    .footer-closing { font-family: 'Fraunces', serif; font-size: clamp(22px, 2.8vw, 38px); font-style: italic; font-weight: 600; color: #FFF5F0; line-height: 1.25; }
+    .footer-links { display: grid; grid-template-columns: auto auto; gap: 8px 28px; width: fit-content; }
+    .footer-links a { font-size: 14px; font-weight: 500; color: var(--accent); text-decoration: none; cursor: none; position: relative; transition: color 0.2s; width: fit-content; }
+    .footer-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.25s; }
+    .footer-links a:hover { color: #FFF5F0; }
+    .footer-links a:hover::after { transform: scaleX(1); }
+    .footer-copy { font-size: 11px; color: var(--accent-muted); letter-spacing: 0.04em; line-height: 1.6; }
+    .footer-copy-light { color: var(--accent-strong); }
+    .footer-right { display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; text-align: right; padding: 48px 52px 80px; }
+    .footer-availability { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); background: var(--tag-bg); border: 1px solid var(--border-lg); padding: 5px 14px; border-radius: 100px; width: fit-content; }
+    .footer-right-bottom { display: flex; flex-direction: column; gap: 14px; align-items: flex-end; }
+    .footer-nav-link { font-family: 'Chillax', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,245,240,0.38); text-decoration: none; cursor: none; transition: color 0.2s; }
+    .footer-nav-link:hover { color: #FFF5F0; }
+    .footer-back-top { font-family: 'Chillax', sans-serif; font-size: 13px; font-weight: 500; color: var(--accent-mid); background: none; border: none; cursor: none; transition: color 0.2s; letter-spacing: 0.03em; padding: 0; }
+    .footer-back-top:hover { color: var(--accent); }
+
+    /* ── PHASE BREAK (chapter transition) ── */
+    .phase-break {
+      position: relative;
+      margin: 0 -64px;
+      padding: 52px 64px;
+      background: #2C1810;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .phase-break::after {
+      content: '';
+      position: absolute;
+      left: 100%; top: 0; bottom: 0;
+      width: 100vw;
+      background: #2C1810;
+    }
+    html.dark .phase-break { background: #1A0C08; }
+    html.dark .phase-break::after { background: #1A0C08; }
+    .phase-break-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.2em; color: var(--accent);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .phase-break-line {
+      height: 1px; flex: 1; background: rgba(255,245,240,0.1);
+    }
+    .phase-break-statement {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(15px, 1.8vw, 22px); font-weight: 700; font-style: italic;
+      color: rgba(255,245,240,0.88); letter-spacing: -0.015em; line-height: 1.35;
+      flex-shrink: 0; max-width: 340px; text-align: right;
+    }
+
+    /* ── STAT BANNER ── */
+    .stat-banner {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      padding: 36px 0;
+      margin: 36px 0 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat-banner-num {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(64px, 8vw, 96px); font-weight: 900;
+      color: var(--accent); letter-spacing: -0.05em; line-height: 1;
+      flex-shrink: 0;
+    }
+    .stat-banner-label {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(17px, 2vw, 24px); font-weight: 700;
+      color: var(--heading); letter-spacing: -0.02em; line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    .stat-banner-sub { font-size: 14px; color: var(--body); line-height: 1.8; max-width: 440px; }
+
+    /* ── PULL QUOTE (large display quote) ── */
+    .pull-quote {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(22px, 2.8vw, 36px); font-style: italic; font-weight: 400;
+      color: var(--heading); line-height: 1.5;
+      margin: 56px 0;
+      padding-top: 28px;
+      border-top: 2px solid var(--accent-muted);
+      position: relative;
+    }
+    .pull-quote::before {
+      content: '\201C';
+      display: block;
+      font-family: 'Fraunces', serif; font-style: normal;
+      font-size: clamp(48px, 6vw, 72px); font-weight: 900;
+      color: var(--accent); line-height: 1;
+      margin-bottom: 8px;
+    }
+    .pull-quote-attr {
+      display: block;
+      font-family: 'Chillax', sans-serif;
+      font-size: 12px; font-weight: 700; font-style: normal;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent-soft); margin-top: 20px;
+    }
+
+    /* ── DELIVERY GRID (3-path side-by-side videos) ── */
+    .delivery-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px; margin: 24px 0; align-items: stretch;
+    }
+    .delivery-grid > div { display: flex; flex-direction: column; }
+    .delivery-grid > div .callout { flex: 1; }
+    .delivery-grid-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--accent); margin-bottom: 10px;
+    }
+
+    /* ── FRESHBITE HERO PHONE CLUSTER ── */
+    .fbm-outer {
+      position: relative; width: 100%;
+      aspect-ratio: 6 / 5; overflow: hidden;
+    }
+    .fbm-scene {
+      position: absolute; width: 1200px; height: 760px;
+      left: 50%; top: 50%; transform-origin: center center;
+      will-change: transform;
+    }
+    .fbm-ground {
+      position: absolute; left: 50%; bottom: 78px;
+      width: 820px; height: 130px; transform: translateX(-50%);
+      background: radial-gradient(ellipse at 50% 50%,
+          rgba(26,14,10,.38) 0%, rgba(26,14,10,.16) 40%, transparent 72%);
+      filter: blur(6px); pointer-events: none;
+    }
+    @keyframes fbmFloatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+    @keyframes fbmFloatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    @keyframes fbmFloatC { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+    .fbm-fA { animation: fbmFloatA 9s ease-in-out infinite; }
+    .fbm-fB { animation: fbmFloatB 11s ease-in-out infinite; }
+    .fbm-fC { animation: fbmFloatC 8s ease-in-out infinite; }
+    .fbm-node { position: absolute; }
+    .fbm-device {
+      position: relative;
+      border-radius: var(--fbm-r, 44px); padding: var(--fbm-pad, 12px);
+      background: linear-gradient(150deg, #34211A 0%, #1A0E0A 46%, #100806 100%);
+      box-shadow:
+        0 2px 2px rgba(255,245,240,.10) inset,
+        0 0 0 1.5px rgba(255,245,240,.05) inset,
+        0 38px 70px -24px rgba(26,14,10,.62),
+        0 14px 32px -16px rgba(26,14,10,.40);
+    }
+    .fbm-screen {
+      position: relative; overflow: hidden;
+      width: var(--fbm-sw); height: var(--fbm-sh);
+      border-radius: var(--fbm-sr, 33px);
+      background: #FBF7F2;
+      box-shadow: 0 0 0 2px #0c0604, inset 0 0 10px rgba(0,0,0,.35);
+    }
+    .fbm-screen img {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: auto; display: block;
+    }
+    .fbm-island {
+      position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+      width: 34%; height: 7%; max-height: 24px;
+      background: #080403; border-radius: 100px; z-index: 3;
+    }
+    .fbm-navpin {
+      position: absolute !important; top: auto !important; bottom: 0; left: 0;
+      width: 100%; height: auto; z-index: 3; display: block;
+      box-shadow: 0 -3px 12px rgba(26,14,10,.08);
+    }
+    .fbm-sheen {
+      position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      background: linear-gradient(125deg,
+          rgba(255,255,255,.16) 0%, rgba(255,255,255,.04) 18%, transparent 42%);
+      mix-blend-mode: screen;
+    }
+    .fbm-dim::after {
+      content: ''; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+      border-radius: var(--fbm-sr, 33px);
+      background: linear-gradient(180deg, rgba(26,14,10,.10), rgba(26,14,10,.20));
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fbm-fA, .fbm-fB, .fbm-fC { animation: none !important; }
+      #fbmScrollImg { animation: none !important; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .cs-layout { grid-template-columns: 1fr; padding: 0 40px; }
+      .cs-toc { display: none; }
+      /* iPad / tablet: hero stacks + becomes content-height (kills the 100vh gap) */
+      .cs-hero { height: auto; min-height: auto; }
+      .cs-hero-split { grid-template-columns: 1fr; gap: 36px; padding: 104px 48px 48px; }
+      .cs-hero-left { align-items: flex-start; }
+      .cs-hero-right { justify-content: center; }
+      .tldr-strip { flex-direction: column; }
+      .tldr-item { border-right: none; border-bottom: 1px solid rgba(255,245,240,0.08); }
+      .tldr-item:last-child { border-bottom: none; }
+      .cs-main { padding: 0; }
+      .surfaces-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .cs-hero { height: auto; min-height: auto; }
+      .cs-hero-split { grid-template-columns: 1fr; gap: 32px; padding: 100px 32px 40px; }
+      .cs-hero-right { justify-content: flex-start; }
+      .fbm-outer { display: none; }
+      .tldr-strip { flex-direction: column; }
+      .tldr-item { border-right: none; border-bottom: 1px solid rgba(255,245,240,0.08); padding: 20px 24px; }
+      .tldr-item:last-child { border-bottom: none; }
+      .cs-layout { padding: 0 24px; }
+      .cs-section { padding: 56px 0; }
+      .surfaces-grid { grid-template-columns: repeat(2, 1fr); }
+      .beat-row, .beat-row--flip { flex-direction: column; }
+      .beat-callouts { position: static; }
+      .persona-strip { flex-direction: column; gap: 24px; }
+      .persona-strip-img { flex: none; width: 100%; }
+      .persona-strip-info { position: static; }
+      .info-cards { flex-direction: column; }
+      .before-after { grid-template-columns: 1fr; }
+      .ba-arrow-icon { display: none; }
+      .next-project { padding: 56px 24px; }
+      .next-project-link { min-width: auto; width: 100%; }
+      .cs-outcomes-dark { margin: 0 -24px; padding: 56px 24px; }
+      .phase-break { margin: 0 -24px; padding: 40px 24px; flex-wrap: wrap; gap: 16px; }
+      .phase-break-line { display: none; }
+      .phase-break-statement { text-align: left; max-width: 100%; }
+      .stat-banner { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .site-footer { grid-template-columns: 1fr; }
+      .footer-bean { display: none; }
+      .footer-middle { padding: 44px 24px 12px; gap: 18px; }
+      .footer-right { align-items: flex-start; text-align: left; padding: 12px 24px 56px; }
+      .footer-right-bottom { align-items: flex-start; }
+      .delivery-grid { grid-template-columns: 1fr; }
+      nav { padding: 18px 24px; }
+      .nav-links { gap: 16px; }
+    }
+    @media (max-width: 480px) {
+      .surfaces-grid { grid-template-columns: 1fr 1fr; }
+      .cs-step { grid-template-columns: 36px 1fr; gap: 16px; }
+      .step-num { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+<div id="cursor">✦</div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="index.html" class="nav-logo">Ananya Prabhakar</a>
+  <ul class="nav-links">
+    <li><button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <span class="toggle-icon icon-sun">☀︎</span>
+      <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      <span class="toggle-icon icon-moon">☾</span>
+    </button></li>
+    <li class="nav-active"><a href="index.html#work" style="color:inherit;text-decoration:none;cursor:none;">Work</a></li>
+    <li><a href="about.html" style="color:inherit;text-decoration:none;cursor:none;">About</a></li>
+    <li><a href="#" style="color:inherit;text-decoration:none;cursor:none;">Resume ↗</a></li>
+    <li><a href="mailto:ananyaprabhakar1@gmail.com" class="nav-cta" style="text-decoration:none;cursor:none;">Say Hi ✦</a></li>
+  </ul>
+<button class="nav-hamburger" aria-label="Open menu" id="navHamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ══════════════════════════════════
+     HERO
+════════════════════════════════════ -->
+<section class="cs-hero">
+  <div class="cs-hero-ghost">FreshBite</div>
+  <div class="cs-hero-split">
+    <div class="cs-hero-left">
+      <div class="cs-hero-eyebrow">
+        <div class="cs-hero-eyebrow-rule"></div>
+        Case Study · Academic · Service Design
+      </div>
+      <h1 class="cs-hero-title reveal">FreshBite</h1>
+      <p class="cs-hero-subtitle reveal" style="transition-delay:0.08s;">Meal Kits for College Students</p>
+      <p class="cs-hero-hook reveal" style="transition-delay:0.16s; margin-bottom:0;">Meal kits promised to fix dinner. Nobody asked the student eating ramen at 11pm if they were invited.</p>
+      <div class="cs-hero-stat reveal" style="transition-delay:0.19s;">
+        <div class="cs-hero-stat-value">~40%</div>
+        <div class="cs-hero-stat-label">Improvement in task success rate</div>
+      </div>
+      <a href="https://www.figma.com/make/nLkwuclzCX6PG21mJGC61o/Freshbite-Final?fullscreen=1&t=rxhRZrxi74tHkFhL-1&code-node-id=0-9" class="cs-hero-cta reveal" style="transition-delay:0.22s;" target="_blank" rel="noopener">Explore the Prototype →</a>
+    </div>
+    <div class="cs-hero-right reveal" style="transition-delay:0.2s;">
+      <div class="fbm-outer" id="fbmOuter">
+        <div class="fbm-scene" id="fbmScene">
+          <div class="fbm-ground"></div>
+
+          <!-- Back-left: Meal Information (static, tilted) -->
+          <div class="fbm-node fbm-side" style="left:270px; top:188px;">
+            <div class="fbm-fB">
+              <div style="transform:rotate(-4deg) scale(.86);">
+                <div class="fbm-device" style="--fbm-r:40px; --fbm-pad:10px; --fbm-sr:30px;">
+                  <div class="fbm-screen fbm-dim" style="--fbm-sw:212px; --fbm-sh:459px;">
+                    <div class="fbm-island"></div>
+                    <img src="../uploads/freshbite/fb-screen-meal.png" alt="Meal information screen">
+                    <div class="fbm-sheen"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Back-right: Community (static, tilted) -->
+          <div class="fbm-node fbm-side" style="left:728px; top:170px;">
+            <div class="fbm-fC">
+              <div style="transform:rotate(4deg) scale(.86);">
+                <div class="fbm-device" style="--fbm-r:40px; --fbm-pad:10px; --fbm-sr:30px;">
+                  <div class="fbm-screen fbm-dim" style="--fbm-sw:212px; --fbm-sh:459px;">
+                    <div class="fbm-island"></div>
+                    <img src="../uploads/freshbite/fb-screen-community.png" alt="Community screen" style="height:100%; object-fit:cover; object-position:top center;">
+                    <div class="fbm-sheen"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero center: Home (auto-scroll + pinned tab bar) -->
+          <div class="fbm-node" style="left:456px; top:100px; z-index:6;">
+            <div class="fbm-fA">
+              <div class="fbm-device" style="--fbm-r:46px; --fbm-pad:13px; --fbm-sr:34px;">
+                <div class="fbm-screen" style="--fbm-sw:262px; --fbm-sh:567px;">
+                  <div class="fbm-island"></div>
+                  <img id="fbmScrollImg" src="../uploads/freshbite/fb-screen-home.png" alt="FreshBite home screen">
+                  <img class="fbm-navpin" src="../uploads/freshbite/fb-nav-home.png" alt="">
+                  <div class="fbm-sheen"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tldr-strip reveal" style="transition-delay:0.24s;">
+    <div class="tldr-item">
+      <div class="tldr-label">My Role</div>
+      <div class="tldr-value">Customer Insights &amp; UX Designer</div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Team</div>
+      <div class="tldr-value">4 people: research, service design, app design, backend ops</div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Timeline</div>
+      <div class="tldr-value">Fall 2024 · ~4 months</div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Tools</div>
+      <div class="tldr-value">Figma, Qualtrics, Figma Make</div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Course</div>
+      <div class="tldr-value">ISE 216 Service Design, SJSU</div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Deliverables</div>
+      <div class="tldr-value">User research, personas, journey map, hi-fi mobile prototype, usability testing</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     MAIN LAYOUT: TOC + CONTENT
+════════════════════════════════════ -->
+<div class="cs-layout">
+
+  <!-- ── TOC ── -->
+  <aside class="cs-toc">
+    <div class="toc-label">Sections</div>
+    <ul class="toc-list">
+      <li id="toc-problem"><a href="#problem"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="5.5"/><circle cx="7" cy="7" r="2.8"/><circle cx="7" cy="7" r="0.8" fill="currentColor" stroke="none"/></svg></span> Problem Space</a></li>
+      <li id="toc-research"><a href="#research"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="5.5" r="4"/><path d="M8.5 8.5l3.5 3.5"/></svg></span> Research</a></li>
+      <li id="toc-painpoints"><a href="#painpoints"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 2.5h11a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5H7.5L5 12V9.5H1.5A.5.5 0 0 1 1 9V3a.5.5 0 0 1 .5-.5z"/></svg></span> What We Heard</a></li>
+      <li id="toc-personas"><a href="#personas"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="4.5" r="2.5"/><path d="M2 13c0-2.76 2.24-5 5-5s5 2.24 5 5"/></svg></span> Personas</a></li>
+      <li id="toc-journey"><a href="#journey"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="2.5" cy="10" r="1.2" fill="currentColor" stroke="none"/><circle cx="7" cy="4.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="11.5" cy="10" r="1.2" fill="currentColor" stroke="none"/><path d="M2.5 10Q5 10 7 4.5Q9 4.5 11.5 10"/></svg></span> Journey Map</a></li>
+      <li id="toc-prototype"><a href="#prototype"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="1" width="6" height="12" rx="1.2"/><circle cx="7" cy="11.2" r="0.7" fill="currentColor" stroke="none"/></svg></span> Prototype</a></li>
+      <li id="toc-testing"><a href="#testing"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="5.5"/><path d="M4.5 7l2 2 3.5-3.5"/></svg></span> Usability Testing</a></li>
+      <li id="toc-outcomes"><a href="#outcomes"><span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2A3.5 3.5 0 0 1 10.5 5.5c0 1.6-1 2.9-2.5 3.5V11h-2V9C4.5 8.4 3.5 7.1 3.5 5.5A3.5 3.5 0 0 1 7 2z"/><path d="M5.5 11.5h3"/><path d="M6 13h2"/></svg></span> Results &amp; Learnings</a></li>
+      <li class="toc-divider" style="list-style:none;height:0;"></li>
+      <li class="toc-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">↑ Top</a></li>
+    </ul>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="cs-main">
+
+
+    <!-- ══════════════════════════════════
+         SECTION 1 · PROBLEM SPACE
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="problem">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>The Problem Space</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">Students eat badly. Not because they don't care. Because nothing was designed for them.</h2>
+
+      <p class="cs-body reveal" style="transition-delay:0.12s;">Existing meal kit services assume:</p>
+      <ul class="changed-list reveal" style="transition-delay:0.16s; margin-bottom:28px;">
+        <li>A predictable weekly schedule</li>
+        <li>A full kitchen</li>
+        <li>A budget that can absorb $60 without blinking</li>
+      </ul>
+
+      <p class="cs-body reveal" style="transition-delay:0.2s;">For a student juggling classes, a part-time job, and three group projects, that's not a service. That's another thing to manage.</p>
+
+      <p class="cs-body reveal" style="transition-delay:0.24s; font-family:'Fraunces',serif; font-style:italic; font-size:clamp(16px,1.8vw,20px); color:var(--heading);">But the problem wasn't just on the user side.</p>
+
+      <p class="cs-body reveal" style="transition-delay:0.28s;">Meal kits are complex operations. If something breaks behind the scenes (sourcing, logistics, support), the user feels it.</p>
+
+      <p class="cs-body reveal" style="transition-delay:0.32s;">So we asked a different question:</p>
+
+      <div class="reflection-quote reveal" style="transition-delay:0.36s;">
+        What would a meal kit look like if it was designed around a student's actual life, built with the people who run these services in the room?
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 2 · RESEARCH
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="research">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>Research</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">We didn't just ask students what they wanted. We asked the people serving them too.</h2>
+
+      <div class="info-cards reveal" style="transition-delay:0.12s;">
+        <div class="info-card">
+          <span class="info-card-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13" cy="12" r="7"/><path d="M18.5 17.5L24 24"/><path d="M10 12h6"/><path d="M13 9v6"/></svg></span>
+          <div class="info-card-stat">04</div>
+          <div class="info-card-desc">research methods</div>
+        </div>
+        <div class="info-card">
+          <span class="info-card-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="5" width="14" height="18" rx="1.5"/><path d="M11 5v3h6V5"/><path d="M10.5 13h7"/><path d="M10.5 17h7"/><path d="M10.5 21h4"/></svg></span>
+          <div class="info-card-stat">88</div>
+          <div class="info-card-desc">survey responses</div>
+        </div>
+        <div class="info-card">
+          <span class="info-card-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="4"/><path d="M3 24c0-3.87 3.13-7 7-7s7 3.13 7 7"/><circle cx="20" cy="11" r="3.5"/><path d="M25 24c0-3.31-2.24-5.5-5-6"/></svg></span>
+          <div class="info-card-stat">2</div>
+          <div class="info-card-desc">sides of the service</div>
+        </div>
+      </div>
+
+      <div class="cs-steps">
+
+        <div class="cs-step reveal">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <div class="step-label">Method 1</div>
+            <div class="step-heading">Competitor Analysis</div>
+            <p class="step-body">Audited existing meal kit services before talking to anyone.</p>
+            <p class="step-body" style="margin-top:10px;"><strong>What they do well</strong> → Variety, customization, subscription convenience<br><strong>Where they fall short</strong> → Packaging waste, subscription lock-ins, complex meal prep, limited flexibility</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;">
+              <img src="../uploads/freshbite/artefacts/Freshbite-Competitor%20Analysis%20-%201.jpeg" alt="Competitor Analysis slide 1" loading="lazy" style="width:100%;height:auto;border-radius:10px;display:block;">
+              <img src="../uploads/freshbite/artefacts/Freshbite-Competitor%20Analysis%20-%202.jpeg" alt="Competitor Analysis slide 2" loading="lazy" style="width:100%;height:auto;border-radius:10px;display:block;">
+            </div>
+          </div>
+        </div>
+
+        <div class="cs-step reveal">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <div class="step-label">Method 2</div>
+            <div class="step-heading">Survey: 88 responses</div>
+            <p class="step-body">Qualtrics survey capturing meal kit usage patterns, affordability concerns, and service preferences at scale.</p>
+            <div style="margin-top:20px;">
+              <img src="../uploads/freshbite/artefacts/freshbite%20survey%20visual.png" alt="Survey results visual" loading="lazy" style="width:100%;height:auto;border-radius:10px;display:block;">
+            </div>
+          </div>
+        </div>
+
+        <div class="cs-step reveal">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <div class="step-label">Method 3</div>
+            <div class="step-heading">Customer Focus Group</div>
+            <p class="step-body">Explored real experiences with services like HelloFresh. Frustrations with customization, prep time, and packaging came up repeatedly.</p>
+            <div style="margin-top:20px;">
+              <img src="../uploads/freshbite/artefacts/focus%20group.png" alt="Customer focus group" loading="lazy" style="width:100%;height:auto;border-radius:10px;display:block;">
+            </div>
+          </div>
+        </div>
+
+        <div class="cs-step reveal">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <div class="step-label">Method 4</div>
+            <div class="step-heading">Customer User Interview</div>
+            <p class="step-body">1:1 conversation surfacing deeper pain points around pricing, subscription models, and portion sizes.</p>
+            <div style="margin-top:20px;">
+              <img src="../uploads/freshbite/artefacts/user%20interview.png" alt="Customer user interview" loading="lazy" style="width:100%;height:auto;border-radius:10px;display:block;">
+            </div>
+          </div>
+        </div>
+
+        <div class="cs-step reveal">
+          <div class="step-num">05</div>
+          <div class="step-content">
+            <div class="step-label">Method 5</div>
+            <div class="step-heading">Service-Side Staff Focus Group</div>
+            <p class="step-body">Three chefs and dining operations staff in one room, answering questions, building on each other's answers, and giving us an honest look at how large-scale meal services actually run.</p>
+            <div class="reflection-quote" style="margin-top:24px; margin-bottom:0;">It was the first time I got to research from the service side, and it changed how I think about design problems entirely.</div>
+            <div style="margin-top:20px;">
+              <img src="../uploads/freshbite/artefacts/service%20side%20staff%20photo.png" alt="Service-side staff focus group" loading="lazy" style="width:100%;height:auto;border-radius:10px;display:block;">
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /cs-steps -->
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 3 · WHAT WE HEARD
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="painpoints">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>What We Heard</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">Five pain points. All pointing to the same thing: students needed a service that worked around their life, not the other way around.</h2>
+
+      <div class="surfaces-grid reveal" style="transition-delay:0.12s;">
+        <div class="surface-card">
+          <span class="surface-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v12"/><path d="M9 8.5C9.5 7.2 10.4 6.5 12 6.5s2.5.7 2.5 2c0 1.2-1 1.8-2.5 2.2S9.5 11.8 9.5 13c0 1.3 1 2 2.5 2s2.5-.7 2.5-2"/></svg></span>
+          <div class="surface-name">Affordability</div>
+          <div class="surface-desc">Meal kits felt expensive; students couldn't justify the cost consistently.</div>
+        </div>
+        <div class="surface-card">
+          <span class="surface-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4C20 4 8 4.5 5.5 14c4.5-3.5 9.5-1.5 10.5 3.5"/><path d="M5.5 14C5 19 9 22 12 22"/><path d="M20 4L12 22"/></svg></span>
+          <div class="surface-name">Packaging Waste</div>
+          <div class="surface-desc">Excessive packaging frustrated users who cared about sustainability.</div>
+        </div>
+        <div class="surface-card">
+          <span class="surface-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 7v6l4 2.5"/><path d="M10 3h4"/><path d="M12 3v2"/></svg></span>
+          <div class="surface-name">Prep Time</div>
+          <div class="surface-desc">Meals took longer than advertised. Pre-prepared options were strongly preferred.</div>
+        </div>
+        <div class="surface-card">
+          <span class="surface-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="16.5" r="1.5" fill="currentColor" stroke="none"/></svg></span>
+          <div class="surface-name">Subscription Lock-In</div>
+          <div class="surface-desc">Rigid weekly plans felt like a trap. Users wanted to order on their own terms.</div>
+        </div>
+        <div class="surface-card">
+          <span class="surface-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/><circle cx="9" cy="7" r="2.5" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="2.5" fill="currentColor" stroke="none"/><circle cx="10" cy="17" r="2.5" fill="currentColor" stroke="none"/></svg></span>
+          <div class="surface-name">Customization Limits</div>
+          <div class="surface-desc">Swapping ingredients based on dietary needs or preferences wasn't possible.</div>
+        </div>
+      </div>
+
+      <div class="stat-banner reveal" style="transition-delay:0.2s;">
+        <div class="stat-banner-num">88</div>
+        <div>
+          <div class="stat-banner-label">students told us the same story.</div>
+          <p class="stat-banner-sub">Every pain point above appeared, unprompted, across surveys, focus groups, and 1:1 interviews. This wasn't noise. It was signal.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 4 · PERSONAS
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="personas">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>Personas</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">Designing for both sides of the service meant understanding both sides of the people.</h2>
+      <p class="cs-body reveal" style="transition-delay:0.12s;">I created 6 personas (3 customers, 3 service staff) so every design decision could be tested against real human needs, not assumptions.</p>
+
+      <h3 class="cs-sub-heading reveal" style="transition-delay:0.16s;">Customer Personas</h3>
+      <div class="persona-strips reveal" style="transition-delay:0.2s;">
+
+        <div class="persona-strip">
+          <div class="persona-strip-img">
+            <img src="../uploads/freshbite/artefacts/personas/Niyal%20Gupta.png" alt="Niyal Gupta persona" loading="lazy">
+          </div>
+          <div class="persona-strip-info">
+            <div class="persona-name">Niyal Gupta</div>
+            <div class="persona-archetype">The Busy Student Managing a Hectic Schedule</div>
+            <p class="persona-detail"><strong>Goal:</strong> Flexibility. Order when she needs it, not on a rigid weekly plan.</p>
+            <p class="persona-detail"><strong>Frustration:</strong> Forgets to skip deliveries and gets charged anyway</p>
+          </div>
+        </div>
+
+        <div class="persona-strip">
+          <div class="persona-strip-img">
+            <img src="../uploads/freshbite/artefacts/personas/sarah%20lopez.png" alt="Sarah Lopez persona" loading="lazy">
+          </div>
+          <div class="persona-strip-info">
+            <div class="persona-name">Sarah Lopez</div>
+            <div class="persona-archetype">The Student on a Budget</div>
+            <p class="persona-detail"><strong>Goal:</strong> Affordable, single-serving, on-demand meals with minimal waste</p>
+            <p class="persona-detail"><strong>Frustration:</strong> Meal kits aren't built for one person; minimum orders and complex recipes price her out</p>
+          </div>
+        </div>
+
+        <div class="persona-strip">
+          <div class="persona-strip-img">
+            <img src="../uploads/freshbite/artefacts/personas/Jake%20Thompson.png" alt="Jake Thompson persona" loading="lazy">
+          </div>
+          <div class="persona-strip-info">
+            <div class="persona-name">Jake Thompson</div>
+            <div class="persona-archetype">The Fitness-Focused College Athlete</div>
+            <p class="persona-detail"><strong>Goal:</strong> High-protein, customizable meals that actually match his macros</p>
+            <p class="persona-detail"><strong>Frustration:</strong> Portion sizes are too small and ingredient swaps are nearly impossible</p>
+          </div>
+        </div>
+
+      </div><!-- /customer personas -->
+
+      <h3 class="cs-sub-heading reveal" style="margin-top:32px; transition-delay:0.08s;">Service-Side Personas</h3>
+      <div class="persona-strips reveal" style="transition-delay:0.12s;">
+
+        <div class="persona-strip">
+          <div class="persona-strip-img">
+            <img src="../uploads/freshbite/artefacts/personas/Samantha%20Lee.png" alt="Samantha Lee persona" loading="lazy">
+          </div>
+          <div class="persona-strip-info">
+            <div class="persona-name">Samantha Lee</div>
+            <div class="persona-archetype">Logistics &amp; Delivery Coordinator</div>
+            <p class="persona-detail"><strong>Goal:</strong> On-time deliveries with minimal disruptions</p>
+            <p class="persona-detail"><strong>Frustration:</strong> Weather, inconsistent drivers, and packaging leaks constantly derail her day</p>
+          </div>
+        </div>
+
+        <div class="persona-strip">
+          <div class="persona-strip-img">
+            <img src="../uploads/freshbite/artefacts/personas/David%20Carter.png" alt="David Carter persona" loading="lazy">
+          </div>
+          <div class="persona-strip-info">
+            <div class="persona-name">David Carter</div>
+            <div class="persona-archetype">Head of Meal Innovation &amp; Recipe Development</div>
+            <p class="persona-detail"><strong>Goal:</strong> Create exciting, easy-to-cook meals customers actually love</p>
+            <p class="persona-detail"><strong>Frustration:</strong> Supplier constraints make ingredient flexibility nearly impossible</p>
+          </div>
+        </div>
+
+        <div class="persona-strip">
+          <div class="persona-strip-img">
+            <img src="../uploads/freshbite/artefacts/personas/Alex%20Martinez.png" alt="Alex Martinez persona" loading="lazy">
+          </div>
+          <div class="persona-strip-info">
+            <div class="persona-name">Alex Martinez</div>
+            <div class="persona-archetype">Customer Support Representative</div>
+            <p class="persona-detail"><strong>Goal:</strong> Resolve issues fast and keep customers happy</p>
+            <p class="persona-detail"><strong>Frustration:</strong> Rigid company policies make it hard to actually help people</p>
+          </div>
+        </div>
+
+      </div><!-- /service personas -->
+    </section>
+
+    <div class="phase-break reveal">
+      <div class="phase-break-label">Phase 2: Synthesize</div>
+      <div class="phase-break-line"></div>
+      <div class="phase-break-statement">With who we were designing for locked in, it was time to map the full story.</div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         SECTION 5 · JOURNEY MAP
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="journey">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>Journey Map</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">With research in hand, we mapped the full customer journey, from the moment a student first hears about FreshBite to becoming a loyal user.</h2>
+      <p class="cs-body reveal" style="transition-delay:0.12s;">The journey followed Sarah Lopez, our budget-conscious persona, through five stages:</p>
+
+      <div class="flow-graphic reveal" style="transition-delay:0.16s;">
+        <div class="flow-node"><span class="flow-node-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 11s3.5-6.5 9-6.5S20 11 20 11s-3.5 6.5-9 6.5S2 11 2 11z"/><circle cx="11" cy="11" r="2.5"/></svg></span><span class="flow-node-label">Awareness</span></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node"><span class="flow-node-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8.5"/><path d="M8.5 8.5a2.5 2.5 0 0 1 5 0c0 2-2.5 2.5-2.5 4"/><circle cx="11" cy="15.5" r=".9" fill="currentColor" stroke="none"/></svg></span><span class="flow-node-label">Consideration</span></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node"><span class="flow-node-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="2" width="11" height="18" rx="2"/><path d="M9.5 17h3"/><path d="M11 7v7"/><path d="M8 11l3 3 3-3"/></svg></span><span class="flow-node-label">Acquisition</span></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node"><span class="flow-node-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l8-5 8 5v9l-8 5-8-5V8.5z"/><path d="M3 8.5l8 5 8-5"/><path d="M11 13.5v9"/></svg></span><span class="flow-node-label">Service</span></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node"><span class="flow-node-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 18.5S2.5 13 2.5 7.5A4.5 4.5 0 0 1 11 5.2a4.5 4.5 0 0 1 8.5 2.3C19.5 13 11 18.5 11 18.5z"/></svg></span><span class="flow-node-label">Loyalty</span></div>
+      </div>
+
+      <h3 class="cs-sub-heading reveal">Key moments we identified</h3>
+      <div class="info-cards-stack reveal" style="transition-delay:0.1s;">
+        <div class="info-card-block">
+          <div class="info-card-heading">Consideration: Highest Drop-Off Risk</div>
+          <p class="info-card-body">Students visited the app but second-guessed committing.</p>
+        </div>
+        <div class="info-card-block">
+          <div class="info-card-heading">Acquisition: Hinged on Trust</div>
+          <p class="info-card-body">The kiosk pickup experience had to feel intuitive on the first try.</p>
+        </div>
+        <div class="info-card-block">
+          <div class="info-card-heading">Loyalty: Driven by Sustainability</div>
+          <p class="info-card-body">Users who felt connected to the rescued produce mission stayed longer.</p>
+        </div>
+      </div>
+
+      <p class="cs-body reveal" style="margin-top:24px;">These friction points directly informed the onboarding flow and scheduling design in the prototype.</p>
+
+      <div class="reveal" style="transition-delay:0.14s;">
+        <img src="../uploads/freshbite/artefacts/Customer%20Journey%20Map.png" alt="FreshBite customer journey map" loading="lazy" style="width:100%;height:auto;border-radius:12px;display:block;">
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 6 · PROTOTYPE WALKTHROUGH
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="prototype">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>Prototype Walkthrough</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">Six flows. One goal: make healthy eating feel effortless for students.</h2>
+      <p class="cs-body reveal" style="transition-delay:0.16s;">Prototypes were built in Figma and polished to production quality using Figma Make.</p>
+
+      <div class="cs-beats">
+
+        <!-- Beat 01 -->
+        <div class="beat reveal">
+          <div class="beat-number">01: Onboarding</div>
+          <h3 class="beat-heading">First impressions matter more when students are already subscription-skeptical. The onboarding had one job: earn trust before asking for anything.</h3>
+          <div class="beat-row">
+            <div class="beat-media">
+              <video muted loop playsinline style="max-height:500px;width:auto;display:block;">
+                <source src="../uploads/freshbite/FreshBite-Onboarding%20video.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="beat-callouts">
+              <div class="callouts">
+                <div class="callout">
+                  <div class="callout-label">Brand Intro</div>
+                  <p class="callout-body">"Fresh, Flexible and Planet-Friendly." No jargon, no commitment pressure.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">Differentiators</div>
+                  <p class="callout-body">A quick scan of what makes FreshBite different. On-demand ordering, rescued produce, AI recommendations.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">Sustainability Hook</div>
+                  <p class="callout-body">"You're helping rescue produce." Turns a product feature into a sense of personal contribution, before the user has even ordered once.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">Personalization Quiz</div>
+                  <p class="callout-body">"Let's get to know YOU." Bridges brand values to individual needs, setting up AI-powered recommendations.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Beat 02 -->
+        <div class="beat reveal">
+          <div class="beat-number">02: Homepage &amp; Menu</div>
+          <h3 class="beat-heading">The homepage needed to feel warm but also immediately useful.</h3>
+          <div class="beat-row beat-row--flip">
+            <div class="beat-media">
+              <img src="../uploads/freshbite/Freshbite-Home.png" alt="FreshBite — homepage" loading="lazy" style="width:230px;height:auto;display:block;">
+            </div>
+            <div class="beat-callouts">
+              <div class="callouts">
+                <div class="callout">
+                  <div class="callout-label">Personalized Greeting</div>
+                  <p class="callout-body">"Hello Sarah!" builds instant connection.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">Sustainability Progress Nudge</div>
+                  <p class="callout-body">"You've saved 4 lbs of food waste so far" keeps the mission visible without being preachy.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">DIY vs. Heat-and-Eat</div>
+                  <p class="callout-body">DIY Meal Kits and Heat-and-Eat are visually separated, so users self-select based on how much time and effort they have that day.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Beat 03 -->
+        <div class="beat reveal">
+          <div class="beat-number">03: Meal Information</div>
+          <h3 class="beat-heading">This screen does three jobs at once: inform, customize, and reinforce brand values.</h3>
+          <div class="beat-row">
+            <div class="beat-media">
+              <img src="../uploads/freshbite/Freshbite-MealInformation.png" alt="FreshBite — meal information screen" loading="lazy" style="width:230px;height:auto;display:block;">
+            </div>
+            <div class="beat-callouts">
+              <div class="callouts">
+                <div class="callout">
+                  <div class="callout-label">Complete Meal Snapshot</div>
+                  <p class="callout-body">Full ingredient list with allergens, spice level, and portion size. All upfront.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">Customization</div>
+                  <p class="callout-body">Add-ons and vegetarian-friendly swaps for personalization.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">Dynamic Switching</div>
+                  <p class="callout-body">Switch between DIY and Heat-and-Eat dynamically, for flexibility without starting over.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">Values at Checkout</div>
+                  <p class="callout-body">Rescued produce and eco-friendly packaging messaging at checkout: confidence, control, and values all in one place.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Beat 04 -->
+        <div class="beat reveal">
+          <div class="beat-number">04: Meal Delivery</div>
+          <h3 class="beat-heading">The most complex flow to design: it had to serve two very different user types without making either feel like they were in the wrong app.</h3>
+          <p class="beat-intro"><em>This flow gives users more control without more friction,</em> which was the core tension the research kept surfacing.</p>
+          <div class="delivery-grid" style="margin-top:24px;">
+            <div>
+              <div class="delivery-grid-label">On-Demand</div>
+              <div style="border-radius:14px;overflow:hidden;">
+                <video muted loop playsinline style="width:100%;display:block;">
+                  <source src="../uploads/freshbite/Meal%20Delivery%20order%20now.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="callout" style="margin-top:16px;">
+                <div class="callout-label">On-Demand Path</div>
+                <p class="callout-body">Order now, delivered to the nearest kiosk in 1 hour. Low friction, immediate.</p>
+              </div>
+            </div>
+            <div>
+              <div class="delivery-grid-label">Schedule for Later</div>
+              <div style="border-radius:14px;overflow:hidden;">
+                <video muted loop playsinline style="width:100%;display:block;">
+                  <source src="../uploads/freshbite/Meal%20delivery%20-%20schedule%20for%20later%201%20-%20one%20time.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="callout" style="margin-top:16px;">
+                <div class="callout-label">Schedule for Later Path</div>
+                <p class="callout-body">Pick a date, time, and meal. Ideal for planners.</p>
+              </div>
+            </div>
+            <div>
+              <div class="delivery-grid-label">Weekly Plan</div>
+              <div style="border-radius:14px;overflow:hidden;">
+                <video muted loop playsinline style="width:100%;display:block;">
+                  <source src="../uploads/freshbite/Meal%20Delivery-schedule%20for%20later%202%20-%20weekly%20plan.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="callout" style="margin-top:16px;">
+                <div class="callout-label">Weekly Subscription Path</div>
+                <p class="callout-body">Dual input (meals per day × days per week) with day-wise meal selection. "Choose or Repeat" quick actions for users who find a meal they love.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Beat 05 -->
+        <div class="beat reveal">
+          <div class="beat-number">05: Orders &amp; Pickup</div>
+          <h3 class="beat-heading">Getting the meal is the moment of truth. This flow blends logistical clarity with emotional reward.</h3>
+          <div class="beat-row">
+            <div class="beat-media">
+              <video muted loop playsinline style="max-height:500px;width:auto;display:block;">
+                <source src="../uploads/freshbite/order%20%26%20pickup%20flow.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="beat-callouts">
+              <div class="callouts">
+                <div class="callout">
+                  <div class="callout-label">Orders Page</div>
+                  <p class="callout-body">Shows current and past orders with day-wise visibility and an Opt-Out option. No traps.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">Pickup Flow</div>
+                  <p class="callout-body">Location-based kiosk directions → QR code scan → locker opens → confirmation.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">Closing Screen</div>
+                  <p class="callout-body">"You just rescued 4 veggies" is positive reinforcement that closes the sustainability loop with a feel-good moment.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Beat 06 -->
+        <div class="beat reveal">
+          <div class="beat-number">06: Prep Guide &amp; Community</div>
+          <h3 class="beat-heading">The experience doesn't end at pickup. Students still need to actually cook the thing.</h3>
+          <div class="beat-row beat-row--flip">
+            <div class="beat-media">
+              <video muted loop playsinline style="max-height:500px;width:auto;display:block;">
+                <source src="../uploads/freshbite/Prep%20guide%20and%20community.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="beat-callouts">
+              <div class="callouts">
+                <div class="callout">
+                  <div class="callout-label">Step-by-Step Recipe</div>
+                  <p class="callout-body">With a video option for hands-free cooking support and an audio option.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">Social Nudge</div>
+                  <p class="callout-body">"Share what you cooked" nudge at the end: a natural, unforced bridge to the community feed.</p>
+                </div>
+                <div class="callout">
+                  <div class="callout-label">Community Feed</div>
+                  <p class="callout-body">Transforms isolated cooking into a shared experience, turning a utility app into something students actually want to open.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /cs-beats -->
+    </section>
+
+    <div class="phase-break reveal">
+      <div class="phase-break-label">Phase 3: Validate</div>
+      <div class="phase-break-line"></div>
+      <div class="phase-break-statement">Six screens built. Five students watching. One afternoon that changed the design.</div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         SECTION 7 · USABILITY TESTING
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="testing">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>Usability Testing</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">Designs don't get better by looking at them. They get better by watching someone else use them.</h2>
+      <p class="cs-body reveal" style="transition-delay:0.12s;">I ran a task-based usability test with 5 students using a think-aloud protocol.</p>
+
+      <div class="info-cards-stack reveal" style="transition-delay:0.16s;">
+        <div class="info-card-block">
+          <div class="info-card-heading">Goal</div>
+          <p class="info-card-body">Test the clarity and efficiency of the meal scheduling flow.</p>
+        </div>
+        <div class="info-card-block">
+          <div class="info-card-heading">What We Found</div>
+          <p class="info-card-body">CTAs in the scheduling flow were overwhelming; users didn't know where to look or what to do next.</p>
+        </div>
+        <div class="info-card-block">
+          <div class="info-card-heading">What We Changed</div>
+          <p class="info-card-body">Replaced the CTA-heavy layout with a breadcrumb-based navigation system, giving users a clear sense of where they were and what came next.</p>
+        </div>
+      </div>
+
+      <div class="pull-quote reveal" style="transition-delay:0.14s; margin-top:40px;">
+        I wasn't sure which step I was on before. The breadcrumbs really help now!
+        <span class="pull-quote-attr">Usability Tester, Session 3</span>
+      </div>
+
+      <p class="cs-body reveal" style="transition-delay:0.18s;">Changes were implemented immediately after testing, keeping the process agile and truly iterative, not just performatively so.</p>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 8 · RESULTS & LEARNINGS
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="outcomes" style="border-bottom:none; padding-bottom:0;">
+      <div class="cs-outcomes-dark">
+
+        <div class="outcomes-intro-band reveal">
+          <div class="phase-break-label">Results &amp; Learnings</div>
+          <div class="phase-break-line"></div>
+          <div class="phase-break-statement">The research pointed to real problems. The design solved them.</div>
+        </div>
+        <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">The research pointed to real problems. The design solved them. The testing proved it.</h2>
+
+        <!-- Big stat -->
+        <p class="reveal" style="transition-delay:0.12s; font-family:'Fraunces',serif; font-size:clamp(40px,6vw,72px); font-weight:800; color:#FFF5F0; letter-spacing:-0.04em; line-height:1; margin-bottom:8px;">~40%</p>
+        <p class="reveal" style="transition-delay:0.16s; font-size:16px; color:rgba(255,245,240,0.72); margin-bottom:40px; line-height:1.6; max-width:480px;">improvement in task success rate across usability testing sessions</p>
+
+        <!-- Stat cards -->
+        <div class="info-cards reveal" style="transition-delay:0.2s;">
+          <div class="info-card" style="background:rgba(255,245,240,0.06); border-color:rgba(255,245,240,0.1);">
+            <span class="info-card-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="3" width="12" height="22" rx="2.5"/><path d="M12.5 22h3"/><circle cx="14" cy="13" r="5"/><path d="M14 10v3l3 1.5"/></svg></span>
+            <div class="info-card-stat" style="color:#FFF5F0;">4 / 5</div>
+            <div class="info-card-desc" style="color:rgba(255,245,240,0.65);">testers preferred the on-demand ordering model over typical subscription plans</div>
+          </div>
+          <div class="info-card" style="background:rgba(255,245,240,0.06); border-color:rgba(255,245,240,0.1);">
+            <span class="info-card-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="20" height="18" rx="2"/><path d="M4 13h20"/><path d="M9 4v6"/><path d="M19 4v6"/><path d="M9 18h3"/><path d="M15 18h4"/></svg></span>
+            <div class="info-card-stat" style="color:#FFF5F0;">In Control</div>
+            <div class="info-card-desc" style="color:rgba(255,245,240,0.65);">users felt it: the redesigned flow let them customize meals per day without confusion</div>
+          </div>
+          <div class="info-card" style="background:rgba(255,245,240,0.06); border-color:rgba(255,245,240,0.1);">
+            <span class="info-card-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 5C22 5 9 5.5 6 16c5-4 11-2 12 4"/><path d="M6 16C5.5 22 10 25.5 14 25.5"/><path d="M22 5L14 25.5"/></svg></span>
+            <div class="info-card-stat" style="color:#FFF5F0;">3 / 5</div>
+            <div class="info-card-desc" style="color:rgba(255,245,240,0.65);">users felt they were actively contributing to a cause through the rescued produce framing</div>
+          </div>
+          <div class="info-card" style="background:rgba(255,245,240,0.06); border-color:rgba(255,245,240,0.1);">
+            <span class="info-card-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="14" cy="15" r="9"/><path d="M14 8V6"/><path d="M11.5 6h5"/><path d="M14 15V10"/><path d="M14 15l5 3"/></svg></span>
+            <div class="info-card-stat" style="color:#FFF5F0;">&lt; 5 min</div>
+            <div class="info-card-desc" style="color:rgba(255,245,240,0.65);">prep options appreciated for visual ingredient clarity; cooking felt approachable, not intimidating</div>
+          </div>
+        </div>
+
+        <!-- What I Learned -->
+        <h3 class="cs-sub-heading reveal" style="transition-delay:0.08s; margin-top:64px;">What I Learned</h3>
+        <p class="cs-body reveal" style="transition-delay:0.12s; color:rgba(255,245,240,0.72);">Good service design starts way before the first screen.</p>
+
+        <div class="info-cards-stack reveal" style="transition-delay:0.16s;">
+          <div class="info-card-block">
+            <div class="info-card-heading">Research both sides.</div>
+            <p class="info-card-body">Talking to chefs and logistics staff alongside students changed how I see design problems. The same failure looks completely different depending on which end of the service you're standing on.</p>
+          </div>
+          <div class="info-card-block">
+            <div class="info-card-heading">Systems thinking is a design skill.</div>
+            <p class="info-card-body">I came in thinking this was an app project. I left understanding logistics, affiliate marketing, and cold chain compliance. Service design is bigger than the screen. I'm hooked.</p>
+          </div>
+          <div class="info-card-block">
+            <div class="info-card-heading">Collaboration is rarely textbook.</div>
+            <p class="info-card-body">I learned to stay accountable for outcomes even when ownership got uneven: stepping up, filling gaps, keeping focus. It made me a more adaptable collaborator.</p>
+          </div>
+          <div class="info-card-block">
+            <div class="info-card-heading">Iterate fast, involve real users.</div>
+            <p class="info-card-body">One usability test changed the entire scheduling flow. That's the reminder I needed.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main><!-- /cs-main -->
+</div><!-- /cs-layout -->
+
+<!-- ══════════════════════════════════
+     NEXT PROJECT
+════════════════════════════════════ -->
+<div class="next-project">
+  <div class="next-project-inner">
+    <a href="ticketsque.html" class="next-project-link reveal">
+      <div class="next-label">Next Project →</div>
+      <div class="next-title">TicketsQue Solutions</div>
+      <div class="next-sub">Designing at Startup Speed</div>
+    </a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     FOOTER
+════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-bean">
+    <img src="../uploads/giphy.gif" alt="Mr. Bean waiting patiently"/>
+  </div>
+  <div class="footer-middle">
+    <div class="footer-availability">Available to work ✦</div>
+    <p class="footer-closing">I'll be waiting<br/>to hear from you.</p>
+    <div class="footer-links">
+      <a href="mailto:ananyaprabhakar1@gmail.com">Email ↗</a>
+      <a href="https://www.linkedin.com/in/ananya--prabhakar/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="https://x.com/AnanyaPrabhakr" target="_blank" rel="noopener">X ↗</a>
+      <a href="https://medium.com/@ananyaprabhakar1" target="_blank" rel="noopener">Medium ↗</a>
+      <a href="https://www.behance.net/ananyaprabhakar1" target="_blank" rel="noopener">Behance ↗</a>
+      <a href="#" target="_blank">Resume ↗</a>
+    </div>
+    <p class="footer-copy"><span class="footer-copy-light">designed and created by</span><br/>© 2026 Ananya Prabhakar</p>
+  </div>
+  <div class="footer-right">
+    <div class="footer-right-bottom">
+      <a href="index.html#work" class="footer-nav-link">Work</a>
+      <a href="about.html" class="footer-nav-link">About</a>
+      <a href="#" class="footer-nav-link">Resume ↗</a>
+      <a href="mailto:ananyaprabhakar1@gmail.com" class="footer-nav-link">Say Hi ✦</a>
+      <button class="footer-back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Dark mode
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+  });
+
+  
+  // Hamburger nav
+  (function () {
+    var burger = document.getElementById('navHamburger');
+    var list   = document.querySelector('.nav-links');
+    if (!burger || !list) return;
+    burger.addEventListener('click', function () {
+      burger.classList.toggle('open');
+      list.classList.toggle('open');
+    });
+    list.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        burger.classList.remove('open');
+        list.classList.remove('open');
+      });
+    });
+  })();
+
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('button, a, .info-card, .surface-card, .persona-card, .next-project-link').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // TOC active state
+  const sections = ['problem','research','painpoints','personas','journey','prototype','testing','outcomes'];
+  const tocItems = {};
+  sections.forEach(id => { tocItems[id] = document.getElementById('toc-' + id); });
+
+  const tocObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      const id = e.target.id;
+      if (tocItems[id]) {
+        if (e.isIntersecting) tocItems[id].classList.add('toc-active');
+        else tocItems[id].classList.remove('toc-active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) tocObserver.observe(el);
+  });
+
+  // Smooth scroll for TOC links
+  document.querySelectorAll('.toc-list a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+
+  /* FreshBite hero phone cluster — scene fit + auto-scroll */
+  (function () {
+    var fbmOuter = document.getElementById('fbmOuter');
+    var fbmScene = document.getElementById('fbmScene');
+    var fbmScrollImg = document.getElementById('fbmScrollImg');
+    if (!fbmOuter || !fbmScene || !fbmScrollImg) return;
+
+    function fitFbm() {
+      var s = Math.min(fbmOuter.clientWidth / 780, 1.0);
+      fbmScene.style.zoom = s;
+      fbmScene.style.transform = 'translate(-50%,-50%)';
+    }
+    window.addEventListener('resize', fitFbm);
+    fitFbm();
+
+    function setupFbmScroll() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var screen = fbmScrollImg.parentElement;
+      var dist = Math.max(0, fbmScrollImg.clientHeight - screen.clientHeight);
+      if (dist === 0) return;
+      var st = document.createElement('style');
+      st.textContent =
+        '@keyframes fbmHeroScroll{' +
+        '0%,7%{transform:translateY(0)}' +
+        '48%,57%{transform:translateY(-' + dist + 'px)}' +
+        '98%,100%{transform:translateY(0)}' +
+        '}';
+      document.head.appendChild(st);
+      fbmScrollImg.style.animation = 'fbmHeroScroll 17s cubic-bezier(.5,0,.5,1) infinite';
+    }
+
+    if (fbmScrollImg.complete && fbmScrollImg.naturalHeight > 0) {
+      setupFbmScroll();
+    } else {
+      fbmScrollImg.addEventListener('load', setupFbmScroll);
+    }
+  })();
+
+  // Play videos only when they enter the viewport
+  const videoEls = document.querySelectorAll('video');
+  if ('IntersectionObserver' in window) {
+    const videoObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.play().catch(() => {}); }
+        else { entry.target.pause(); }
+      });
+    }, { threshold: 0.2 });
+    videoEls.forEach(v => videoObserver.observe(v));
+  } else {
+    videoEls.forEach(v => { v.play().catch(() => {}); });
+  }
+</script>
+</body>
+</html>
+

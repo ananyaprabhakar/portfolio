@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Southwest · Ananya Prabhakar</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=chillax@200,300,400,500,600,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --bg: #F9F5F0; --surface: #F0E4DF; --accent: #D4908A; --accent-hover: #C17B75;
+      --body: #6B5B55; --heading: #2C1810; --card-bg: #F9F5F0;
+      --card-shadow: rgba(44,24,16,0.15); --tag-bg: rgba(212,144,138,0.10);
+      --tag-border: rgba(212,144,138,0.22); --border: rgba(212,144,138,0.12);
+      --border-md: rgba(212,144,138,0.15); --border-lg: rgba(212,144,138,0.30);
+      --accent-faint: rgba(212,144,138,0.05); --accent-ghost: rgba(212,144,138,0.08);
+      --accent-muted: rgba(212,144,138,0.28); --accent-soft: rgba(212,144,138,0.35);
+      --accent-mid: rgba(212,144,138,0.40); --accent-strong: rgba(212,144,138,0.45);
+      --shadow-sm: rgba(44,24,16,0.08); --shadow-md: rgba(44,24,16,0.13);
+      --shadow-lg: rgba(44,24,16,0.22); --nav-cta-bg: #2C1810; --nav-cta-text: #F9F5F0;
+      --btn-primary-txt: #FFF5F0; --footer-bg: #2C1810;
+    }
+    html.dark {
+      --bg: #140A08; --surface: #2A1612; --accent: #E49B93; --accent-hover: #D4908A;
+      --body: #D4B5A8; --heading: #FFF5F0; --card-bg: #1E0E0A;
+      --card-shadow: rgba(0,0,0,0.45); --tag-bg: rgba(228,155,147,0.10);
+      --tag-border: rgba(228,155,147,0.22); --border: rgba(228,155,147,0.12);
+      --border-md: rgba(228,155,147,0.15); --border-lg: rgba(228,155,147,0.25);
+      --accent-faint: rgba(228,155,147,0.05); --accent-ghost: rgba(228,155,147,0.08);
+      --accent-muted: rgba(228,155,147,0.28); --accent-soft: rgba(228,155,147,0.35);
+      --accent-mid: rgba(228,155,147,0.40); --accent-strong: rgba(228,155,147,0.45);
+      --shadow-sm: rgba(0,0,0,0.15); --shadow-md: rgba(0,0,0,0.25);
+      --shadow-lg: rgba(0,0,0,0.45); --nav-cta-bg: #FFF5F0; --nav-cta-text: #140A08;
+      --btn-primary-txt: #140A08; --footer-bg: #0A0604;
+    }
+    html { transition: background 0.4s ease, color 0.4s ease; overflow-x: clip; }
+    html, body { width: 100%; font-family: 'Chillax', sans-serif; background: var(--bg); cursor: none; color: var(--body); overflow-x: clip; }
+
+    /* ── CURSOR ── */
+    #cursor {
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif; font-size: 20px; color: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.08s ease, color 0.15s;
+    }
+    #cursor.hovering { transform: translate(-50%, -50%) scale(1.6); color: var(--accent-hover); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 22px 52px;
+      background: rgba(249,245,240,0.88); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.4s ease, border-color 0.3s;
+    }
+    html.dark nav { background: rgba(20,10,8,0.88); }
+    /* ── HAMBURGER MENU ── */
+    .nav-hamburger {
+      display: none; flex-direction: column; justify-content: center; align-items: center;
+      gap: 5px; width: 40px; height: 40px;
+      background: none; border: none; cursor: none; padding: 4px; flex-shrink: 0;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--heading); border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; }
+      .nav-hamburger { display: flex; }
+      nav ul.nav-links {
+        display: none; position: fixed; top: 72px; left: 0; right: 0;
+        background: rgba(249,245,240,0.97); backdrop-filter: blur(12px);
+        flex-direction: column; align-items: stretch;
+        padding: 8px 0 16px; gap: 0;
+        border-bottom: 1px solid var(--border);
+        z-index: 99;
+      }
+      html.dark nav ul.nav-links { background: rgba(20,10,8,0.97); }
+      nav ul.nav-links.open { display: flex; }
+      nav ul.nav-links li {
+        font-size: 16px; padding: 14px 24px;
+        border-bottom: 1px solid var(--border); width: 100%;
+      }
+      nav ul.nav-links li:last-child { border-bottom: none; }
+      nav ul.nav-links li::after { display: none !important; }
+      nav ul.nav-links li:has(.theme-toggle) {
+        order: 10; border-top: 1px solid var(--border);
+        border-bottom: none; margin-top: 4px; padding-top: 16px;
+      }
+      .nav-cta { display: inline-block; }
+    }
+    .nav-logo { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--heading); cursor: none; text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+    .nav-links li { font-size: 14px; font-weight: 500; color: var(--body); cursor: none; position: relative; }
+    .nav-links li::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease; }
+    .nav-links li:hover { color: var(--accent); }
+    .nav-links li:hover::after { transform: scaleX(1); }
+    .nav-links li:has(.theme-toggle)::after { display: none; }
+    .nav-links li:has(.theme-toggle):hover { color: inherit; }
+    .nav-links li.nav-active { color: var(--accent); }
+    .nav-links li.nav-active::after { transform: scaleX(1); }
+    .nav-cta { background: var(--nav-cta-bg); color: var(--nav-cta-text) !important; padding: 8px 18px; border-radius: 8px; font-weight: 600 !important; transition: background 0.2s; }
+    .theme-toggle { background: none; border: none; padding: 0; cursor: none; display: flex; align-items: center; gap: 7px; }
+    .toggle-icon { font-size: 13px; line-height: 1; transition: opacity 0.3s, color 0.3s; }
+    .icon-sun  { color: var(--accent); opacity: 1; }
+    .icon-moon { color: var(--body); opacity: 0.35; }
+    html.dark .icon-sun  { color: var(--body); opacity: 0.35; }
+    html.dark .icon-moon { color: var(--accent); opacity: 1; }
+    .toggle-track { width: 36px; height: 20px; background: var(--surface); border: 1.5px solid var(--border-md); border-radius: 100px; position: relative; flex-shrink: 0; transition: border-color 0.35s, background 0.35s; }
+    html.dark .toggle-track { border-color: var(--accent-muted); }
+    .toggle-thumb { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); top: 50%; left: 2px; --tx: 0px; transform: translateY(-50%) translateX(var(--tx)); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.35s; box-shadow: 0 1px 4px var(--shadow-sm); }
+    html.dark .toggle-thumb { --tx: 15px; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── HERO ── */
+    .cs-hero {
+      height: 100vh; background: #2C1810;
+      background-image: radial-gradient(circle, rgba(255,245,240,0.08) 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
+      display: flex; flex-direction: column;
+      padding: 0; position: relative; overflow: hidden;
+    }
+    html.dark .cs-hero { background: #1A0C08; }
+    .cs-hero-ghost {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif; font-size: clamp(120px, 24vw, 360px);
+      font-weight: 900; color: rgba(255,245,240,0.018);
+      pointer-events: none; white-space: nowrap; letter-spacing: -0.04em;
+      user-select: none;
+    }
+    .cs-hero-split {
+      flex: 1; display: grid; grid-template-columns: 1fr 2fr;
+      gap: 32px; padding: 72px 36px 16px;
+      align-items: center; position: relative; z-index: 1;
+      max-width: 1440px; width: 100%; margin: 0 auto;
+    }
+    .cs-hero-left { display: flex; flex-direction: column; align-items: flex-start; }
+    .cs-hero-right { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+    .sw-hero-placeholder {
+      width: 100%; max-width: 580px; border-radius: 16px;
+      border: 1.5px dashed rgba(212,144,138,0.32);
+      background: rgba(255,245,240,0.04);
+      min-height: 380px; display: flex; align-items: center; justify-content: center;
+      padding: 40px;
+    }
+    .sw-hero-placeholder-label {
+      font-family: 'Fraunces', serif; font-size: 14px; font-style: italic;
+      color: rgba(255,245,240,0.28); text-align: center; line-height: 1.6;
+    }
+    .cs-hero-eyebrow {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.18em; color: var(--accent);
+      display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+    }
+    .cs-hero-eyebrow-rule { width: 36px; height: 1px; background: var(--accent); flex-shrink: 0; }
+    .cs-hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(36px, 4vw, 64px);
+      font-weight: 800; color: #FFF5F0;
+      letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 16px;
+    }
+    .cs-hero-subtitle {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(16px, 1.8vw, 24px);
+      font-weight: 300; color: rgba(255,245,240,0.55);
+      letter-spacing: -0.01em; margin-bottom: 24px;
+    }
+    .cs-hero-hook {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(14px, 1.4vw, 18px);
+      font-style: italic; color: var(--accent);
+      line-height: 1.6; margin-bottom: 40px; max-width: 560px;
+    }
+    .cs-hero-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600; color: var(--accent);
+      text-decoration: none; cursor: none; width: fit-content;
+      border: 1.5px solid var(--accent-strong); border-radius: 100px;
+      padding: 12px 26px;
+      transition: background 0.25s, color 0.25s, border-color 0.25s;
+    }
+    .cs-hero-cta:hover { background: var(--accent); border-color: var(--accent); color: #2C1810; }
+
+    /* ── HERO IMPACT STAT ── */
+    .cs-hero-stat { margin-top: 24px; margin-bottom: 24px; }
+    .cs-hero-stat-value {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(36px, 4.5vw, 56px);
+      font-weight: 900; line-height: 1; letter-spacing: -0.02em;
+      color: var(--accent);
+    }
+    .cs-hero-stat-label {
+      font-family: 'Chillax', sans-serif;
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.14em;
+      color: rgba(255,245,240,0.6); margin-top: 6px;
+    }
+
+    /* ── TL;DR STRIP ── */
+    .tldr-strip { border-top: 1px solid rgba(255,245,240,0.1); display: flex; align-items: stretch; }
+    .tldr-item { flex: 1; padding: 28px 32px; border-right: 1px solid rgba(255,245,240,0.08); }
+    .tldr-item:last-child { border-right: none; }
+    .tldr-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent); margin-bottom: 8px; }
+    .tldr-value { font-family: 'Chillax', sans-serif; font-size: 13px; font-weight: 500; color: rgba(255,245,240,0.82); line-height: 1.5; }
+    .tldr-value strong { color: #FFF5F0; font-weight: 700; }
+
+    /* ── MAIN LAYOUT ── */
+    .cs-layout { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 220px 1fr; gap: 0; align-items: start; padding: 0 64px; }
+
+    /* ── TOC ── */
+    .cs-toc { position: sticky; top: 88px; align-self: start; padding: 80px 0 80px; border-right: 1px solid var(--border); padding-right: 40px; }
+    .toc-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent-muted); margin-bottom: 20px; padding-left: 2px; }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .toc-list li a { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; color: var(--body); text-decoration: none; cursor: none; padding: 8px 10px; border-radius: 8px; transition: color 0.2s, background 0.2s; line-height: 1.3; }
+    .toc-list li a:hover { color: var(--accent); background: var(--accent-faint); }
+    .toc-list li.toc-active a { color: var(--accent); background: var(--accent-ghost); font-weight: 600; }
+    .toc-icon { flex-shrink: 0; display: flex; align-items: center; color: var(--accent); }
+    .toc-divider { height: 1px; background: var(--border); margin: 12px 0; }
+    .toc-list .toc-top a { color: var(--accent-soft); font-size: 12px; }
+    .toc-list .toc-top a:hover { color: var(--accent); }
+
+    /* ── CASE STUDY MAIN ── */
+    .cs-main { padding: 0 0 0 64px; min-width: 0; }
+    .cs-main img { max-width: 100%; }
+
+    /* ── SECTION BASE ── */
+    .cs-section { padding: 80px 0; border-bottom: 1px solid var(--border); }
+    .cs-section:last-child { border-bottom: none; }
+    .section-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+    .section-eyebrow .eyebrow-rule { width: 40px; height: 1px; background: var(--accent); flex-shrink: 0; }
+    .cs-section-title { font-family: 'Fraunces', serif; font-size: clamp(26px, 2.8vw, 38px); font-weight: 700; color: var(--heading); letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 32px; }
+    .cs-body { font-size: 16px; line-height: 1.85; color: var(--body); max-width: 680px; margin-bottom: 32px; }
+    .cs-body:last-child { margin-bottom: 0; }
+    .cs-body strong { color: var(--heading); font-weight: 600; }
+    .cs-body em { color: var(--accent); font-style: italic; }
+    .cs-sub-heading { font-family: 'Fraunces', serif; font-size: clamp(18px, 2vw, 24px); font-weight: 700; color: var(--heading); letter-spacing: -0.02em; margin: 48px 0 16px; }
+    .cs-sub-heading:first-child { margin-top: 0; }
+
+    /* ── REFLECTION QUOTE ── */
+    .reflection-quote { font-family: 'Fraunces', serif; font-size: clamp(18px, 2vw, 24px); font-style: italic; font-weight: 400; color: var(--heading); line-height: 1.72; border-left: 3px solid var(--accent); padding-left: 24px; margin: 32px 0; }
+
+    /* ── STAT CHIPS ── */
+    .stat-chips { display: flex; gap: 16px; flex-wrap: wrap; margin: 32px 0; }
+    .stat-chip { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 20px 28px; border: 1px solid var(--border-md); border-radius: 14px; background: var(--card-bg); box-shadow: 0 2px 12px var(--shadow-sm); }
+    .stat-chip-num { font-family: 'Fraunces', serif; font-size: clamp(28px, 3.2vw, 40px); font-weight: 900; color: var(--accent); letter-spacing: -0.04em; line-height: 1; }
+    .stat-chip-label { font-size: 13px; color: var(--body); line-height: 1.4; }
+
+    /* ── INLINE CALLOUT ── */
+    .callout { background: var(--surface); border-radius: 12px; border-left: 3px solid var(--accent); padding: 18px 22px; max-width: 680px; margin: 28px 0; }
+    .callout-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 8px; }
+    .callout-body { font-size: 14px; color: var(--body); line-height: 1.72; }
+    .callout-body strong { color: var(--heading); font-weight: 600; }
+
+    /* ── CHALLENGE CARDS ── */
+    .challenge-cards { display: flex; flex-direction: column; gap: 16px; margin: 28px 0; }
+    .challenge-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border-md); padding: 28px 32px; }
+    .challenge-card-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .challenge-card-heading { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--heading); margin-bottom: 12px; }
+    .challenge-card-body { font-size: 14px; color: var(--body); line-height: 1.78; }
+    .challenge-card-body strong { color: var(--heading); font-weight: 600; }
+    .challenge-card-stat { display: inline-flex; align-items: baseline; gap: 10px; margin-top: 16px; padding: 12px 20px; border: 1px solid var(--border-md); border-radius: 10px; background: var(--card-bg); }
+    .challenge-card-stat-num { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 900; color: var(--accent); letter-spacing: -0.04em; line-height: 1; }
+    .challenge-card-stat-label { font-size: 13px; color: var(--body); }
+
+    /* ── PERSONA CARDS ── */
+    .sw-personas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+    .sw-persona { background: var(--surface); border: 1px solid var(--border-md); border-radius: 16px; padding: 22px 24px; }
+    .sw-persona-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--heading); margin-bottom: 2px; }
+    .sw-persona-role { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 14px; }
+    .sw-persona-desc { font-size: 13.5px; color: var(--body); line-height: 1.72; }
+    .sw-persona-desc strong { color: var(--heading); font-weight: 600; }
+
+    /* ── TASK TIMING FLOW ── */
+    .sw-task-flow { display: flex; align-items: stretch; gap: 8px; margin: 32px 0; flex-wrap: wrap; }
+    .sw-task { flex: 1; min-width: 140px; padding: 22px 26px; border: 1px solid var(--border-md); border-radius: 14px; background: var(--card-bg); }
+    .sw-task-arrow { display: flex; align-items: center; color: var(--accent-muted); font-size: 20px; flex-shrink: 0; padding: 0 4px; }
+    .sw-task-num { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.13em; color: var(--accent); margin-bottom: 10px; }
+    .sw-task-time { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 900; color: var(--heading); letter-spacing: -0.04em; line-height: 1; }
+    .sw-task-clicks { font-size: 12.5px; color: var(--body); margin-top: 6px; }
+
+    /* ── COMPETITION CALLOUTS ── */
+    .comp-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+    .comp-card { border-radius: 14px; border: 1px solid var(--border-md); overflow: hidden; }
+    .comp-card-head { padding: 14px 18px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.13em; color: var(--accent); background: var(--surface); border-bottom: 1px solid var(--border); }
+    .comp-card-body { padding: 16px 18px; background: var(--card-bg); font-size: 14px; color: var(--body); line-height: 1.7; }
+    .comp-card-body strong { color: var(--heading); font-weight: 600; display: block; margin-bottom: 4px; }
+    .comp-card--winner .comp-card-head { background: rgba(212,144,138,0.12); }
+
+    /* ── PLACEHOLDER BLOCK ── */
+    .placeholder-block { width: 100%; border-radius: 16px; background: var(--surface); border: 1.5px dashed var(--border-lg); margin: 0; min-height: 240px; display: flex; align-items: center; justify-content: center; padding: 40px; }
+    .placeholder-label { font-family: 'Fraunces', serif; font-size: 14px; font-style: italic; color: var(--body); opacity: 0.5; text-align: center; line-height: 1.6; }
+
+    /* ── IMAGE / SCREENSHOT ── */
+    .cs-shot { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--border-md); box-shadow: 0 4px 24px var(--shadow-sm); background: var(--surface); }
+    .img-figure { margin: 28px 0; }
+    .img-caption { font-family: 'Fraunces', serif; font-style: italic; font-size: 13.5px; color: var(--body); opacity: 0.78; margin-top: 12px; line-height: 1.6; }
+    .img-caption .cap-star { color: var(--accent); font-style: normal; margin-right: 7px; font-size: 10px; }
+
+    /* ── 2-UP SCREENSHOT GRID ── */
+    .sw-2up { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .sw-2up img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--border-md); box-shadow: 0 4px 20px var(--shadow-sm); }
+    .sw-img-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.13em; color: var(--body); opacity: 0.65; margin-bottom: 8px; }
+
+    /* ── 3-UP HOMEPAGE GRID ── */
+    .sw-3up { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 28px 0; }
+    .sw-3up-item { display: flex; flex-direction: column; gap: 8px; }
+    .sw-3up img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--border-md); box-shadow: 0 4px 20px var(--shadow-sm); }
+    .sw-3up-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.13em; color: var(--body); opacity: 0.65; text-align: center; }
+
+    /* ── BIG STAT (ease score) ── */
+    .sw-big-stat {
+      display: flex; align-items: center; gap: 24px;
+      margin: 40px 0; padding: 36px 40px;
+      background: var(--surface); border-radius: 20px; border: 1.5px solid var(--border-md);
+      max-width: 680px;
+    }
+    .sw-big-from { display: flex; flex-direction: column; align-items: center; }
+    .sw-big-num { font-family: 'Fraunces', serif; font-size: clamp(52px, 7vw, 80px); font-weight: 900; letter-spacing: -0.05em; line-height: 1; }
+    .sw-big-num--before { color: var(--body); opacity: 0.45; }
+    .sw-big-num--after { color: var(--accent); }
+    .sw-big-sub { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--body); opacity: 0.55; margin-top: 4px; }
+    .sw-big-arrow { font-size: 32px; color: var(--accent-muted); flex-shrink: 0; }
+    .sw-big-label { font-size: 14px; color: var(--body); line-height: 1.65; max-width: 260px; }
+    .sw-big-label strong { color: var(--heading); font-weight: 700; display: block; font-size: 16px; margin-bottom: 6px; }
+
+    /* ── DASH LIST ── */
+    .dash-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 20px 0; max-width: 680px; }
+    .dash-list li { font-size: 15px; color: var(--body); line-height: 1.7; padding-left: 20px; position: relative; }
+    .dash-list li::before { content: '—'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+    .dash-list li strong { color: var(--heading); font-weight: 600; }
+
+    /* ── HERO POSTER ── */
+    /* ── HERO FRAME LAYOUT ── */
+    .sw-hero-main-frame { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    .sw-hero-main-frame .sw-frame-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    .sw-hero-main-frame .sw-screen-frame { aspect-ratio: unset; flex: 1; min-height: 0; }
+    .sw-hero-bottom { flex: 0 0 auto; }
+    .sw-hero-small-frame { aspect-ratio: unset !important; height: 140px; }
+    /* ── POSTER FULL-BLEED ── */
+    .sw-poster-section {
+      margin: 0 -64px; padding: 0 64px 48px;
+      text-align: center;
+    }
+    .sw-poster-thumb {
+      width: 100%; max-width: 1040px; height: auto; display: inline-block;
+      border-radius: 6px; cursor: zoom-in;
+      transition: transform 0.3s ease; opacity: 0.95;
+    }
+    .sw-poster-thumb:hover { transform: scale(1.015); opacity: 1; }
+    .sw-poster-caption {
+      font-family: 'Chillax', sans-serif; font-size: 12px;
+      color: var(--body); margin-top: 14px; opacity: 0.6; letter-spacing: 0.04em;
+    }
+    /* ── LIGHTBOX ── */
+    .sw-lightbox {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,0.92); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+    }
+    .sw-lightbox.open { opacity: 1; pointer-events: all; }
+    .sw-lightbox-img {
+      max-width: 92vw; max-height: 92vh;
+      border-radius: 8px; box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+    }
+    .sw-lightbox-close {
+      position: absolute; top: 20px; right: 24px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; font-size: 18px; line-height: 1;
+      width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .sw-lightbox-close:hover { background: rgba(255,255,255,0.22); }
+
+    /* ── PERSONA IMAGES ── */
+    .sw-persona-imgs { display: flex; flex-direction: column; gap: 20px; margin: 28px 0; }
+    .sw-persona-img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--border-md); box-shadow: 0 4px 20px var(--shadow-sm); }
+
+    /* ── SCROLLING SCREEN FRAME ── */
+    .sw-frame-wrap { margin: 28px 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--border-md); box-shadow: 0 8px 40px var(--shadow-md); }
+    .sw-frame-chrome { display: flex; align-items: center; gap: 8px; padding: 9px 14px; background: #e5e3e0; border-bottom: 1px solid rgba(0,0,0,0.08); }
+    html.dark .sw-frame-chrome { background: #2a2420; border-bottom-color: rgba(255,255,255,0.05); }
+    .sw-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+    .sw-dot-red { background: #ff5f56; }
+    .sw-dot-yellow { background: #ffbd2e; }
+    .sw-dot-green { background: #27c93f; }
+    .sw-chrome-url { margin-left: 8px; flex: 1; background: rgba(0,0,0,0.07); border-radius: 6px; padding: 4px 0; font-size: 12px; color: rgba(0,0,0,0.45); font-family: 'Chillax', sans-serif; text-align: center; max-width: 360px; }
+    html.dark .sw-chrome-url { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.35); }
+    .sw-screen-frame { position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #fff; cursor: default; }
+    .sw-screen-frame img { position: absolute; top: 0; left: 0; width: 100%; height: auto; will-change: transform; }
+
+    /* ── HOMEPAGE FRAMES ── */
+    .sw-hp-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .sw-hp-bottom .sw-frame-wrap { margin: 0; }
+    .sw-3up-frame-label { font-family: 'Chillax', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--body); opacity: 0.65; text-align: center; margin-top: 8px; }
+    .sw-booking-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .sw-booking-cards .sw-frame-wrap { margin: 0; }
+    .sw-card-frame { background: #fff; }
+    .sw-card-frame img { width: 100%; height: auto; display: block; }
+    /* crop frames: taller aspect ratio + offset to skip hero plane and land on booking widget */
+    .sw-screen-frame[data-no-scroll] { aspect-ratio: 4 / 3; }
+    .sw-screen-frame[data-no-scroll] img { top: -75px; }
+
+    /* ── CSS BAR CHARTS ── */
+    .sw-charts { margin: 28px 0; }
+    .sw-charts-2up { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 0; }
+    .sw-chart-card { background: var(--card-bg); border: 1px solid var(--border-md); border-radius: 16px; padding: 24px 24px 12px; }
+    .sw-chart-title { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; color: var(--heading); margin-bottom: 14px; letter-spacing: -0.01em; line-height: 1.3; }
+    .sw-chart-legend { display: flex; gap: 16px; margin-bottom: 16px; }
+    .sw-legend-item { display: flex; align-items: center; gap: 6px; font-family: 'Chillax', sans-serif; font-size: 11px; color: var(--body); }
+    .sw-legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .sw-legend-dot--before { background: var(--surface); border: 1.5px solid var(--border-lg); }
+    .sw-legend-dot--after { background: var(--accent); }
+    .sw-bar-area { display: flex; align-items: flex-end; height: 180px; border-bottom: 1px solid var(--border); padding-top: 28px; gap: 0; }
+    .sw-bar-group { display: flex; flex-direction: column; align-items: center; flex: 1; }
+    .sw-bar-pair { display: flex; align-items: flex-end; gap: 5px; }
+    .sw-bar { width: 30px; border-radius: 4px 4px 0 0; position: relative; flex-shrink: 0; }
+    .sw-bar--before { background: var(--surface); border: 1.5px solid var(--border-lg); border-bottom: none; }
+    .sw-bar--after { background: var(--accent); border-bottom: none; }
+    .sw-bar-val { font-family: 'Chillax', sans-serif; font-size: 9px; font-weight: 700; color: var(--body); position: absolute; top: -16px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+    .sw-bar--after .sw-bar-val { color: var(--accent); }
+    .sw-bar-label { font-family: 'Chillax', sans-serif; font-size: 10.5px; color: var(--body); text-align: center; opacity: 0.7; padding-top: 7px; width: 100%; }
+    .sw-chart-subtitle { font-family: 'Chillax', sans-serif; font-size: 11px; color: var(--body); opacity: 0.55; margin-bottom: 14px; margin-top: -10px; }
+    .sw-chart-ease .sw-bar-group { flex: 0 1 160px; }
+    .sw-chart-ease .sw-bar { width: 56px; }
+
+    /* ── OUTCOMES / LEARNINGS DARK BAND ── */
+    .cs-outcomes-dark {
+      background: #2C1810; margin: 0 -64px; padding: 80px 64px;
+      border-radius: 0; position: relative;
+    }
+    .outcomes-intro-band {
+      display: flex; align-items: center; gap: 32px;
+      margin: -80px -64px 64px;
+      padding: 52px 64px;
+      border-bottom: 1px solid rgba(255,245,240,0.07);
+    }
+    .cs-outcomes-dark::before {
+      content: ''; position: absolute; right: 100%; top: 0; bottom: 0;
+      width: 100vw; background: #2C1810;
+    }
+    .cs-outcomes-dark::after {
+      content: ''; position: absolute; left: 100%; top: 0; bottom: 0;
+      width: 100vw; background: #2C1810;
+    }
+    html.dark .cs-outcomes-dark { background: #1A0C08; }
+    html.dark .cs-outcomes-dark::before,
+    html.dark .cs-outcomes-dark::after { background: #1A0C08; }
+    .cs-outcomes-dark .cs-section-title { color: #FFF5F0; }
+    .cs-outcomes-dark .cs-body { color: rgba(255,245,240,0.72); }
+    .cs-outcomes-dark .section-eyebrow { color: var(--accent); }
+    .cs-outcomes-dark .eyebrow-rule { background: var(--accent); }
+    .phase-break-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.2em; color: var(--accent);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .phase-break-line { height: 1px; flex: 1; background: rgba(255,245,240,0.1); }
+    .phase-break-statement {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(15px, 1.8vw, 22px); font-weight: 700; font-style: italic;
+      color: rgba(255,245,240,0.88); letter-spacing: -0.015em; line-height: 1.35;
+      flex-shrink: 0; max-width: 340px; text-align: right;
+    }
+    .learnings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; align-items: start; margin-top: 48px; }
+    .lc-label { font-family: 'Chillax', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(255,245,240,0.38); margin-bottom: 14px; }
+    .lc-rule { width: 22px; height: 2px; background: var(--accent); opacity: 0.65; margin-bottom: 16px; }
+    .lc-hook { font-family: 'Chillax', sans-serif; font-size: 15px; font-weight: 700; color: #FFF5F0; line-height: 1.4; margin: 0 0 10px; }
+    .lc-body { font-family: 'Chillax', sans-serif; font-size: 13.5px; color: rgba(255,245,240,0.55); line-height: 1.7; margin: 0; }
+
+
+    /* ── FOOTER ── */
+    .site-footer { background: var(--footer-bg); display: grid; grid-template-columns: 1fr 1fr 1fr; min-height: 360px; }
+    .footer-bean { overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .footer-bean img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
+    .footer-middle { display: flex; flex-direction: column; justify-content: flex-end; padding: 56px 52px; gap: 24px; }
+    .footer-closing { font-family: 'Fraunces', serif; font-size: clamp(22px, 2.8vw, 38px); font-style: italic; font-weight: 600; color: #FFF5F0; line-height: 1.25; }
+    .footer-links { display: grid; grid-template-columns: auto auto; gap: 8px 28px; width: fit-content; }
+    .footer-links a { font-size: 14px; font-weight: 500; color: var(--accent); text-decoration: none; cursor: none; position: relative; transition: color 0.2s; width: fit-content; }
+    .footer-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.25s; }
+    .footer-links a:hover { color: #FFF5F0; }
+    .footer-links a:hover::after { transform: scaleX(1); }
+    .footer-copy { font-size: 11px; color: var(--accent-muted); letter-spacing: 0.04em; line-height: 1.6; }
+    .footer-copy-light { color: var(--accent-strong); }
+    .footer-right { display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; text-align: right; padding: 48px 52px 80px; }
+    .footer-availability { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); background: var(--tag-bg); border: 1px solid var(--border-lg); padding: 5px 14px; border-radius: 100px; width: fit-content; }
+    .footer-right-bottom { display: flex; flex-direction: column; gap: 14px; align-items: flex-end; }
+    .footer-nav-link { font-family: 'Chillax', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,245,240,0.38); text-decoration: none; cursor: none; transition: color 0.2s; }
+    .footer-nav-link:hover { color: #FFF5F0; }
+    .footer-back-top { font-family: 'Chillax', sans-serif; font-size: 13px; font-weight: 500; color: var(--accent-mid); background: none; border: none; cursor: none; transition: color 0.2s; letter-spacing: 0.03em; padding: 0; }
+    .footer-back-top:hover { color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .cs-layout { grid-template-columns: 1fr; padding: 0 40px; }
+      .cs-toc { display: none; }
+      /* iPad / tablet: hero stacks + becomes content-height (kills the 100vh gap) */
+      .cs-hero { height: auto; min-height: auto; }
+      .cs-hero-split { grid-template-columns: 1fr; gap: 36px; padding: 104px 48px 48px; }
+      .cs-hero-left { align-items: flex-start; }
+      .cs-hero-right { justify-content: center; }
+      .tldr-strip { flex-direction: column; }
+      .tldr-item { border-right: none; border-bottom: 1px solid rgba(255,245,240,0.08); }
+      .tldr-item:last-child { border-bottom: none; }
+      .cs-main { padding: 0; }
+    }
+    /* ── SOUTHWEST HERO MOCKUP (swh-*) ── */
+    .swh-stage {
+      position: relative;
+      flex: 1;
+      width: 100%; height: 100%;
+      min-height: 420px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .swh-scene {
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 860px; height: 500px;
+      transform: translate(-50%, -50%);
+      transform-origin: center center;
+      will-change: transform;
+    }
+    @keyframes swhFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+    .swh-float {
+      position: absolute; inset: 0;
+      animation: swhFloat 14s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) { .swh-float { animation: none; } }
+    .swh-macbook-wrap { position: absolute; }
+    .swh-lid {
+      position: relative;
+      width: 490px;
+      background: linear-gradient(170deg, #E2E2E2 0%, #CCCCCC 45%, #BABABA 100%);
+      border-radius: 10px 10px 2px 2px;
+      padding: 14px 12px 24px;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,.18),
+        0 50px 100px -20px rgba(0,0,0,.38),
+        0 18px 36px -10px rgba(0,0,0,.22),
+        inset 0 1px 0 rgba(255,255,255,.65);
+    }
+    .swh-camera {
+      position: absolute; top: 6px; left: 50%;
+      transform: translateX(-50%);
+      width: 5px; height: 5px; border-radius: 50%;
+      background: #2A2A2A;
+      box-shadow: 0 0 0 1.5px rgba(0,0,0,.3), inset 0 0 0 1px rgba(255,255,255,.08);
+      z-index: 2;
+    }
+    .swh-screen {
+      width: 100%; height: 290px;
+      background: #000;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+    .swh-screen img {
+      position: absolute; left: 0; top: -96px;
+      width: 100%; height: auto; display: block;
+    }
+    .swh-hinge {
+      width: 510px; height: 4px;
+      margin-left: -10px;
+      background: linear-gradient(180deg, #A6A6A6, #939393);
+      border-left: 1px solid rgba(0,0,0,.12);
+      border-right: 1px solid rgba(0,0,0,.12);
+    }
+    .swh-base {
+      width: 510px; height: 14px;
+      margin-left: -10px;
+      background: linear-gradient(180deg, #D0D0D0 0%, #B8B8B8 100%);
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.16), 0 6px 18px -4px rgba(0,0,0,.18);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .swh-trackpad {
+      width: 52px; height: 7px;
+      border-radius: 3px;
+      background: rgba(0,0,0,.06);
+      border: 1px solid rgba(0,0,0,.1);
+    }
+    .swh-callout { position: absolute; }
+    .swh-callout-inner {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,.07),
+        0 22px 50px -10px rgba(0,0,0,.18),
+        0 8px 18px -6px rgba(0,0,0,.1);
+    }
+    .swh-callout-tag {
+      display: flex; align-items: center; gap: 7px;
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(0,0,0,.07);
+    }
+    .swh-callout-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+    .swh-callout-label {
+      font-family: ui-monospace, 'SF Mono', 'Menlo', monospace;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #666;
+    }
+    .swh-callout-img { display: block; width: 100%; }
+
+    @media (max-width: 900px) {
+      .comp-row { grid-template-columns: 1fr; }
+      .sw-personas { grid-template-columns: 1fr; }
+      .sw-3up { grid-template-columns: 1fr; }
+      .sw-hp-bottom { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sw-poster-section { margin: 0 -24px; padding: 40px 24px; }
+      .cs-hero { height: auto; min-height: auto; }
+      .cs-hero-split { grid-template-columns: 1fr; gap: 32px; padding: 100px 32px 40px; }
+      .cs-hero-right { align-items: stretch; }
+      .sw-hero-main-frame { flex: 0 0 auto; }
+      .sw-hero-main-frame .sw-screen-frame { height: 260px; }
+      .sw-hero-small-frame { height: 100px; }
+      .sw-charts-2up { grid-template-columns: 1fr; }
+      .tldr-strip { flex-direction: column; }
+      .tldr-item { border-right: none; border-bottom: 1px solid rgba(255,245,240,0.08); padding: 20px 24px; }
+      .tldr-item:last-child { border-bottom: none; }
+      .cs-layout { padding: 0 24px; }
+      .cs-section { padding: 56px 0; }
+      .cs-outcomes-dark { margin: 0 -24px; padding: 56px 24px; }
+      .outcomes-intro-band { margin: -56px -24px 48px; padding: 40px 24px; flex-wrap: wrap; gap: 16px; }
+      .phase-break-line { display: none; }
+      .phase-break-statement { text-align: left; max-width: 100%; }
+      .learnings-grid { grid-template-columns: 1fr; gap: 32px; }
+      .stat-chips { flex-direction: column; }
+      .sw-task-flow { flex-direction: column; }
+      .sw-task-arrow { transform: rotate(90deg); align-self: flex-start; padding: 4px 0; }
+      .sw-2up { grid-template-columns: 1fr; }
+      .sw-big-stat { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .site-footer { grid-template-columns: 1fr; }
+      .footer-bean { display: none; }
+      .footer-middle { padding: 44px 24px 12px; gap: 18px; }
+      .footer-right { align-items: flex-start; text-align: left; padding: 12px 24px 56px; }
+      .footer-right-bottom { align-items: flex-start; }
+      nav { padding: 18px 24px; }
+      .nav-links { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+<div id="cursor">✦</div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="index.html" class="nav-logo">Ananya Prabhakar</a>
+  <ul class="nav-links">
+    <li><button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <span class="toggle-icon icon-sun">☀︎</span>
+      <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      <span class="toggle-icon icon-moon">☾</span>
+    </button></li>
+    <li class="nav-active"><a href="index.html#work" style="color:inherit;text-decoration:none;cursor:none;">Work</a></li>
+    <li><a href="about.html" style="color:inherit;text-decoration:none;cursor:none;">About</a></li>
+    <li><a href="#" style="color:inherit;text-decoration:none;cursor:none;">Resume ↗</a></li>
+    <li><a href="mailto:ananyaprabhakar1@gmail.com" class="nav-cta" style="text-decoration:none;cursor:none;">Say Hi ✦</a></li>
+  </ul>
+<button class="nav-hamburger" aria-label="Open menu" id="navHamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ══════════════════════════════════
+     HERO
+════════════════════════════════════ -->
+<section class="cs-hero">
+  <div class="cs-hero-ghost">SW</div>
+  <div class="cs-hero-split">
+    <div class="cs-hero-left">
+      <div class="cs-hero-eyebrow">
+        <div class="cs-hero-eyebrow-rule"></div>
+        Case Study · Academic · HCI
+      </div>
+      <h1 class="cs-hero-title reveal">Southwest</h1>
+      <p class="cs-hero-subtitle reveal" style="transition-delay:0.08s;">Rethinking a Booking Experience Millions Use</p>
+      <p class="cs-hero-hook reveal" style="transition-delay:0.16s; margin-bottom:0;">95% of flyers said price mattered most. So why was it the hardest thing to find?</p>
+      <div class="cs-hero-stat reveal" style="transition-delay:0.19s;">
+        <div class="cs-hero-stat-value">4 → 6.5</div>
+        <div class="cs-hero-stat-label">Ease of finding a flight by price</div>
+      </div>
+      <a href="https://www.figma.com/proto/Z2MaMFTBE4mIVcP6cucJaY/Southwest-Re-design?page-id=150%3A271&node-id=268-986&p=f&viewport=164%2C-508%2C0.12&t=mEos9Dc3840ZgGeb-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=268%3A986&show-proto-sidebar=1" class="cs-hero-cta reveal" style="transition-delay:0.22s;" target="_blank" rel="noopener">View the Figma Prototype →</a>
+    </div>
+    <div class="cs-hero-right reveal" style="transition-delay:0.2s; align-self:stretch;">
+      <div class="swh-stage">
+        <div class="swh-scene" id="swhScene">
+          <div class="swh-float">
+
+            <!-- MacBook -->
+            <div class="swh-macbook-wrap" style="left:12px;top:51px;">
+              <div class="swh-lid">
+                <div class="swh-camera"></div>
+                <div class="swh-screen">
+                  <img src="../uploads/handoff_sw/sw-booking-hero/oneway2.png" alt="Southwest One Way booking">
+                </div>
+              </div>
+              <div class="swh-hinge"></div>
+              <div class="swh-base"><div class="swh-trackpad"></div></div>
+            </div>
+
+            <!-- Round Trip callout -->
+            <div class="swh-callout" style="left:510px;top:14px;width:336px;">
+              <div class="swh-callout-inner">
+                <div class="swh-callout-tag">
+                  <div class="swh-callout-dot" style="background:#4E8CFF;"></div>
+                  <span class="swh-callout-label">Round Trip</span>
+                </div>
+                <img class="swh-callout-img" src="../uploads/handoff_sw/sw-booking-hero/card-roundtrip.png" alt="Round Trip booking">
+              </div>
+            </div>
+
+            <!-- Multi City callout -->
+            <div class="swh-callout" style="left:510px;top:232px;width:336px;">
+              <div class="swh-callout-inner">
+                <div class="swh-callout-tag">
+                  <div class="swh-callout-dot" style="background:#27C484;"></div>
+                  <span class="swh-callout-label">Multi City</span>
+                </div>
+                <img class="swh-callout-img" src="../uploads/handoff_sw/sw-booking-hero/card-multicity.png" alt="Multi City booking">
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tldr-strip reveal" style="transition-delay:0.26s;">
+    <div class="tldr-item">
+      <div class="tldr-label">Project</div>
+      <div class="tldr-value">Usability evaluation and redesign of <strong>Southwest Airlines' booking website</strong></div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Role</div>
+      <div class="tldr-value"><strong>UX Researcher &amp; Designer</strong></div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Course</div>
+      <div class="tldr-value">ISE 217, Human-Computer Interaction · Fall 2024</div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Team</div>
+      <div class="tldr-value">Team of 4</div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">My contribution</div>
+      <div class="tldr-value">Interface evaluation, competitive benchmarking, user personas, collaborative redesign</div>
+    </div>
+    <div class="tldr-item">
+      <div class="tldr-label">Tools</div>
+      <div class="tldr-value">Qualtrics, Zoom, Figma, Canva</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     MAIN LAYOUT: TOC + CONTENT
+════════════════════════════════════ -->
+<div class="cs-layout">
+
+  <!-- ── TOC ── -->
+  <aside class="cs-toc">
+    <div class="toc-label">Sections</div>
+    <ul class="toc-list">
+      <li id="toc-scene"><a href="#scene">
+        <span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="5.5"/><circle cx="7" cy="7" r="2.8"/><circle cx="7" cy="7" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+        Setting the Scene
+      </a></li>
+      <li id="toc-evaluation"><a href="#evaluation">
+        <span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h10M2 7h7M2 10h5"/></svg></span>
+        The Evaluation
+      </a></li>
+      <li id="toc-findings"><a href="#findings">
+        <span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="4"/><path d="M9 9l2.5 2.5"/></svg></span>
+        What We Found
+      </a></li>
+      <li id="toc-redesign"><a href="#redesign">
+        <span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M5 7h4M7 5v4"/></svg></span>
+        The Redesign
+      </a></li>
+      <li id="toc-results"><a href="#results">
+        <span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12V8.5"/><path d="M5.3 12V4.5"/><path d="M8.7 12V6.8"/><path d="M12 12V2.5"/></svg></span>
+        Proving It Worked
+      </a></li>
+      <li id="toc-learnings"><a href="#learnings">
+        <span class="toc-icon"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2A3.5 3.5 0 0 1 10.5 5.5c0 1.6-1 2.9-2.5 3.5V11h-2V9C4.5 8.4 3.5 7.1 3.5 5.5A3.5 3.5 0 0 1 7 2z"/><path d="M5.5 11.5h3"/><path d="M6 13h2"/></svg></span>
+        What I Learned
+      </a></li>
+      <li class="toc-divider" style="list-style:none;height:0;"></li>
+      <li class="toc-top"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">↑ Top</a></li>
+    </ul>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="cs-main">
+
+    <!-- ══════════════════════════════════
+         SECTION 1 · SETTING THE SCENE
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="scene">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>Setting the Scene</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">Southwest is the airline you pick when price is the point.</h2>
+
+      <p class="cs-body reveal" style="transition-delay:0.12s;">Low fares, no change fees, two bags free. It's built its whole reputation on being the affordable, no-frills choice, and it's one of the largest domestic carriers in the country.</p>
+
+      <div class="stat-chips reveal" style="transition-delay:0.16s; flex-wrap: nowrap;">
+        <div class="stat-chip" style="flex:1;"><span class="stat-chip-num">120+</span><span class="stat-chip-label">US destinations</span></div>
+        <div class="stat-chip" style="flex:1;"><span class="stat-chip-num">10</span><span class="stat-chip-label">other countries</span></div>
+        <div class="stat-chip" style="flex:1;"><span class="stat-chip-num">3rd</span><span class="stat-chip-label">largest by domestic passengers</span></div>
+      </div>
+
+      <p class="cs-body reveal" style="transition-delay:0.20s;">And the website is where that promise gets kept or broken. Booking, check-in, managing trips, flight status — it all runs through one site.</p>
+
+      <p class="cs-body reveal" style="transition-delay:0.24s;">So we didn't start with a redesign. We started with a question:</p>
+
+      <blockquote class="reflection-quote reveal" style="transition-delay:0.28s;">If people come to Southwest for price, can they actually find the cheapest flight?</blockquote>
+
+      <p class="cs-body reveal" style="transition-delay:0.32s;">Before changing a single thing, we set out to evaluate the booking experience exactly as it was.</p>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 2 · THE EVALUATION
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="evaluation">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>The Evaluation</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">Before redesigning anything, we needed to know two things: what flyers actually care about, and where the current site lets them down.</h2>
+
+      <h3 class="cs-sub-heading reveal">First, we asked.</h3>
+      <p class="cs-body reveal" style="transition-delay:0.08s;">A survey, 20 questions, 21 responses. Two numbers set the agenda for everything after:</p>
+
+      <div class="stat-chips reveal" style="transition-delay:0.12s;">
+        <div class="stat-chip"><span class="stat-chip-num">95%</span><span class="stat-chip-label">said <strong>price</strong> is the #1 booking factor</span></div>
+        <div class="stat-chip"><span class="stat-chip-num">81%</span><span class="stat-chip-label">said <strong>departure time</strong> is #2</span></div>
+      </div>
+
+      <p class="cs-body reveal" style="transition-delay:0.16s;">Over half of respondents had flown Southwest before, so this wasn't outsiders guessing. These were the people the site is built for.</p>
+
+      <h3 class="cs-sub-heading reveal">Then we figured out who they were.</h3>
+      <p class="cs-body reveal" style="transition-delay:0.08s;">Three personas, drawn from real flyer behaviors, spanning expert to first-timer and business to leisure:</p>
+
+      <div class="sw-persona-imgs reveal" style="transition-delay:0.12s;">
+        <img src="../uploads/Southwest/sw%20sarah%20persona.png" alt="Sarah persona card — 38, Sales Executive, Chicago" class="sw-persona-img">
+        <img src="../uploads/Southwest/sw%20john%20persona.png" alt="John persona card — 45, School Teacher, Denver" class="sw-persona-img">
+        <img src="../uploads/Southwest/sw%20emily%20persona.png" alt="Emily persona card — 23, College Student, Austin" class="sw-persona-img">
+      </div>
+
+      <h3 class="cs-sub-heading reveal">Then we built tasks straight from what mattered.</h3>
+      <p class="cs-body reveal" style="transition-delay:0.08s;">Each task mapped to a survey priority, so we were testing real behavior, not invented ones:</p>
+
+      <ul class="dash-list reveal" style="transition-delay:0.12s;">
+        <li><strong>Task 1 · Cheapest holiday flight.</strong> Because price was the 95% answer.</li>
+        <li><strong>Task 2 · Flight plus hotel for the family.</strong> Because bundling should be easy and nobody knew if it was.</li>
+        <li><strong>Task 3 · Multi-city business trip.</strong> Because departure time was the 81% answer, and multi-city is where it gets hard.</li>
+      </ul>
+
+      <p class="cs-body reveal" style="transition-delay:0.16s;"><strong>How we tested:</strong> 5 participants, moderated, remote over Zoom. Think-aloud throughout. We measured time to complete, number of clicks, and ease of use, with pre-test, post-task, and post-test questions around each one.</p>
+
+      <h3 class="cs-sub-heading reveal">And we checked Southwest against its rivals.</h3>
+      <p class="cs-body reveal" style="transition-delay:0.08s;">We benchmarked the site against Delta and Expedia across six booking features. The pattern was clear:</p>
+
+      <div class="comp-row reveal" style="transition-delay:0.12s;">
+        <div class="comp-card comp-card--winner">
+          <div class="comp-card-head">Expedia</div>
+          <div class="comp-card-body"><strong>Owns bundling.</strong> Hotel, flight, and car in one flow with no detours.</div>
+        </div>
+        <div class="comp-card comp-card--winner">
+          <div class="comp-card-head">Delta</div>
+          <div class="comp-card-body"><strong>Owns multi-city.</strong> Accessible from the homepage, supports any number of legs.</div>
+        </div>
+        <div class="comp-card">
+          <div class="comp-card-head">Southwest</div>
+          <div class="comp-card-body"><strong>Owned none of the three.</strong> Simplicity was its real strength. Filtering, multi-city, and packages were where it fell behind.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 3 · WHAT WE FOUND
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="findings">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>What We Found</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">We watched five people try to do three normal things. The same frustrations came up again and again.</h2>
+
+      <div class="challenge-cards reveal" style="transition-delay:0.12s;">
+
+        <div class="challenge-card">
+          <div class="challenge-card-tag">Problem 1</div>
+          <div class="challenge-card-heading">The cheapest flight was hidden in plain sight.</div>
+          <p class="challenge-card-body">The "Sort By" filter sat between the calendar and the flight list. Technically visible. Functionally invisible. They only learned the filter existed when we asked about their frustrations afterward. The one thing 95% came for, and the tool to find it went unseen. Textbook inattentional blindness.</p>
+          <div class="challenge-card-stat">
+            <span class="challenge-card-stat-num">4 of 5</span>
+            <span class="challenge-card-stat-label">participants never noticed the filter</span>
+          </div>
+        </div>
+
+        <div class="challenge-card">
+          <div class="challenge-card-tag">Problem 2</div>
+          <div class="challenge-card-heading">Hotels lived outside the journey.</div>
+          <p class="challenge-card-body">There was no hotel step inside the booking flow. So people booked their flight, then went back to the homepage to start a separate hunt. Only one person found the in-flow hotel option. A recognition-over-recall problem: the feature existed, but nobody remembered where.</p>
+          <div class="challenge-card-stat">
+            <span class="challenge-card-stat-num">4 of 5</span>
+            <span class="challenge-card-stat-label">booked the flight, then went looking for the hotel</span>
+          </div>
+        </div>
+
+        <div class="challenge-card">
+          <div class="challenge-card-tag">Problem 3</div>
+          <div class="challenge-card-heading">Multi-city was a feature you had to already know about.</div>
+          <p class="challenge-card-body">You couldn't reach multi-city from the homepage. It only appeared after you'd booked a first flight, and even then it let you add exactly one city. A hidden affordance. People can't use what they can't see, and the busiest task became the slowest.</p>
+          <div class="challenge-card-stat">
+            <span class="challenge-card-stat-num">3 of 5</span>
+            <span class="challenge-card-stat-label">booked a round trip first, then started over</span>
+          </div>
+        </div>
+
+      </div>
+
+      <h3 class="cs-sub-heading reveal">And the tell that tied it all together.</h3>
+      <p class="cs-body reveal" style="transition-delay:0.08s;">Time and clicks nearly tripled from the simplest task to the hardest. The site got exponentially harder exactly where people needed it to hold up.</p>
+
+      <div class="sw-task-flow reveal" style="transition-delay:0.12s;">
+        <div class="sw-task">
+          <div class="sw-task-num">Task 1 · Cheapest flight</div>
+          <div class="sw-task-time">137s</div>
+          <div class="sw-task-clicks">15 clicks</div>
+        </div>
+        <div class="sw-task-arrow">→</div>
+        <div class="sw-task">
+          <div class="sw-task-num">Task 2 · Flight + hotel</div>
+          <div class="sw-task-time">257s</div>
+          <div class="sw-task-clicks">27 clicks</div>
+        </div>
+        <div class="sw-task-arrow">→</div>
+        <div class="sw-task">
+          <div class="sw-task-num">Task 3 · Multi-city</div>
+          <div class="sw-task-time">411s</div>
+          <div class="sw-task-clicks">38 clicks</div>
+        </div>
+      </div>
+
+      <blockquote class="reflection-quote reveal" style="transition-delay:0.16s;">Oh, and 3 of 5 people accidentally bought a rental car along the way. Nobody meant to.</blockquote>
+
+      <a href="https://docs.google.com/document/d/1c2z7sUe_FXfJdNkjAxWSOK9uInfRcDtmhMOc7vMNv3c/edit?usp=sharing" class="cs-hero-cta reveal" style="transition-delay:0.20s; margin-top:8px;" target="_blank" rel="noopener">Read the Full Usability Test Report →</a>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 4 · THE REDESIGN
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="redesign">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>The Redesign</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">Three problems. Three fixes. We prototyped in low fidelity first, tested the thinking, then built it out in Figma.</h2>
+
+      <!-- Fix 1 -->
+      <h3 class="cs-sub-heading reveal">Fix 1 — Make filtering impossible to miss.</h3>
+      <p class="cs-body reveal" style="transition-delay:0.08s;">We pulled sorting out of the dead zone and gave it real presence: a clear Sort By control, stop filters for nonstop or one-stop, and a price slider, so narrowing by what matters is right there instead of buried.</p>
+
+      <div class="sw-frame-wrap reveal" style="transition-delay:0.12s;">
+        <div class="sw-frame-chrome">
+          <span class="sw-dot sw-dot-red"></span>
+          <span class="sw-dot sw-dot-yellow"></span>
+          <span class="sw-dot sw-dot-green"></span>
+          <span class="sw-chrome-url">southwest.com · flight results</span>
+        </div>
+        <div class="sw-screen-frame">
+          <img src="../uploads/Southwest/Frames/sw-One%20Way%20Flight%20Booking%20-%20Filter%20Option%20Selection.png" alt="Redesigned filter panel — Sort By, stops filter, and price slider visible">
+        </div>
+      </div>
+
+      <!-- Fix 2 -->
+      <h3 class="cs-sub-heading reveal">Fix 2 — Put hotels inside the journey.</h3>
+      <p class="cs-body reveal" style="transition-delay:0.08s;">We folded hotel booking into the flow and surfaced it as a package, so it shows up where people already expect it instead of sending them back to square one. The hotel lands at checkout, not in a separate hunt.</p>
+
+      <div class="sw-frame-wrap reveal" style="transition-delay:0.12s;">
+        <div class="sw-frame-chrome">
+          <span class="sw-dot sw-dot-red"></span>
+          <span class="sw-dot sw-dot-yellow"></span>
+          <span class="sw-dot sw-dot-green"></span>
+          <span class="sw-chrome-url">southwest.com · booking</span>
+        </div>
+        <div class="sw-screen-frame">
+          <img src="../uploads/Southwest/Frames/sw-Flight%20Booking%20+%20Hotel%20Search.png" alt="Hotel booking integrated into the flight booking flow">
+        </div>
+      </div>
+
+      <!-- Fix 3 -->
+      <h3 class="cs-sub-heading reveal">Fix 3 — Bring multi-city to the front.</h3>
+      <p class="cs-body reveal" style="transition-delay:0.08s;">Multi-city moved up to the homepage, right alongside One Way and Round Trip. Add as many cities as the trip needs, with a clear visual of every flight selected so far.</p>
+
+      <div class="sw-frame-wrap reveal" style="transition-delay:0.12s;">
+        <div class="sw-frame-chrome">
+          <span class="sw-dot sw-dot-red"></span>
+          <span class="sw-dot sw-dot-yellow"></span>
+          <span class="sw-dot sw-dot-green"></span>
+          <span class="sw-chrome-url">southwest.com · multi-city</span>
+        </div>
+        <div class="sw-screen-frame">
+          <img src="../uploads/Southwest/Frames/sw-Multi%20City%20Flight%20Booking%20-%20First%20Flight%20Search%20Results.png" alt="Multi-city booking — first flight search results">
+        </div>
+      </div>
+
+      <!-- Homepage -->
+      <h3 class="cs-sub-heading reveal">One more thing we rethought: the homepage itself.</h3>
+      <p class="cs-body reveal" style="transition-delay:0.08s;">We rebuilt it so all three booking types are visible from the first screen, and the packages Southwest already offers actually get showcased instead of buried.</p>
+
+      <!-- One Way: full scrolling frame -->
+      <div class="sw-frame-wrap reveal" style="transition-delay:0.12s;">
+        <div class="sw-frame-chrome">
+          <span class="sw-dot sw-dot-red"></span>
+          <span class="sw-dot sw-dot-yellow"></span>
+          <span class="sw-dot sw-dot-green"></span>
+          <span class="sw-chrome-url">southwest.com · One Way</span>
+        </div>
+        <div class="sw-screen-frame">
+          <img src="../uploads/Southwest/Frames/sw-Homepage%20-%20One%20Way.png" alt="Redesigned homepage — One Way booking, full page">
+        </div>
+      </div>
+      <!-- Round Trip + Multi City: hero crop only -->
+      <div class="sw-hp-bottom reveal" style="transition-delay:0.16s;">
+        <div>
+          <div class="sw-frame-wrap">
+            <div class="sw-frame-chrome">
+              <span class="sw-dot sw-dot-red"></span>
+              <span class="sw-dot sw-dot-yellow"></span>
+              <span class="sw-dot sw-dot-green"></span>
+              <span class="sw-chrome-url">Round Trip</span>
+            </div>
+            <div class="sw-screen-frame" data-no-scroll>
+              <img src="../uploads/Southwest/Frames/sw-Homepage%20-%20Round%20Trip.png" alt="Redesigned homepage — Round Trip tab">
+            </div>
+          </div>
+          <div class="sw-3up-frame-label">Round Trip</div>
+        </div>
+        <div>
+          <div class="sw-frame-wrap">
+            <div class="sw-frame-chrome">
+              <span class="sw-dot sw-dot-red"></span>
+              <span class="sw-dot sw-dot-yellow"></span>
+              <span class="sw-dot sw-dot-green"></span>
+              <span class="sw-chrome-url">Multi City</span>
+            </div>
+            <div class="sw-screen-frame" data-no-scroll>
+              <img src="../uploads/Southwest/Frames/sw-Homepage%20-%20Multi%20City.png" alt="Redesigned homepage — Multi City tab">
+            </div>
+          </div>
+          <div class="sw-3up-frame-label">Multi City</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         SECTION 5 · PROVING IT WORKED
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="results">
+      <div class="section-eyebrow reveal"><div class="eyebrow-rule"></div>Proving It Worked</div>
+      <h2 class="cs-section-title reveal" style="transition-delay:0.08s;">A redesign that looks better isn't a redesign that works better. So we tested it the same way we tested the original.</h2>
+
+      <p class="cs-body reveal" style="transition-delay:0.12s;">Same three tasks, same think-aloud, same metrics, this time with 4 participants on the new design.</p>
+
+      <h3 class="cs-sub-heading reveal">The win we cared about most.</h3>
+
+      <div class="sw-big-stat reveal" style="transition-delay:0.08s;">
+        <div class="sw-big-from">
+          <div class="sw-big-num sw-big-num--before">4</div>
+          <div class="sw-big-sub">original</div>
+        </div>
+        <div class="sw-big-arrow">→</div>
+        <div class="sw-big-from">
+          <div class="sw-big-num sw-big-num--after">6.5</div>
+          <div class="sw-big-sub">redesign</div>
+        </div>
+        <div class="sw-big-label">
+          <strong>Ease of finding a flight by price</strong>
+          The exact thing 95% of flyers came for went from a struggle to the easiest part of the experience.
+        </div>
+      </div>
+
+      <h3 class="cs-sub-heading reveal">And the features people used to miss, they found.</h3>
+      <p class="cs-body reveal" style="transition-delay:0.08s;">This is the part a prototype can't fake. In the original, people walked right past the filter and never reached multi-city. In the redesign, they saw the sorting, recognized the multi-city option, and reached the hotel at checkout without backtracking. The hidden features stopped being hidden.</p>
+
+      <h3 class="cs-sub-heading reveal">Time and clicks moved too.</h3>
+      <p class="cs-body reveal" style="transition-delay:0.08s;">Both trended down across the redesign, supporting what we saw: less hunting, less backtracking, less effort.</p>
+
+      <div class="sw-charts reveal" style="transition-delay:0.12s;">
+        <div class="sw-charts-2up">
+
+          <!-- Time chart -->
+          <div class="sw-chart-card">
+            <div class="sw-chart-title">Average Completion Time (seconds)</div>
+            <div class="sw-chart-legend">
+              <span class="sw-legend-item"><span class="sw-legend-dot sw-legend-dot--before"></span>Original</span>
+              <span class="sw-legend-item"><span class="sw-legend-dot sw-legend-dot--after"></span>Redesign</span>
+            </div>
+            <div class="sw-bar-area">
+              <div class="sw-bar-group">
+                <div class="sw-bar-pair">
+                  <div class="sw-bar sw-bar--before" style="height:48px"><span class="sw-bar-val">137s</span></div>
+                  <div class="sw-bar sw-bar--after"  style="height:7px"><span class="sw-bar-val">20s</span></div>
+                </div>
+                <div class="sw-bar-label">Task 1</div>
+              </div>
+              <div class="sw-bar-group">
+                <div class="sw-bar-pair">
+                  <div class="sw-bar sw-bar--before" style="height:89px"><span class="sw-bar-val">257s</span></div>
+                  <div class="sw-bar sw-bar--after"  style="height:9px"><span class="sw-bar-val">27s</span></div>
+                </div>
+                <div class="sw-bar-label">Task 2</div>
+              </div>
+              <div class="sw-bar-group">
+                <div class="sw-bar-pair">
+                  <div class="sw-bar sw-bar--before" style="height:142px"><span class="sw-bar-val">411s</span></div>
+                  <div class="sw-bar sw-bar--after"  style="height:11px"><span class="sw-bar-val">32s</span></div>
+                </div>
+                <div class="sw-bar-label">Task 3</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Clicks chart -->
+          <div class="sw-chart-card">
+            <div class="sw-chart-title">Average Number of Clicks</div>
+            <div class="sw-chart-legend">
+              <span class="sw-legend-item"><span class="sw-legend-dot sw-legend-dot--before"></span>Original</span>
+              <span class="sw-legend-item"><span class="sw-legend-dot sw-legend-dot--after"></span>Redesign</span>
+            </div>
+            <div class="sw-bar-area">
+              <div class="sw-bar-group">
+                <div class="sw-bar-pair">
+                  <div class="sw-bar sw-bar--before" style="height:52px"><span class="sw-bar-val">15</span></div>
+                  <div class="sw-bar sw-bar--after"  style="height:33px"><span class="sw-bar-val">9.5</span></div>
+                </div>
+                <div class="sw-bar-label">Task 1</div>
+              </div>
+              <div class="sw-bar-group">
+                <div class="sw-bar-pair">
+                  <div class="sw-bar sw-bar--before" style="height:94px"><span class="sw-bar-val">27</span></div>
+                  <div class="sw-bar sw-bar--after"  style="height:42px"><span class="sw-bar-val">12</span></div>
+                </div>
+                <div class="sw-bar-label">Task 2</div>
+              </div>
+              <div class="sw-bar-group">
+                <div class="sw-bar-pair">
+                  <div class="sw-bar sw-bar--before" style="height:134px"><span class="sw-bar-val">38</span></div>
+                  <div class="sw-bar sw-bar--after"  style="height:52px"><span class="sw-bar-val">15</span></div>
+                </div>
+                <div class="sw-bar-label">Task 3</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <p class="cs-body reveal" style="transition-delay:0.16s;"><strong>One honest caveat.</strong> The hi-fi prototype wasn't a perfect mirror of a live site. Flight destinations were pre-built, some buttons weren't interactive, and testers had just used the real Southwest, which primed them. So we read the time and click numbers as <strong>directional, not absolute</strong>. The ease score and the recognition wins are the ones the constraints couldn't manufacture, and those are the ones we lean on.</p>
+
+      <blockquote class="reflection-quote reveal" style="transition-delay:0.20s;">We didn't just redesign a booking flow. We closed the gap between what people wanted and what the site let them do, and we were honest about exactly how far the evidence goes.</blockquote>
+    </section>
+
+    <!-- ══ TEAM POSTER ══ -->
+    <div class="sw-poster-section reveal">
+      <img src="../uploads/Southwest/Southwest%20Poster.png"
+           alt="Southwest Airlines ISE 217 research and redesign poster — click to view full size"
+           class="sw-poster-thumb" id="swPosterThumb">
+      <p class="sw-poster-caption">Team poster · ISE 217 · Human-Computer Interaction · Click to enlarge ↗</p>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="sw-lightbox" id="posterLightbox">
+      <button class="sw-lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+      <img src="../uploads/Southwest/Southwest%20Poster.png"
+           alt="Southwest Airlines ISE 217 research and redesign poster"
+           class="sw-lightbox-img">
+    </div>
+
+    <!-- ══════════════════════════════════
+         SECTION 6 · WHAT I LEARNED
+    ════════════════════════════════════ -->
+    <section class="cs-section" id="learnings" style="border-bottom:none; padding-bottom:72px;">
+      <div class="cs-outcomes-dark">
+        <div class="outcomes-intro-band">
+          <div class="phase-break-label">What I Learned</div>
+          <div class="phase-break-line"></div>
+          <div class="phase-break-statement">Visible isn't the same as findable.</div>
+        </div>
+
+        <div class="learnings-grid">
+
+          <div class="reveal" style="transition-delay:0.10s;">
+            <div class="lc-label">01</div>
+            <div class="lc-rule"></div>
+            <p class="lc-hook">Visible isn't the same as findable.</p>
+            <p class="lc-body">The filter was right there. People still couldn't find it. Inattentional blindness and hidden affordances are the difference between a feature that helps and one that may as well not exist. I design for what people actually notice, not what's technically on screen.</p>
+          </div>
+
+          <div class="reveal" style="transition-delay:0.14s;">
+            <div class="lc-label">02</div>
+            <div class="lc-rule"></div>
+            <p class="lc-hook">Behavior reveals the mental model.</p>
+            <p class="lc-body">Four of five booked a flight, then went looking for a hotel. That pattern told us where people expected the feature to be, more clearly than any survey answer. I evaluate by watching what people do, not just what they say.</p>
+          </div>
+
+          <div class="reveal" style="transition-delay:0.18s;">
+            <div class="lc-label">03</div>
+            <div class="lc-rule"></div>
+            <p class="lc-hook">A redesign isn't done until you've measured it, honestly.</p>
+            <p class="lc-body">Shipping something prettier is easy. Proving it's better means re-testing, and reading the results with a clear eye — including what the prototype couldn't fairly measure. Knowing what your evidence can and can't claim is the job.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /cs-main -->
+</div><!-- /cs-layout -->
+
+<!-- ══════════════════════════════════
+     FOOTER
+════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-bean">
+    <img src="../uploads/giphy.gif" alt="Mr. Bean waiting patiently"/>
+  </div>
+  <div class="footer-middle">
+    <div class="footer-availability">Available to work ✦</div>
+    <p class="footer-closing">I'll be waiting<br/>to hear from you.</p>
+    <div class="footer-links">
+      <a href="mailto:ananyaprabhakar1@gmail.com">Email ↗</a>
+      <a href="https://www.linkedin.com/in/ananya--prabhakar/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="https://x.com/AnanyaPrabhakr" target="_blank" rel="noopener">X ↗</a>
+      <a href="https://medium.com/@ananyaprabhakar1" target="_blank" rel="noopener">Medium ↗</a>
+      <a href="https://www.behance.net/ananyaprabhakar1" target="_blank" rel="noopener">Behance ↗</a>
+      <a href="#" target="_blank">Resume ↗</a>
+    </div>
+    <p class="footer-copy"><span class="footer-copy-light">designed and created by</span><br/>© 2026 Ananya Prabhakar</p>
+  </div>
+  <div class="footer-right">
+    <div class="footer-right-bottom">
+      <a href="index.html#work" class="footer-nav-link">Work</a>
+      <a href="about.html" class="footer-nav-link">About</a>
+      <a href="#" class="footer-nav-link">Resume ↗</a>
+      <a href="mailto:ananyaprabhakar1@gmail.com" class="footer-nav-link">Say Hi ✦</a>
+      <button class="footer-back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+  });
+
+  
+  // Hamburger nav
+  (function () {
+    var burger = document.getElementById('navHamburger');
+    var list   = document.querySelector('.nav-links');
+    if (!burger || !list) return;
+    burger.addEventListener('click', function () {
+      burger.classList.toggle('open');
+      list.classList.toggle('open');
+    });
+    list.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        burger.classList.remove('open');
+        list.classList.remove('open');
+      });
+    });
+  })();
+
+  
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('button, a').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+
+  /* ── Southwest hero scene scale ── */
+  (function(){
+    const scene = document.getElementById('swhScene');
+    if (!scene) return;
+    const W = 860, H = 500;
+    function fit() {
+      const stage = scene.parentElement;
+      const sw = stage.clientWidth, sh = stage.clientHeight;
+      if (!sw || !sh) { requestAnimationFrame(fit); return; }
+      const s = Math.min(sw / W, sh / H, 1.0);
+      scene.style.zoom = s;
+      scene.style.transform = 'translate(-50%,-50%)';
+    }
+    window.addEventListener('resize', fit);
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(scene.parentElement);
+    requestAnimationFrame(fit);
+  })();
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  const sections = ['scene','evaluation','findings','redesign','results','learnings'];
+  const tocItems = {};
+  sections.forEach(id => { tocItems[id] = document.getElementById('toc-' + id); });
+
+  const tocObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      const id = e.target.id;
+      if (tocItems[id]) {
+        if (e.isIntersecting) tocItems[id].classList.add('toc-active');
+        else tocItems[id].classList.remove('toc-active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) tocObserver.observe(el);
+  });
+
+  document.querySelectorAll('.toc-list a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+
+  /* Scroll-through screenshots: loop top→bottom, reset, repeat while in view */
+  if ('IntersectionObserver' in window) {
+    document.querySelectorAll('.sw-screen-frame:not([data-no-scroll])').forEach(frame => {
+      const img = frame.querySelector('img');
+      if (!img) return;
+
+      let inView = false;
+
+      const startScroll = () => {
+        const dist = Math.max(0, img.offsetHeight - frame.offsetHeight);
+        if (!dist) return;
+        img.style.transition = 'none';
+        img.style.transform  = 'translateY(0)';
+        void img.offsetHeight; /* force reflow so reset paints before new transition */
+        img.style.transition = 'transform 14s 1s ease-in-out';
+        img.style.transform  = `translateY(-${dist}px)`;
+      };
+
+      /* When scroll finishes, pause 1.5s at bottom then loop back to top */
+      img.addEventListener('transitionend', () => {
+        if (inView) setTimeout(startScroll, 1500);
+      });
+
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.intersectionRatio >= 0.3 && !inView) {
+            inView = true;
+            startScroll();
+          } else if (entry.intersectionRatio === 0) {
+            inView = false;
+            img.style.transition = 'none';
+            img.style.transform  = 'translateY(0)';
+          }
+        });
+      }, { threshold: [0, 0.3] });
+
+      if (img.complete && img.naturalHeight) obs.observe(frame);
+      else img.addEventListener('load', () => obs.observe(frame));
+    });
+  }
+
+  /* Poster lightbox */
+  const posterThumb = document.getElementById('swPosterThumb');
+  const lightbox = document.getElementById('posterLightbox');
+  const lightboxClose = document.getElementById('lightboxClose');
+  if (posterThumb && lightbox) {
+    posterThumb.addEventListener('click', () => lightbox.classList.add('open'));
+    lightboxClose.addEventListener('click', () => lightbox.classList.remove('open'));
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
+  }
+</script>
+</body>
+</html>

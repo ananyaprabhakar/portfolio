@@ -1290,7 +1290,7 @@
   <div class="ghost" id="ghost">Ananya</div>
 
   <nav>
-    <div class="nav-logo">Ananya Prabhakar</div>
+    <a href="index.html" class="nav-logo" style="text-decoration:none;cursor:none;">Ananya Prabhakar</a>
     <ul class="nav-links">
       <li><button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
         <span class="toggle-icon icon-sun">☀︎</span>
@@ -1548,7 +1548,7 @@
           <div class="card-number">Track 02</div>
           <div class="card-title">FreshBite</div>
           <div class="card-subtitle">2025 · Service Design</div>
-          <p class="card-desc">Designing a student meal kit service from the ground up — where flexible ordering, rescued produce, and a campus kiosk had to work together seamlessly for the most time-starved users on campus.</p>
+          <p class="card-desc">Designing a student meal kit service from the ground up, where flexible ordering, rescued produce, and a campus kiosk had to work together seamlessly for the most time-starved users on campus.</p>
           <div class="card-tags"><span class="genre-label">Genre</span><span class="tag">Service Design</span><span class="tag">UX Research</span><span class="tag">Mobile App</span><span class="tag">Figma Make</span></div>
           <a href="freshbite.html" class="card-cta">Liner Notes →</a>
         </div>
@@ -1594,7 +1594,7 @@
           <div class="card-number">Track 03</div>
           <div class="card-title">TicketsQue Solutions</div>
           <div class="card-subtitle">Internship · B2B SaaS</div>
-          <p class="card-desc">Designing two live products at a B2B ticketing startup — a coworking space management dashboard and a VIP membership module — across two internship stints.</p>
+          <p class="card-desc">Designing two live products at a B2B ticketing startup (a coworking space management dashboard and a VIP membership module) across two internship stints.</p>
           <div class="card-tags"><span class="genre-label">Genre</span><span class="tag">Real Client Work</span><span class="tag">B2B SaaS</span><span class="tag">Dashboard Design</span><span class="tag">UX Research</span></div>
           <a href="ticketsque.html" class="card-cta">Liner Notes →</a>
         </div>
@@ -2009,7 +2009,7 @@
   });
 
   // Cursor hover — footer + about CTA
-  document.querySelectorAll('.footer-links a, .footer-nav-link, .footer-back-top, .footer-availability, .about-cta .btn-s').forEach(el => {
+  document.querySelectorAll('.nav-logo, .footer-links a, .footer-nav-link, .footer-back-top, .footer-availability, .about-cta .btn-s').forEach(el => {
     el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
     el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
   });
@@ -2031,6 +2031,17 @@
       if (p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
+  });
+
+  // Logo → always return to a clean homepage: scroll to top AND clear the hash.
+  // On the homepage we intercept the click (no reload); the href="index.html"
+  // is the no-JS fallback and handles clicks coming from case study pages.
+  document.querySelector('.nav-logo').addEventListener('click', function (e) {
+    e.preventDefault();
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   // Hero → About snap: first downward input from hero jumps instantly to about

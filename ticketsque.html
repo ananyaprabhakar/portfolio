@@ -1140,6 +1140,13 @@
       .ia-node-box { width: 90px; font-size: 11px; padding: 6px 0; }
       .ia-note { font-size: 11px; max-width: 160px; }
     }
+      /* Touch devices (mobile/tablet): drop the custom cursor. A tap fires a
+       synthetic mouse event that parks the #cursor sparkle and leaves it stuck,
+       so hide it and restore the native cursor. Desktop (fine pointer) keeps it. */
+    @media (hover: none) and (pointer: coarse) {
+      #cursor { display: none !important; }
+      html, body { cursor: auto; }
+    }
   </style>
 </head>
 <body>

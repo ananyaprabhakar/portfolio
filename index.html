@@ -1280,15 +1280,17 @@
     @media (max-width: 768px) {
       /* Hero: one plushy per corner; vinyl hidden (it would crowd the corners) */
       .vinyl-float-wrap { display: none; }
-      .hero-body { padding-top: 88px; padding-bottom: 84px; }
+      /* Tall hero content anchors near the top on phones, so pad the top
+         enough that the eyebrow clears the two top-corner plushies */
+      .hero-body { padding-top: 158px; padding-bottom: 96px; }
       .sticker img,
-      .s1 img, .s2 img, .s5 img, .s6 img { height: 66px; }
+      .s1 img, .s2 img, .s5 img, .s6 img { height: 64px; }
       /* Keep four — one per corner — drop the rest */
       .s3, .s4, .s7, .s8 { display: none; }
-      .s1 { top: 88px;  left: 12px;   right: auto;  bottom: auto; }
-      .s2 { top: 88px;  right: 12px;  left: auto;   bottom: auto; }
-      .s5 { top: auto;  bottom: 20px; left: 12px;   right: auto; }
-      .s6 { top: auto;  bottom: 20px; right: 12px;  left: auto; }
+      .s1 { top: 82px;  left: 12px;   right: auto;  bottom: auto; }
+      .s2 { top: 82px;  right: 12px;  left: auto;   bottom: auto; }
+      .s5 { top: auto;  bottom: 24px; left: 12px;   right: auto; }
+      .s6 { top: auto;  bottom: 24px; right: 12px;  left: auto; }
 
       .card-sleeve { height: 220px; }
       .card-info   { padding: 22px 24px 26px; }

@@ -100,21 +100,6 @@
         border-bottom: none; margin-top: 4px; padding-top: 16px;
       }
       .nav-cta { display: inline-block; }
-      .site-footer { grid-template-columns: 1fr; }
-      .footer-bean { display: none; }
-      .footer-middle { padding: 44px 24px 12px; gap: 18px; }
-      .footer-right { align-items: flex-start; text-align: left; padding: 12px 24px 56px; }
-      .footer-right-bottom { align-items: flex-start; }
-
-      /* Sections still using fixed 64px desktop padding — shrink for phones
-         so content stops overflowing the right edge */
-      .currently-section { padding: 72px 24px; }
-      .currently-grid { grid-template-columns: 1fr; }   /* was 2 cols → single column */
-      .faq-section { padding: 72px 24px; }
-      .faq-a { padding-right: 0; }                       /* was 50px, wasted on mobile */
-      .ux-section { padding: 72px 24px; }
-      .carousel-section { padding: 72px 0 72px 24px; }
-      .carousel-header { padding-right: 24px; }
     }
     .nav-logo {
       font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700;
@@ -487,6 +472,34 @@
     .footer-nav-link:hover { color: #FFF5F0; }
     .footer-back-top { font-family: 'Chillax', sans-serif; font-size: 13px; font-weight: 500; color: var(--accent-mid); background: none; border: none; cursor: none; transition: color 0.2s; letter-spacing: 0.03em; padding: 0; }
     .footer-back-top:hover { color: var(--accent); }
+
+    /* ══════════════════════════════════
+       MOBILE HERO/SECTION FIXES (≤768px)
+       Placed at the END of the stylesheet on purpose: these override
+       base section rules (.currently-*, .faq-*, .carousel-*, .ux-*) that
+       are defined later in the source, so they must come after them to win.
+    ══════════════════════════════════ */
+    @media (max-width: 768px) {
+      /* "What I'm into" — the 2-col grid overflowed the right edge on phones */
+      .currently-section { padding: 72px 24px; }
+      .currently-grid { grid-template-columns: 1fr; }
+      /* FAQ — shrink desktop 64px side padding, reclaim wasted answer padding */
+      .faq-section { padding: 72px 24px; }
+      .faq-a { padding-right: 0; }
+      /* Dark quote section */
+      .ux-section { padding: 72px 24px; }
+      /* Candids carousel — tighten left inset + header */
+      .carousel-section { padding: 72px 0 72px 24px; }
+      .carousel-header { padding-right: 24px; }
+
+      /* Footer — single column (base .site-footer is defined later in source,
+         so these must live here at the end to take effect) */
+      .site-footer { grid-template-columns: 1fr; }
+      .footer-bean { display: none; }
+      .footer-middle { padding: 44px 24px 12px; gap: 18px; }
+      .footer-right { align-items: flex-start; text-align: left; padding: 12px 24px 56px; }
+      .footer-right-bottom { align-items: flex-start; }
+    }
   </style>
 </head>
 <body>

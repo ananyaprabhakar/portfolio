@@ -1149,14 +1149,31 @@
     }
     .swc-callout-img { display: block; width: 100%; }
 
-    /* ── HERO RESPONSIVE — padding is fluid via clamp() on .hero-body ── */
-    /* Stickers hide once the centered text block nears the corner art */
+    /* ══════════════════════════════════
+       HERO RESPONSIVE — TABLET (≤1024px)
+       Plushies stay: two side clusters of three hugging the edges,
+       framing the centered text. Vinyl stays (bottom-right corner).
+    ══════════════════════════════════ */
     @media (max-width: 1024px) {
-      .sticker-layer { display: none; }
-      .vinyl-float-wrap { display: none; }
-      /* Hero becomes content-height so the About section follows, not a 100vh gap */
-      .hero { height: auto; min-height: auto; }
-      .hero-body { padding-top: 120px; padding-bottom: 80px; }
+      /* Full-height hero so the edge art has room to breathe */
+      .hero { height: auto; min-height: 100svh; }
+      .hero-body { padding-top: 96px; padding-bottom: 88px; }
+
+      /* Stickers shrink and reflow to the edges (override the 150px group too) */
+      .sticker-layer { display: block; }
+      .sticker img,
+      .s1 img, .s2 img, .s3 img, .s5 img, .s6 img, .s8 img { height: 90px; }
+
+      /* LEFT cluster — three, hugging the left edge */
+      .s1 { top: 13%; left: 1.5%; right: auto; bottom: auto; }
+      .s3 { top: 43%; left: 4%;   right: auto; bottom: auto; }
+      .s5 { top: 72%; left: 1.5%; right: auto; bottom: auto; }
+      /* RIGHT cluster — three, hugging the right edge */
+      .s2 { top: 13%; right: 1.5%; left: auto; bottom: auto; }
+      .s4 { top: 43%; right: 4%;   left: auto; bottom: auto; }
+      .s6 { top: 72%; right: 1.5%; left: auto; bottom: auto; }
+      /* Drop the crowding inner pair on tablet */
+      .s7, .s8 { display: none; }
     }
     @media (max-width: 860px) {
       .eyebrow { font-size: 14px; }
@@ -1261,7 +1278,18 @@
        RESPONSIVE — MOBILE (≤768px)
     ══════════════════════════════════ */
     @media (max-width: 768px) {
-      /* hero auto-height, stickers + vinyl hidden at ≤1024 above */
+      /* Hero: one plushy per corner; vinyl hidden (it would crowd the corners) */
+      .vinyl-float-wrap { display: none; }
+      .hero-body { padding-top: 88px; padding-bottom: 84px; }
+      .sticker img,
+      .s1 img, .s2 img, .s5 img, .s6 img { height: 66px; }
+      /* Keep four — one per corner — drop the rest */
+      .s3, .s4, .s7, .s8 { display: none; }
+      .s1 { top: 88px;  left: 12px;   right: auto;  bottom: auto; }
+      .s2 { top: 88px;  right: 12px;  left: auto;   bottom: auto; }
+      .s5 { top: auto;  bottom: 20px; left: 12px;   right: auto; }
+      .s6 { top: auto;  bottom: 20px; right: 12px;  left: auto; }
+
       .card-sleeve { height: 220px; }
       .card-info   { padding: 22px 24px 26px; }
 
@@ -1280,6 +1308,13 @@
       .ctas { flex-direction: column; align-items: stretch; }
       .btn-p, .btn-s { justify-content: center; }
       .card-sleeve   { height: 190px; }
+      /* Tiny screens — plushies a touch smaller and tighter into the corners */
+      .sticker img,
+      .s1 img, .s2 img, .s5 img, .s6 img { height: 58px; }
+      .s1, .s2 { top: 84px; }
+      .s1, .s5 { left: 8px; }
+      .s2, .s6 { right: 8px; }
+      .s5, .s6 { bottom: 16px; }
     }
 
   </style>
